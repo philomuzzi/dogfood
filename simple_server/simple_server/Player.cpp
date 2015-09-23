@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 void Player::do_write(std::size_t length) {
 	auto self(shared_from_this());

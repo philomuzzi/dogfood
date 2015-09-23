@@ -1,7 +1,6 @@
 #pragma once
 #include <boost/asio.hpp>
 
-
 class Server {
 public:
 	Server(boost::asio::io_service& io_service, short port)
