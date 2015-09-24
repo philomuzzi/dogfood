@@ -1,0 +1,152 @@
+package network.command;
+
+
+message Airplane {
+    required uint32 id = 1;
+    optional PlaneSlot slotOne = 2;
+    optional PlaneSlot slotTwo = 3;
+    optional PlaneSlot slotThree = 4;
+    optional PlaneSlot slotFour = 5;
+    optional PlaneSlot slotFive = 6;
+}
+
+message PlaneSlot {
+    optional bool isOpen = 1 [default = false];
+    optional PlanePart part = 2;      // 使用PlanePart
+}
+
+message PlanePart {
+    optional uint32 id = 1;             // 因为可能存在表格中相同id的不同的部件，需要利用csv的id生成一个独立的唯一标识
+    optional uint32 thisid = 2;         // 生成的唯一标识
+    optional uint32 exp = 3;
+}
+
+message Pilot {
+    required uint32 id = 1;
+    optional uint32 skill_property_id = 2 [default = 0];  // PilotSkillProperty唯一ID
+    optional uint32 friendliness = 3;
+    optional uint32 notdropfriendlinesstime = 4;
+}
+
+message EndlessFbInfo{
+    required uint32 thisid = 1;
+    optional uint32 maxscore = 2;
+}
+
+message RewardGoods{
+    optional uint32 materialid = 1;
+    optional uint32 materialnum = 2;
+}
+
+message Bag {
+    repeated Item itemList = 1;
+    repeated Item pileItemList = 2;
+    repeated PlanePart partList = 3;
+    optional uint32 size = 4 [default = 50];    // 最大空间
+    optional uint32 usedsize = 5;               // 使用的空间
+}
+
+message Item {
+    optional uint32 id = 1;
+    optional uint32 num = 2;
+}
+
+message PlayerStatus {
+    required bool Playing         = 5;
+}
+
+message MailBag {
+    repeated MailInfo usermail = 1;
+    repeated uint32 readsystemmaillist = 2;
+}
+
+enum MailSourceType {
+    SystemMail = 1;
+    UserMail = 2;
+}
+
+message MailInfo {
+    enum MailType {
+        Text = 1;
+        Attach = 2;
+        Energy = 3;
+    }
+
+    enum MailStatus {
+        InitMail = 0;       // 初始状态
+        Read = 1;       // 已读，未读取附件
+    }
+                                            // init by
+    optional uint64 id = 1;                 // server
+    optional MailSourceType stype = 2;      // user
+    optional MailType mailtype = 3;         // user
+    optional MailStatus status = 4;         // server
+    optional string send_accid = 5;         // user
+    optional uint32 time = 7;               // server
+    optional string text = 8;               // user
+    repeated Item attachList = 9;           // user
+}
+
+message BestRecord {
+    optional uint32 first = 3;
+    optional uint32 second = 4;
+    optional uint32 third = 5;
+    optional WeekRecord record = 6;
+}
+
+message WeekRecord {
+    optional uint32 score = 2;
+    optional uint32 time = 3;
+    optional uint32 weekindex = 5;
+}
+
+// 只是无尽模式的排行
+message RankingInfo {
+    optional string name = 1;
+    optional string avatar = 2;
+    optional uint32 level = 3;
+    optional uint32 exp = 4;
+    optional BestRecord bestrecord = 5;
+    optional WeekRecord weekrecord = 6;
+    optional string accid = 7;
+    optional uint32 lastweekrecord = 8;
+    optional uint32 lastloginweek = 9;
+	repeated Airplane airplaneList = 10;
+    optional bool allowEnergyMail = 11 [default = false];
+}
+
+message NextSendTime {
+    optional string accid = 1;
+    optional uint32 nextSendTime = 2;
+}
+
+message GMCmdData {
+   optional string command = 1;
+   optional string data = 2;
+}
+
+message QuestStatistics {
+    optional uint32 totalScore = 1;
+    optional uint32 endlessTimes = 2;
+    optional uint32 endlessTopScore = 3;
+    optional uint32 normalTimes = 4;
+    optional uint32 normalTopScore = 5;
+}
+
+message DailyStatistics {
+    optional uint32 activeCount = 1;
+    optional uint32 endlessTimes = 2;
+}
+
+message PetStatistics{
+    required uint32 thisid =1;
+    optional uint32 petid = 2;
+    optional uint32 scrawid = 3 [default = 999999];
+    optional uint32 scrawstate = 4;
+}
+
+message NormalFbStatistics{
+   required uint32 id = 1;
+   optional uint32 wipetimes = 2;
+   optional uint32 groupid = 3; 
+}

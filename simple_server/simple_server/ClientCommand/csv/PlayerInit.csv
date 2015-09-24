@@ -1,0 +1,3 @@
+id,airplane_id,pilot_id,diamond,gold,energy,bag_size,bag_max_size,friendliness_drop_timer,friendliness_drop_game,pet1_id,pet2_id
+标识,新建角色飞机唯一标识,飞行员唯一标识,钻石,金币,体力,背包初始大小,背包最大大小,每小时友好度下降,每局游戏友好度下降,宠物1,宠物2
+0,10503001,20100000,100000,100000,0,50,1000,5,2,20113000,20223000

@@ -1,0 +1,7 @@
+package network.command.GM;
+
+import "data.proto";
+
+message ExecGM_CS{
+    required GMCmdData gmcommand = 1;    
+} 

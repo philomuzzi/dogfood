@@ -1,0 +1,58 @@
+package network.command;
+
+import "data.proto";
+
+message Player {
+	required uint32 id			= 1;		//角色ID
+	required string name		= 2;		//角色名字
+
+    optional uint32 exp =  3;
+	optional uint32 gold =  4;
+	optional uint32 diamond =  5;
+	optional uint32 energy =  6;
+	optional uint64 energyTime =  7;
+	optional uint32 currentPilot =  8;
+	optional uint32 currentAirplane =  9;
+	repeated Pilot pilotList =  10;
+	repeated Airplane airplaneList =  11;
+    optional Bag bag = 12;
+    //repeated EndlessFbInfo endlessfb = 13;
+    optional uint32 extraexp = 14;         //额外的经验
+    optional uint32 state  = 15;
+    optional MailBag mailbag = 16;          // 邮件
+    optional bool newMail = 17 [default = false];           // 是否有新邮件
+    optional BestRecord bestrecord = 18;
+    optional WeekRecord weekrecord = 19;
+
+	optional uint32 level       = 20;
+    optional uint32 idx         = 21;
+    optional uint32 currentmissionid        = 22;
+    optional uint32 currentdailymissionid   = 23;
+
+    repeated string friendlist = 24;    // 好友accid
+    optional string avatar = 25;
+    optional uint32 lastweekrecord = 26;    // 上周得分
+
+    optional QuestStatistics totalstatistics = 27;
+    optional DailyStatistics dailystatistics = 28;
+    repeated uint32 finishedQuestID = 29;
+    repeated uint32 finishedDailyQuestID = 30;
+
+    optional string accid = 31;
+    optional uint32 lastloginweek = 32;
+    optional bool allowEnergyMail = 33 [default = false];
+    optional uint32 lastloginday = 34;
+
+    repeated PetStatistics petstatistics = 35;
+
+    optional uint32 lastofflinetime = 36;
+
+    repeated NormalFbStatistics normalfbstatistics = 37;
+    optional uint32 itemnum = 38; //闯关道具
+    optional uint32 wipestock = 39 ;//扫荡券
+    optional uint32 checktimes = 40; // 签到次数
+    optional uint32 lastcheckday = 41; // 最后签到时间，这个时间是游戏基准天数
+    optional uint32 totalchecktimes = 42; // 累计签到次数
+    optional uint32 lastloginmonth = 43;   // 上次签到月份
+    optional uint32 lastchecktime = 44; // 上次签到时间，这个时间是unix世界秒数
+}

@@ -1,0 +1,24 @@
+package network.command.Pet;
+
+message PetStren_CS{
+    enum Result{
+        SUCCESS   = 0;
+        IDERROR   = 1;
+        NOGOLD    = 2;
+        NODIAMOND = 3;
+        PARAMERROR = 4;
+        LVERROR    = 5;//达到最高等级
+        UNKNOW     =6 ;
+
+        MAXERROR  = 100;
+    }
+    required uint32 thisid = 1;
+    optional uint32 petid  = 2;
+    optional Result result = 3;
+    optional uint32 type   = 4;
+}
+
+message PetScrawl_C{
+       required uint32 thisid = 1;
+       optional uint32 sate   = 2;//0表示脱 1表示穿
+    }

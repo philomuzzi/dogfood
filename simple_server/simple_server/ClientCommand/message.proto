@@ -1,0 +1,41 @@
+package network.command;
+
+enum CMSG {
+	CMSGTimeTickCS								= 0;//心跳
+	CMSGLoginGame_C								= 1;//请求登陆游戏首包
+	CMSGLoginFail_S								= 2;//登陆失败信息
+	CMSGServerInfo_S							= 3;//登陆信息返回
+	CMSGEnterGame_CSS							= 4;//进入游戏
+	CMSGLeaveGame_SS							= 5;//离开游戏
+    CMSGSaveGame_SS                             = 6;//存档
+    CMSGCheckVersion                            = 7; //检查版本
+    CMSGResStartGame_CS                         = 8; //开始一局游戏, Play::StartGame
+    CMSGResEndGame_CS                           = 9; //结束一局游戏, Play::EndGame
+    CMSGResContinueGame_CS                      = 10; //继续一局游戏, Play::ContinueGame
+    CMSGPlayerInfo_S                            = 12; // 发送用户数据 save::Player
+    CMSGBuyCurrency_CS                          = 13;
+    CMSGUpgradeObject_CS                        = 14;   // 升级飞机、部件、飞行员都是用这个消息
+    CMSGBuyObject_CS                            = 15;   // 购买飞机、飞行员等
+    CMSGInstallPlanePart_CS                     = 16;   // 安装替换部件
+    CMSGSellObject_CS                           = 17;   // 出售飞机部件等
+    CMSGMail_SS                                 = 18;   // ds和gs之间传递mail消息
+    CMSGWriteMail_SS                            = 19;   // gs更新mail到ds
+    CMSGSystemMail_SC                           = 20;   // 服务端发送系统邮件
+    CMSGReadMail_CS                             = 21;   // 阅读邮件
+    CMSGCreateUserMail_CS                       = 22;   // 创建用户邮件
+    CMSGCreateSystemMail_CS                     = 23;   // 创建系统邮件
+    CMSGRanking_SC                              = 24;   // 发送好友排行数据到客户端
+    CMSGQueryRanking_SS                         = 25;   // 请求不在线，不在同一服务器的好友的信息
+    CMSGQueryGM_CS                              = 26;   // GM信息
+    CMSGFinishQuest_CS                          = 27;   // 完成任务
+    CMSGPlayerSetting_CS                        = 28;   // 客户端玩家设置
+    CMSGFriendMailNextTime_S                    = 29;
+    CMSGPetInfo_CS                              = 30;   // 宠物系统
+    CMSGFriendlinessInteract_CS                 = 31;   // 友好度交互
+    CMSGItemForFriendliness_CS                  = 32;   // 友好度增加
+    CMSGPetScraw_C                              = 33;   // 涂鸦状态
+    CMSGCheckIn_CS                              = 34;   // 签到
+    CMSGInitInfo_S                              = 35;   // 服务器时间等启动信息
+
+	CMSGMax										= 32768;
+}

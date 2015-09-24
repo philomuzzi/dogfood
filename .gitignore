@@ -211,3 +211,8 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+
+*.pb.h
+*.pb.cc
+*.exe

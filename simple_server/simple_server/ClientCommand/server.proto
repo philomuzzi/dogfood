@@ -1,0 +1,39 @@
+package network.command;
+
+import "data.proto";
+import "save.proto";
+
+message Mail_SS {
+    enum SystemMailType {
+        InitSystemMail = 1;
+        NewMail = 2;
+    }
+    optional string accid = 1 [default = ""];   // 用户id为""则为系统邮件，否则为用户邮件
+    repeated MailInfo mailList = 2;
+    optional SystemMailType systemmailtype = 3;       // 是启动时发送的系统邮件，还是后来发送的系统邮件
+}
+
+message WriteMail_SS {
+    optional string send_accid = 1 [default = ""];
+    optional string recv_accid = 2 [default = ""];
+    optional MailInfo mail = 3;
+}
+
+// 请求不在同一服务器的好友的信息
+message QueryRanking_SS {
+    optional string accid = 1;
+    repeated string friendlist = 2;
+    repeated RankingInfo rankingInfoList = 3;
+}
+
+//离开游戏请求
+message LeaveGame_SS {
+	required string	accid			= 1;		//账号ID
+	optional uint32 asid			= 2;
+	optional uint32 asnum			= 3;
+}
+
+message SaveGame_SS {
+    required string accid           = 1;
+    required Player data            = 2;
+}

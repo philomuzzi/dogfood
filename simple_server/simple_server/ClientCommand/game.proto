@@ -1,0 +1,65 @@
+package network.command.Game;
+
+import "data.proto";
+
+// 还需要一些个人信息，比如名称，等级，经验，头像
+message Ranking_SC {
+    repeated RankingInfo rankingInfoList = 1;
+}
+
+message FinishQuest_CS {
+    enum Result {
+        SUCCESS = 1;
+        LEVEL   = 2;
+        FINISHED = 3;
+        PRETASK = 4;
+        FAIL = 254;
+        UNKNOWN = 255;
+    }
+
+    optional Result result = 1;
+    optional uint32 questid = 2;
+}
+
+message PlayerSetting_CS {
+    enum Result {
+        SUCCESS = 1;
+        FAIL = 254;
+        UNKNOWN = 255;
+    }
+
+    optional Result result = 1;
+    optional bool allowEnergyMail = 2;
+}
+
+message FriendlinessInteract_CS {
+    enum Result {
+        SUCCESS = 1;
+        UNKNOWN = 255;
+    }
+
+    enum Type {
+        Add = 1;
+        Sub = 2;
+    }
+
+    optional Result result = 1;
+    optional uint32 pilotid = 2;
+    optional uint32 interactid = 3;
+    optional uint32 currentfriendliness = 4;        // 返回当前的id的飞行员的友好度
+    optional Type   type = 5;
+}
+
+message ItemForFriendliness_CS {
+    enum Result {
+        SUCCESS = 1;
+        UNKNOWN = 255;
+    }
+    optional Result result = 1;
+    optional uint32 pilotid = 2;
+    optional uint32 itemid = 3;
+}
+
+message InitInfo_S {
+    optional uint64 time = 1;
+}

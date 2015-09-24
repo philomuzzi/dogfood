@@ -1,0 +1,3 @@
+ID,PilotID,Friendliness,Trigger,AddFriendliness,ReduceFriendliness,DialogType,ButtonType,PanelClick,DisappearTime,Dialog
+唯一id,角色id,亲密度,触发类型,对话增加亲密度,对话减少亲密度,对话类型,按钮显示类型,点击任何区域是否播放下一条后者关闭,对话显示时间,对话
+0,20001,0|100,1,25,0,1,0,0,2,很厉害！|真是太厉害了

@@ -1,0 +1,52 @@
+package network.command.Mail;
+
+import "data.proto";
+
+
+message SystemMail_SC {
+    repeated MailInfo mailList = 1;
+}
+
+message ReadMail_CS {
+    enum Result {
+        SUCCESS = 1;
+        ERROR_ID = 2;
+        UNKNOWN = 255;
+    }
+
+    optional uint64 id = 1;
+    optional MailSourceType sType = 2 [default = UserMail];
+    optional Result result = 3;
+}
+
+message CreateUserMail_CS {
+    enum Result {
+        SUCCESS = 1;
+        NO_RECV = 2;
+        WAIT_TIME = 3;
+        UNKNOWN = 255;
+    }
+
+    enum MailType {
+        ENERGY = 1;
+    }
+
+    optional MailType mtype = 1;
+    optional string recv_accid = 2;
+    optional Result result = 4;
+    optional string text = 5;
+}
+
+message CreateSystemMail_CS {
+    enum Result {
+        SUCCESS = 1;
+        UNKNOWN = 255;
+    }
+
+    optional MailInfo info = 1;
+    optional Result result = 2;
+}
+
+message FriendMailNextTime_S {
+    repeated NextSendTime nexttimelist = 1;
+}

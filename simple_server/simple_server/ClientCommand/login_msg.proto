@@ -1,0 +1,52 @@
+package network.command;
+
+import "save.proto";
+import "shop.proto";
+
+enum LOGINERROR {
+	LOGINERROR_UNKNOWN				= 1;		//未知错误
+	LOGINERROR_VERSIONERR			= 2;		//版本错误
+	LOGINERROR_PASSWORDERR			= 3;		//密码错误
+	LOGINERROR_ACCOUNTLOCK			= 4;		//账号锁定
+	LOGINERROR_TIMEOUTERR			= 5;		//超时错误
+	LOGINERROR_NOACCOUNT			= 6;		//账号不存在
+	LOGINERROR_GAMECLOSE			= 7;		//游戏关闭
+	LOGINERROR_NOACTIVE				= 8;		//账号未激活
+	LOGINERROR_DBERR				= 9;		//数据库出错
+}
+
+//登陆游戏
+message LoginGame_C {
+	required uint32 game			= 1;		//游戏类型
+	required uint32 zone			= 2;		//游戏区号
+	required uint32 version			= 3;		//游戏版本
+	optional uint32 net_type		= 4;		//网络类型
+	optional string account			= 5;		//游戏账号
+	optional string password		= 6;		//账号密码
+	optional string pf				= 7;		//第三方平台
+}
+//登陆失败消息
+message LoginFail_S {
+	optional LOGINERROR result		= 1;
+}
+//登陆成功返回消息
+message ServerInfo_S {
+	optional string accid			= 1;		//账号ID
+	optional uint32 loginid			= 2;		//登陆ID
+	optional uint32 state			= 3;		//状态
+	optional string ip				= 4;		//IP
+	optional uint32 port			= 5;		//端口
+}
+//请求进入游戏
+message EnterGame_CSS {
+	required uint32 loginid			= 1;		//登陆ID
+	required string accid			= 2;		//账号ID
+	required uint32 version			= 3;		//版本号
+	optional uint32 asid			= 4;
+	optional uint32 asnum			= 5;
+	optional Player data			= 6;
+}
+
+message PlayerInfo_S {
+    required Player data            = 1;
+}

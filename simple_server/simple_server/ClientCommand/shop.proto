@@ -1,0 +1,136 @@
+package network.command.Shop;
+
+// 市场,签名之类后面再说
+enum CurrencyType {
+    Gold = 0;
+    Energy = 1;
+    Diamond = 2;
+    WipeStock = 3;
+}
+
+enum OpSlot {
+    SLOTONE = 1;
+    SLOTTWO = 2;
+    SLOTTHREE = 3;
+    SLOTFOUR = 4;
+    SLOTFIVE = 5;
+}
+
+message BuyCurrency_CS {
+    enum Result {
+        SUCCESS = 0;
+        FAIL = 1;
+        UNKNOWN = -1;
+    }
+    required uint32 buyItemId       = 2;
+    required CurrencyType itemType        = 3;
+    optional Result result          = 4;
+}
+
+message UpgradeObject_CS{
+    enum ObjectType{
+        Pilot = 1;
+        Airplane = 2;
+        AirplanePart = 3;
+    }
+    enum Result {
+        SUCCESS = 0;
+        FAIL = 1;
+        NODIAMOND = 2;
+        NOGOLD = 3;
+        UNEXIST = 5;
+        SLOTISOPEN = 6;     // 槽已经打开
+        UNKNOWN = -1;
+    }
+    enum UpgradeType {
+        Level       = 1;
+        Quality     = 2;
+        Slot        = 3;    // 通过钻石购买槽
+        OneClick    = 4;    // 一键升级飞行员到可以升级的最高等级
+        Skill       = 5;    // 升级飞行员技能
+    }
+    required uint32 id              = 1;
+    required ObjectType obType      = 2;
+    required UpgradeType upType     = 3;
+    required Result result          = 4;
+    repeated upgradeItem itemlist   = 5;            // 升级部件专用。升级使用的物品id列表
+    optional uint32 thisid          = 6;            // 部件的thisid
+    optional OpSlot slot            = 7;            // 如果安装升级飞机上的部件，则提供飞机部件的编号
+    optional int32 airplaneid       = 8 [default = -1];            // 升级部件所在飞机id, 请赋予-1的默认值
+}
+
+message upgradeItem {
+    optional uint32 id              = 1;
+    optional uint32 thisid          = 3 [default = 0];   // 如果使用部件升级，则同时需要提供thisid，其它物品不需要，每个部件有自己独一无二的thisid
+}
+
+message BuyObject_CS {
+    enum ObjectType {
+        Pilot = 1;
+        Airplane = 2;
+        PlanePart = 3;
+        Other = 4;              // 未定义
+        Item = 5;
+        PileItem = 6;
+        BagSpace = 7;
+        PetEgg   = 8;
+        PetScrawl = 9;
+    }
+
+    enum Result {
+        SUCCESS = 0;
+        NOGOLD = 1;
+        NODIAMOND = 2;
+        NOSPACE = 3;
+        PLAYER_LEVEL = 4;        // 玩家等级不符合
+        PRE_PILOT_NOEXIST = 5;      // 角色前置角色不存在
+        PRE_PILOT_LEVEL = 6;        // 角色前置等级不存在
+        OPEN_PETEGG_ERROR = 7;   //该宠物蛋不能被打开
+        UNKNOWN = 100;
+    }
+
+    required uint32 id = 1;
+    optional ObjectType type = 2;
+    optional Result result = 3;
+    optional uint32 thisid = 4;
+    optional uint32 petid = 5;
+}
+
+message SellObject_CS {
+    enum ObjectType {
+        PlanePart = 1;
+        Item = 2;
+    }
+
+    enum Result {
+        SUCCESS = 0;
+        UNEXIST = 1;
+        UNKNOWN = 100;
+    }
+
+    required uint32 id = 1;
+    optional ObjectType type = 2;
+    optional Result result = 3;
+    optional uint32 thisid = 4; // 出售飞机部件的thisid
+    optional uint32 num = 5;    // 出售材料数量
+}
+
+message InstallPlanePart_CS {
+    enum Result {
+        SUCCESS = 0;
+        UNKNOWN = -1;
+    }
+
+    enum OpType {
+        INSTALL = 0;
+        UNINSTALL = 1;
+    }
+
+    optional uint32 planeid = 1;
+    optional OpSlot slot = 2;
+    optional Result result = 4;
+    optional uint32 thisid = 5;         // 新插入的part的thisid
+    optional OpType opType = 6;
+    optional uint32 explaneid = 7;      // 交换的飞机id
+    optional OpSlot exslot = 8;         // 交换飞机的槽id，里面必须要有部件
+}

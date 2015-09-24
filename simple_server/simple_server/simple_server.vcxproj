@@ -122,6 +122,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientCommand\data.pb.cc" />
+    <ClCompile Include="ClientCommand\game.pb.cc" />
+    <ClCompile Include="ClientCommand\gm.pb.cc" />
+    <ClCompile Include="ClientCommand\login_msg.pb.cc" />
+    <ClCompile Include="ClientCommand\mail.pb.cc" />
+    <ClCompile Include="ClientCommand\message.pb.cc" />
+    <ClCompile Include="ClientCommand\pet.pb.cc" />
+    <ClCompile Include="ClientCommand\play.pb.cc" />
+    <ClCompile Include="ClientCommand\save.pb.cc" />
+    <ClCompile Include="ClientCommand\server.pb.cc" />
+    <ClCompile Include="ClientCommand\shop.pb.cc" />
     <ClCompile Include="ClientMsgCenter.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
@@ -129,11 +140,35 @@
     <ClCompile Include="simple_server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientCommand\data.pb.h" />
+    <ClInclude Include="ClientCommand\game.pb.h" />
+    <ClInclude Include="ClientCommand\gm.pb.h" />
+    <ClInclude Include="ClientCommand\login_msg.pb.h" />
+    <ClInclude Include="ClientCommand\mail.pb.h" />
+    <ClInclude Include="ClientCommand\message.pb.h" />
+    <ClInclude Include="ClientCommand\pet.pb.h" />
+    <ClInclude Include="ClientCommand\play.pb.h" />
+    <ClInclude Include="ClientCommand\save.pb.h" />
+    <ClInclude Include="ClientCommand\server.pb.h" />
+    <ClInclude Include="ClientCommand\shop.pb.h" />
     <ClInclude Include="ClientMsgCenter.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Utility\singleton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClientCommand\data.proto" />
+    <None Include="ClientCommand\game.proto" />
+    <None Include="ClientCommand\gm.proto" />
+    <None Include="ClientCommand\login_msg.proto" />
+    <None Include="ClientCommand\mail.proto" />
+    <None Include="ClientCommand\message.proto" />
+    <None Include="ClientCommand\pet.proto" />
+    <None Include="ClientCommand\play.proto" />
+    <None Include="ClientCommand\save.proto" />
+    <None Include="ClientCommand\server.proto" />
+    <None Include="ClientCommand\shop.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

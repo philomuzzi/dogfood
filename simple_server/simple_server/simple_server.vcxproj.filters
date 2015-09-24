@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Proto">
+      <UniqueIdentifier>{5848fa3e-e211-4dbd-9e2c-832e90ec2716}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp">
@@ -29,6 +32,39 @@
     </ClCompile>
     <ClCompile Include="ClientMsgCenter.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\data.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\game.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\gm.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\login_msg.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\mail.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\message.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\pet.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\play.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\save.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\server.pb.cc">
+      <Filter>Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommand\shop.pb.cc">
+      <Filter>Proto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -47,5 +83,73 @@
     <ClInclude Include="ClientMsgCenter.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ClientCommand\data.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\game.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\gm.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\login_msg.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\mail.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\message.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\pet.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\play.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\save.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\server.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommand\shop.pb.h">
+      <Filter>Proto</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClientCommand\data.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\game.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\gm.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\login_msg.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\mail.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\message.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\pet.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\play.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\save.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\server.proto">
+      <Filter>Proto</Filter>
+    </None>
+    <None Include="ClientCommand\shop.proto">
+      <Filter>Proto</Filter>
+    </None>
   </ItemGroup>
 </Project>

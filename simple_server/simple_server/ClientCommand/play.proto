@@ -1,0 +1,75 @@
+package network.command.Play;
+
+import "data.proto";
+import "save.proto";
+message StartGame_CS {
+	enum Result {
+		SUCCESS =  0;
+		ENERGY =  1;              // 缺少体力
+        PARAMETER = 2;            // 客户端参数错误
+        PLAYING = 3;              // 正在游戏
+        NOSPACE = 4;
+        LEVEL   = 5;              //等级不够
+        PREFBNOPASS   = 6;        //前置副本没通过
+        ITEM    = 7;
+        NOWIPETIMES = 8;          //没扫荡次数
+        NOWIPESTOCK = 9;          //没扫荡券
+        FBNOPASS = 10;            //副本未通过
+		UNKNOWN =  -1;
+	}
+	required uint32 pilotId    =  1;
+	required uint32 airplaneId =  2;
+    optional uint32 fbId       =  3;          //关卡唯一标示符
+	optional Result result     =  4;
+    optional uint32 fbtype     =  5;
+	required string	accid	   =  8;		//账号ID
+}
+
+message ContinueGame_CS {
+	enum Result {
+		SUCCESS = 0;
+		FAIL = 1;
+		ERR = -1;	
+	}
+	enum Type {
+		FREE = 0;
+		BUY =  1;
+	}
+	optional uint32 continueCount = 2;
+	optional Result result = 4;
+	optional Type type = 5;
+	required string	accid			= 6;		//账号ID
+}
+
+message EndGame_CS {
+	enum Result {
+		SUCCESS =  0;
+		DONTSTART =  1;
+        NOPLAYING = 2;          // 没有游戏进行
+        FAIL      = 3;
+		UNKNOWN =  -1;
+	}
+	optional uint32 score =  1;
+    optional uint32 fbId = 2;
+    repeated RewardGoods rewardgoods = 3;
+    optional uint32 maxscore = 4;
+    optional uint32  flag      =  5;
+    optional uint32 petthisid      =  6;
+	optional Result result =  25;
+	required string	accid  = 29;		//账号ID
+    optional uint32 gold = 30;    // 结算奖励的金币
+    optional uint32 diamond = 31;
+    optional uint32 exp = 32;
+    optional uint32 fbtype =33;
+}
+
+message CheckIn_CS {
+    enum Result {
+        SUCCESS = 0;
+        FAIL = 1;
+        UNKNOWN = -1;
+    }
+
+    optional Result result = 1;
+	optional uint32 checktimes = 2;		//签到次数
+}
