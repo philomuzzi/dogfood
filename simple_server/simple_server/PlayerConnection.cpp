@@ -4,6 +4,13 @@
 
 using namespace std;
 
+// PlayerConnection的生命周期问题
+
+PlayerConnection::~PlayerConnection() {
+	cout << "Destroy PlayerConnection" << endl;
+}
+
+
 void PlayerConnection::write(std::string data, std::size_t length) {
 	auto self(shared_from_this());
 	copy(data.begin(), data.end(), write_buffer_.begin());
@@ -79,6 +86,8 @@ void PlayerConnection::do_read() {
 			}
 			if (ec != boost::asio::error::operation_aborted) {
 				// 断开连接
+				socket_.shutdown(boost::asio::socket_base::shutdown_both);
+				socket_.close();
 			}
 		}
 	);

@@ -14,6 +14,7 @@ public:
 
 public:
 	explicit PlayerConnection(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)) {}
+	~PlayerConnection();
 
 	void start();
 	void write(std::string data, std::size_t length);
