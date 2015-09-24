@@ -10,17 +10,18 @@
 
 class Player : public std::enable_shared_from_this<Player> {
 public:
-	Player(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)) {}
+	explicit Player(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)) {}
 
 	void start();
+	void write(std::string data, std::size_t length);
 
 private:
 	void do_read();
-	void do_write(std::size_t length);
 
 	boost::asio::ip::tcp::socket socket_;
 	enum {max_length = 65535};
-	char data_[max_length];
+	char read_buffer_[max_length];
+	std::array<char, max_length> write_buffer_;
 
 	int already_read_{ 0 };
 

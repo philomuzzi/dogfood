@@ -1,19 +1,21 @@
 #include "Player.h"
 #include "ClientMsgCenter.h"
 #include <iostream>
+#include "PlayerManager.h"
 
 using namespace std;
 
 int Player::global_id_ = 1;
 
-void Player::do_write(std::size_t length) {
+void Player::write(std::string data, std::size_t length) {
 	auto self(shared_from_this());
+	copy(data.begin(), data.end(), write_buffer_.begin());
 	boost::asio::async_write(
 		socket_,
-		boost::asio::buffer(data_, length),
-		[this, self](boost::system::error_code ec, std::size_t /*length*/) {
+		boost::asio::buffer(write_buffer_, length),
+		[this, self](boost::system::error_code ec, std::size_t len) {
 			if (!ec) {
-				do_read();
+				cout << "write success: " << len << endl;
 			}
 		}
 	);
@@ -22,6 +24,7 @@ void Player::do_write(std::size_t length) {
 void Player::start() {
 	id_ = global_id_;
 	global_id_++;
+	PlayerManager::getInstance().addUnique(shared_from_this());
 	do_read();
 }
 
@@ -30,12 +33,12 @@ void Player::start() {
 void Player::do_read() {
 	auto self(shared_from_this());
 	socket_.async_read_some(
-		boost::asio::buffer(data_ + already_read_, max_length - already_read_),
+		boost::asio::buffer(read_buffer_ + already_read_, max_length - already_read_),
 		[this, self](boost::system::error_code ec, std::size_t length) {
 			if (!ec) {
 				already_read_ += length;
 				while (already_read_ > HeadLength) {
-					int head = *reinterpret_cast<int *>(data_);
+					int head = *reinterpret_cast<int *>(read_buffer_);
 					cout << "Head length: " << head << endl;
 					int msgid = (head & MSGIDPACKET) >> 16;
 					int len = head & MSGLENPACKET;
@@ -45,8 +48,8 @@ void Player::do_read() {
 						// 其实应该关闭连接
 					} else if (already_read_ >= len) {			
 						std::string content(len, '\0');
-						copy(data_ + sizeof(head) , data_ + sizeof(head) + len - 1, content.begin());
-						copy(data_ + sizeof(head) + len, data_ + already_read_, data_);	// 后面的数据没有清空
+						copy(read_buffer_ + sizeof(head) , read_buffer_ + sizeof(head) + len, content.begin());
+						copy(read_buffer_ + sizeof(head) + len, read_buffer_ + already_read_, read_buffer_);	// 后面的数据没有清空
 						already_read_ -= sizeof(head) + len;
 
 						//将msgid和content放入消息处理函数中
@@ -57,6 +60,10 @@ void Player::do_read() {
 				}
 
 				do_read();
+			} 
+			if (ec != boost::asio::error::operation_aborted)
+			{
+				PlayerManager::getInstance().delUnique(id_);
 			}
 		}
 	);
