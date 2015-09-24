@@ -10,7 +10,7 @@
 using namespace std;
 using namespace network::command;
 
-bool ParseTest_C(shared_ptr<PlayerConnection> self, const void *msg, const short msglen) {
+bool ParseTest_C(shared_ptr<PlayerConnection> self, const void* msg, const short msglen) {
 	std::string str(static_cast<const char*>(msg));
 	cout << "msg len: " << msglen << endl;
 	cout << "msg content: " << str << endl;
@@ -20,7 +20,7 @@ bool ParseTest_C(shared_ptr<PlayerConnection> self, const void *msg, const short
 	return true;
 }
 
-bool ParseLogic_C(shared_ptr<PlayerConnection> self, const void *msg, const short msglen) {
+bool ParseLogic_C(shared_ptr<PlayerConnection> self, const void* msg, const short msglen) {
 	LoginGame_C rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
@@ -37,7 +37,7 @@ bool ParseLogic_C(shared_ptr<PlayerConnection> self, const void *msg, const shor
 	return true;
 }
 
-bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void *msg, const short msglen) {
+bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void* msg, const short msglen) {
 	EnterGame_CSS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
@@ -46,10 +46,11 @@ bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void *msg, cons
 		PlayerManager::getInstance().removePlayer(player);
 	}
 
-	player = shared_ptr<GamePlayer>(new GamePlayer(self));
+	player = make_shared<GamePlayer>(new GamePlayer(self));
 	if (player) {
 		PlayerManager::getInstance().addPlayer(player);
 	}
+
 	return true;
 }
 

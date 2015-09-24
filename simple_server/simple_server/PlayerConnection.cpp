@@ -31,10 +31,10 @@ void PlayerConnection::sendCmdMsg(std::string data, int head) {
 		socket_,
 		boost::asio::buffer(write_buffer_, head & PacketMsgLenMask),
 		[this, self](boost::system::error_code ec, std::size_t len) {
-		if (!ec) {
-			cout << "write success: " << len << endl;
+			if (!ec) {
+				cout << "write success: " << len << endl;
+			}
 		}
-	}
 	);
 }
 
@@ -60,23 +60,24 @@ void PlayerConnection::do_read() {
 						cerr << "头长度错误" << endl;
 						already_read_ = 0;
 						// 其实应该关闭连接
-					} else if (already_read_ >= len) {			
+					}
+					else if (already_read_ >= len) {
 						std::string content(len, '\0');
-						copy(read_buffer_ + sizeof(head) , read_buffer_ + sizeof(head) + len, content.begin());
-						copy(read_buffer_ + sizeof(head) + len, read_buffer_ + already_read_, read_buffer_);	// 后面的数据没有清空
+						copy(read_buffer_ + sizeof(head), read_buffer_ + sizeof(head) + len, content.begin());
+						copy(read_buffer_ + sizeof(head) + len, read_buffer_ + already_read_, read_buffer_); // 后面的数据没有清空
 						already_read_ -= sizeof(head) + len;
 
 						//将msgid和content放入消息处理函数中
 						ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len);
-					} else {
+					}
+					else {
 						break;
 					}
 				}
 
 				do_read();
-			} 
-			if (ec != boost::asio::error::operation_aborted)
-			{
+			}
+			if (ec != boost::asio::error::operation_aborted) {
 				// 断开连接
 			}
 		}
