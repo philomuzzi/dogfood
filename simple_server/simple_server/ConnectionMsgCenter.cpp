@@ -46,7 +46,7 @@ bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void* msg, cons
 		PlayerManager::getInstance().removePlayer(player);
 	}
 
-	player = make_shared<GamePlayer>(new GamePlayer(self));
+	player = make_shared<GamePlayer>(self);
 	if (player) {
 		PlayerManager::getInstance().addPlayer(player);
 	}
