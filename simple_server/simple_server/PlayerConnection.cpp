@@ -1,11 +1,8 @@
 #include "PlayerConnection.h"
 #include "ClientMsgCenter.h"
 #include <iostream>
-#include "PlayerManager.h"
 
 using namespace std;
-
-int PlayerConnection::global_id_ = 1;
 
 void PlayerConnection::write(std::string data, std::size_t length) {
 	auto self(shared_from_this());
@@ -42,9 +39,6 @@ void PlayerConnection::sendCmdMsg(std::string data, int head) {
 }
 
 void PlayerConnection::start() {
-	id_ = global_id_;
-	global_id_++;
-	PlayerManager::getInstance().addUnique(shared_from_this());
 	do_read();
 }
 
@@ -73,7 +67,7 @@ void PlayerConnection::do_read() {
 						already_read_ -= sizeof(head) + len;
 
 						//将msgid和content放入消息处理函数中
-						ClientMsgCenter::getInstance().dispatch(msgid, self, content.data(), len);
+//						ClientMsgCenter::getInstance().dispatch(msgid, self, content.data(), len);
 					} else {
 						break;
 					}
@@ -83,7 +77,7 @@ void PlayerConnection::do_read() {
 			} 
 			if (ec != boost::asio::error::operation_aborted)
 			{
-				PlayerManager::getInstance().delUnique(id_);
+				// 断开连接
 			}
 		}
 	);

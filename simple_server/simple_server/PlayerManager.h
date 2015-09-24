@@ -5,7 +5,7 @@
 
 #include "Utility/singleton.h"
 
-class PlayerConnection;
+class GamePlayer;
 
 class PlayerManager : public SingletonBase<PlayerManager>
 {
@@ -14,9 +14,11 @@ class PlayerManager : public SingletonBase<PlayerManager>
 	friend SingletonBase<PlayerManager>;
 
 public:
-	void addUnique(std::shared_ptr<PlayerConnection>);
-	void delUnique(const int id);
+	void addUnique(std::shared_ptr<GamePlayer> player);
+	void delUnique(std::string name);
+	std::shared_ptr<GamePlayer> getPlayerByName(const std::string name);
+	void removePlayer(std::shared_ptr<GamePlayer> player);
 
 private:
-	std::map<int, std::shared_ptr<PlayerConnection>> m_onlinePlayer;
+	std::map<std::string, std::shared_ptr<GamePlayer>> m_onlinePlayer;
 };

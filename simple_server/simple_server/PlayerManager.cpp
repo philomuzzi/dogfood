@@ -1,18 +1,33 @@
 #include "PlayerManager.h"
-#include "PlayerConnection.h"
+#include "Player.h"
 #include <iostream>
 
 using namespace std;
 
-void PlayerManager::addUnique(std::shared_ptr<PlayerConnection> player) {
-	m_onlinePlayer.insert(make_pair(player->id1(), player));
-	cout << "add new player: " << player->id1() << endl;
+void PlayerManager::addUnique(std::shared_ptr<GamePlayer> player) {
+	m_onlinePlayer.insert(make_pair(player->getAccid(), player));
+	cout << "add new player: " << player->getAccid() << endl;
 }
 
-void PlayerManager::delUnique(const int id) {
-	auto it = m_onlinePlayer.find(id);
+void PlayerManager::delUnique(string name) {
+	auto it = m_onlinePlayer.find(name);
 	if (it != m_onlinePlayer.end()) {
 		m_onlinePlayer.erase(it);
-		cout << "del player: " << id << endl;
+		cout << "del player: " << name << endl;
 	}		
+}
+
+shared_ptr<GamePlayer> PlayerManager::getPlayerByName(const std::string name) {
+	auto it = m_onlinePlayer.find(name);
+	if (it != m_onlinePlayer.end()) {
+		return it->second;
+	}
+
+	return nullptr;
+}
+
+void PlayerManager::removePlayer(std::shared_ptr<GamePlayer> player) {
+	if (player) {
+		delUnique(player->getAccid());
+	}	
 }
