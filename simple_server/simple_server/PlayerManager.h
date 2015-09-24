@@ -14,8 +14,7 @@ class PlayerManager : public SingletonBase<PlayerManager>
 	friend SingletonBase<PlayerManager>;
 
 public:
-	void addUnique(std::shared_ptr<GamePlayer> player);
-	void delUnique(std::string name);
+	void addPlayer(std::shared_ptr<GamePlayer> player);
 	std::shared_ptr<GamePlayer> getPlayerByName(const std::string name);
 	void removePlayer(std::shared_ptr<GamePlayer> player);
 

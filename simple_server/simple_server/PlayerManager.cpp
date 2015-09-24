@@ -4,17 +4,9 @@
 
 using namespace std;
 
-void PlayerManager::addUnique(std::shared_ptr<GamePlayer> player) {
+void PlayerManager::addPlayer(std::shared_ptr<GamePlayer> player) {
 	m_onlinePlayer.insert(make_pair(player->getAccid(), player));
 	cout << "add new player: " << player->getAccid() << endl;
-}
-
-void PlayerManager::delUnique(string name) {
-	auto it = m_onlinePlayer.find(name);
-	if (it != m_onlinePlayer.end()) {
-		m_onlinePlayer.erase(it);
-		cout << "del player: " << name << endl;
-	}		
 }
 
 shared_ptr<GamePlayer> PlayerManager::getPlayerByName(const std::string name) {
@@ -28,6 +20,10 @@ shared_ptr<GamePlayer> PlayerManager::getPlayerByName(const std::string name) {
 
 void PlayerManager::removePlayer(std::shared_ptr<GamePlayer> player) {
 	if (player) {
-		delUnique(player->getAccid());
+		auto it = m_onlinePlayer.find(player->getAccid());
+		if (it != m_onlinePlayer.end()) {
+			m_onlinePlayer.erase(it);
+			cout << "del player: " << player->getAccid() << endl;
+		}
 	}	
 }

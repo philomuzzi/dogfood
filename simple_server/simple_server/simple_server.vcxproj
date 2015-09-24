@@ -75,7 +75,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>F:\boost_1_59_0;$(ProjectDir)ClientCommand;F:\protobuf-2.6.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -136,6 +136,7 @@
     <ClCompile Include="ClientCommand\server.pb.cc" />
     <ClCompile Include="ClientCommand\shop.pb.cc" />
     <ClCompile Include="ClientMsgCenter.cpp" />
+    <ClCompile Include="ConnectionMsgCenter.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerConnection.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="ClientCommand\server.pb.h" />
     <ClInclude Include="ClientCommand\shop.pb.h" />
     <ClInclude Include="ClientMsgCenter.h" />
+    <ClInclude Include="ConnectionMsgCenter.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerConnection.h" />
     <ClInclude Include="PlayerManager.h" />

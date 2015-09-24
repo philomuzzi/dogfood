@@ -2,6 +2,7 @@
 #include <boost/asio.hpp>
 #include "Server.h"
 #include "ClientMsgCenter.h"
+#include "ConnectionMsgCenter.h"
 
 int main(int argc, char* argv[]) {
 	try {
@@ -11,6 +12,7 @@ int main(int argc, char* argv[]) {
 		//}
 
 		ClientMsgCenter::getInstance().registry();
+		ConnectionMsgCenter::getInstance().registry();
 
 		boost::asio::io_service io_service;
 		Server s(io_service, 8001);
