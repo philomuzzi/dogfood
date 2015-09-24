@@ -1,13 +1,13 @@
-#include "Player.h"
+#include "PlayerConnection.h"
 #include "ClientMsgCenter.h"
 #include <iostream>
 #include "PlayerManager.h"
 
 using namespace std;
 
-int Player::global_id_ = 1;
+int PlayerConnection::global_id_ = 1;
 
-void Player::write(std::string data, std::size_t length) {
+void PlayerConnection::write(std::string data, std::size_t length) {
 	auto self(shared_from_this());
 	copy(data.begin(), data.end(), write_buffer_.begin());
 	boost::asio::async_write(
@@ -21,7 +21,27 @@ void Player::write(std::string data, std::size_t length) {
 	);
 }
 
-void Player::start() {
+void PlayerConnection::sendCmdMsg(std::string data, int head) {
+	auto self(shared_from_this());
+	std::array<char, sizeof(int)> arrHead;
+	memcpy(arrHead.data(), &head, sizeof(head));
+
+	// 需要注意这里的封装是否能够工作
+	auto it = copy(arrHead.begin(), arrHead.end(), write_buffer_.begin());
+	copy(data.begin(), data.end(), it);
+
+	boost::asio::async_write(
+		socket_,
+		boost::asio::buffer(write_buffer_, head & PacketMsgLenMask),
+		[this, self](boost::system::error_code ec, std::size_t len) {
+		if (!ec) {
+			cout << "write success: " << len << endl;
+		}
+	}
+	);
+}
+
+void PlayerConnection::start() {
 	id_ = global_id_;
 	global_id_++;
 	PlayerManager::getInstance().addUnique(shared_from_this());
@@ -30,19 +50,19 @@ void Player::start() {
 
 // 读取数据之后，解包，然后相应处理
 // 消息格式是: 0xFFFF0000|0x0000FFFF,一个int32，其中前16位表示消息id，后面16位表示消息整体长度。后面跟着的是protobuf压缩过的数据
-void Player::do_read() {
+void PlayerConnection::do_read() {
 	auto self(shared_from_this());
 	socket_.async_read_some(
-		boost::asio::buffer(read_buffer_ + already_read_, max_length - already_read_),
+		boost::asio::buffer(read_buffer_ + already_read_, Max_DataBufferSize - already_read_),
 		[this, self](boost::system::error_code ec, std::size_t length) {
 			if (!ec) {
 				already_read_ += length;
-				while (already_read_ > HeadLength) {
+				while (already_read_ > PacketHeadLen) {
 					int head = *reinterpret_cast<int *>(read_buffer_);
 					cout << "Head length: " << head << endl;
-					int msgid = (head & MSGIDPACKET) >> 16;
-					int len = head & MSGLENPACKET;
-					if (len > max_length || len < 0) {
+					int msgid = (head & PacketMsgIdMask) >> 16;
+					int len = head & PacketMsgLenMask;
+					if (len > Max_DataBufferSize || len < 0) {
 						cerr << "头长度错误" << endl;
 						already_read_ = 0;
 						// 其实应该关闭连接

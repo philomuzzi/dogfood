@@ -4,8 +4,8 @@
 #include <map>
 #include <memory>
 
-class Player;
-typedef bool(*ClientMsgCallback)(std::shared_ptr<Player> player, const void *msg, const short msglen);
+class PlayerConnection;
+typedef bool(*ClientMsgCallback)(std::shared_ptr<PlayerConnection> player, const void *msg, const short msglen);
 class ClientMsgCenter : public SingletonBase<ClientMsgCenter>
 {
 	ClientMsgCenter() = default;	
@@ -18,7 +18,7 @@ class ClientMsgCenter : public SingletonBase<ClientMsgCenter>
 public:
 	~ClientMsgCenter() = default;
 	bool registry();
-	bool dispatch(short msgid, std::shared_ptr<Player> player, const void *msg, const short msglen) {
+	bool dispatch(short msgid, std::shared_ptr<PlayerConnection> player, const void *msg, const short msglen) {
 		auto it = m_mm.find(msgid);
 		return it == m_mm.end() ? false : (it->second)(player, msg, msglen);
 	}

@@ -136,7 +136,7 @@
     <ClCompile Include="ClientCommand\server.pb.cc" />
     <ClCompile Include="ClientCommand\shop.pb.cc" />
     <ClCompile Include="ClientMsgCenter.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerConnection.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="simple_server.cpp" />
@@ -154,10 +154,12 @@
     <ClInclude Include="ClientCommand\server.pb.h" />
     <ClInclude Include="ClientCommand\shop.pb.h" />
     <ClInclude Include="ClientMsgCenter.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerConnection.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Utility\define.h" />
     <ClInclude Include="Utility\singleton.h" />
+    <ClInclude Include="Utility\utility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClientCommand\data.proto" />

@@ -16,11 +16,11 @@
     <Filter Include="ClientCommand">
       <UniqueIdentifier>{5848fa3e-e211-4dbd-9e2c-832e90ec2716}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{a67748c4-666a-4b70-93b4-49c921cce8f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Player.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -66,15 +66,12 @@
     <ClCompile Include="ClientCommand\shop.pb.cc">
       <Filter>ClientCommand</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Server.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\singleton.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="PlayerManager.h">
@@ -115,6 +112,18 @@
     </ClInclude>
     <ClInclude Include="ClientCommand\shop.pb.h">
       <Filter>ClientCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\singleton.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\utility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\define.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

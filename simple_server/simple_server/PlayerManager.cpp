@@ -1,10 +1,10 @@
 #include "PlayerManager.h"
-#include "Player.h"
+#include "PlayerConnection.h"
 #include <iostream>
 
 using namespace std;
 
-void PlayerManager::addUnique(std::shared_ptr<Player> player) {
+void PlayerManager::addUnique(std::shared_ptr<PlayerConnection> player) {
 	m_onlinePlayer.insert(make_pair(player->id1(), player));
 	cout << "add new player: " << player->id1() << endl;
 }
