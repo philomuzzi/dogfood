@@ -86,7 +86,6 @@ void PlayerConnection::do_read() {
 			}
 			if (ec != boost::asio::error::operation_aborted) {
 				// ¶Ï¿ªÁ¬½Ó
-				socket_.shutdown(boost::asio::socket_base::shutdown_both);
 				socket_.close();
 			}
 		}
