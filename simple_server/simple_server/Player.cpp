@@ -7,3 +7,7 @@ GamePlayer::~GamePlayer()
 {
 	cout << "Destruct GamePlayer" << endl;
 }
+
+void GamePlayer::online() {
+
+}
