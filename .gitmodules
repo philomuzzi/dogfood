@@ -1,3 +1,0 @@
-[submodule "simple_server/simple_server/sqlite_modern_cpp"]
-	path = simple_server/simple_server/sqlite_modern_cpp
-	url = https://github.com/aminroosta/sqlite_modern_cpp.git
