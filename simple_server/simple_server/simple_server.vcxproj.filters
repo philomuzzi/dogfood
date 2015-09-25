@@ -19,6 +19,9 @@
     <Filter Include="Utility">
       <UniqueIdentifier>{a67748c4-666a-4b70-93b4-49c921cce8f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ClientCommand\proto">
+      <UniqueIdentifier>{a031e42c-84b2-4973-977d-b79dd2e4e9f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -143,37 +146,37 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClientCommand\data.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\game.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\gm.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\login_msg.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\mail.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\message.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\pet.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\play.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\save.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\server.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
     <None Include="ClientCommand\shop.proto">
-      <Filter>ClientCommand</Filter>
+      <Filter>ClientCommand\proto</Filter>
     </None>
   </ItemGroup>
 </Project>

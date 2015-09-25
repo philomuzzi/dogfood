@@ -1,6 +1,8 @@
 #include "PlayerConnection.h"
 #include <iostream>
 #include "ConnectionMsgCenter.h"
+#include "PlayerManager.h"
+#include "ClientMsgCenter.h"
 
 using namespace std;
 
@@ -75,7 +77,14 @@ void PlayerConnection::do_read() {
 						already_read_ -= sizeof(head) + len;
 
 						//将msgid和content放入消息处理函数中
-						ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len);
+						if (name.empty())
+							ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len);
+						else {
+							auto player = PlayerManager::getInstance().getPlayerByName(name);
+							if (player) {
+								ClientMsgCenter::getInstance().dispatch(msgid, player, content.data(), len);
+							}
+						}
 					}
 					else {
 						break;

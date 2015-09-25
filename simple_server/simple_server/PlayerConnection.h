@@ -29,4 +29,15 @@ private:
 	std::array<char, Max_DataBufferSize> write_buffer_;
 
 	int already_read_{ 0 };
+
+	std::string name;
+
+public:
+	std::string getName() const {
+		return name;
+	}
+
+	void setName(const std::string& name) {
+		this->name = name;
+	}
 };
