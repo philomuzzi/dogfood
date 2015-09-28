@@ -137,6 +137,7 @@
     <ClCompile Include="ClientCommand\shop.pb.cc" />
     <ClCompile Include="ClientMsgCenter.cpp" />
     <ClCompile Include="ConnectionMsgCenter.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerConnection.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="ClientCommand\shop.pb.h" />
     <ClInclude Include="ClientMsgCenter.h" />
     <ClInclude Include="ConnectionMsgCenter.h" />
+    <ClInclude Include="GameLogic.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerConnection.h" />
     <ClInclude Include="PlayerManager.h" />

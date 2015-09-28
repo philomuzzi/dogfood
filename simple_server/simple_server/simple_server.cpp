@@ -3,6 +3,7 @@
 #include "Server.h"
 #include "ClientMsgCenter.h"
 #include "ConnectionMsgCenter.h"
+#include "GameLogic.h"
 
 int main(int argc, char* argv[]) {
 	try {
@@ -23,6 +24,10 @@ int main(int argc, char* argv[]) {
 
 		boost::asio::io_service io_service;
 		Server s(io_service, 8001);
+
+		GameLogic::init(io_service);
+		GameLogic::getLogicInstance()->start();
+
 		io_service.run();
 	}
 	catch (std::exception& e) {
