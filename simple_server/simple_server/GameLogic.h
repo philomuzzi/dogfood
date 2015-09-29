@@ -3,9 +3,10 @@
 #include <chrono>
 #include <memory>
 
-class GameLogic
+class GameLogic : public std::enable_shared_from_this<GameLogic>
 {
 public:
+	typedef boost::asio::deadline_timer Timer;
 	~GameLogic();
 
 	static std::chrono::system_clock::time_point m_current_time;
@@ -13,18 +14,20 @@ public:
 	static void init(boost::asio::io_service &service);
 	void start();
 
-private:
-	typedef boost::asio::deadline_timer Timer;
+	Timer& getOneSecTimer() {
+		return timer_one_second_;
+	}
 
+private:
 	GameLogic(boost::asio::io_service &service);
 	
 	GameLogic& operator=(GameLogic&) = delete;
-	GameLogic& Gamelogic(GameLogic&) = delete;
+	GameLogic(GameLogic&) = delete;
 
-	void oneSec(const boost::system::error_code& );
-	void oneMinute(const boost::system::error_code& );
-	void oneHour(const boost::system::error_code& );
-	void twentyFourHour(const boost::system::error_code& );
+	void oneSec(const boost::system::error_code&);
+	void oneMin(const boost::system::error_code&);
+	void oneHour(const boost::system::error_code&);
+	void twentyFourHour(const boost::system::error_code&);
 
 	Timer timer_one_second_;
 	Timer timer_one_minute_;
