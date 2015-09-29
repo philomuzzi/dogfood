@@ -30,12 +30,12 @@ void GameLogic::init(boost::asio::io_service& service) {
 }
 
 void GameLogic::start() {
-	auto self = gameLogic_->shared_from_this();
+	cout << "引用指针的数量: " << gameLogic_.use_count() << endl;
 
-	timer_one_second_.async_wait(std::bind(&GameLogic::oneSec, self, placeholders::_1));
-	timer_one_minute_.async_wait(std::bind(&GameLogic::oneMin, self, placeholders::_1));
-	timer_one_hour_.async_wait(std::bind(&GameLogic::oneHour, self, placeholders::_1));
-	timer_24_hour_.async_wait(std::bind(&GameLogic::twentyFourHour, self, placeholders::_1));
+	timer_one_second_.async_wait(std::bind(&GameLogic::oneSec, shared_from_this(), placeholders::_1));
+	timer_one_minute_.async_wait(std::bind(&GameLogic::oneMin, shared_from_this(), placeholders::_1));
+	timer_one_hour_.async_wait(std::bind(&GameLogic::oneHour, shared_from_this(), placeholders::_1));
+	timer_24_hour_.async_wait(std::bind(&GameLogic::twentyFourHour, shared_from_this(), placeholders::_1));
 }
 
 void GameLogic::oneMin(const boost::system::error_code&) {
@@ -49,7 +49,7 @@ void GameLogic::oneMin(const boost::system::error_code&) {
 
 	timer_one_minute_.expires_at(timer_one_minute_.expires_at() + boost::posix_time::minutes(1));
 
-	timer_one_minute_.async_wait(std::bind(&GameLogic::oneMin, gameLogic_->shared_from_this(), placeholders::_1));
+	timer_one_minute_.async_wait(std::bind(&GameLogic::oneMin, shared_from_this(), placeholders::_1));
 }
 
 void GameLogic::oneHour(const boost::system::error_code&) {
@@ -63,7 +63,7 @@ void GameLogic::oneHour(const boost::system::error_code&) {
 
 	timer_one_hour_.expires_at(timer_one_hour_.expires_at() + boost::posix_time::hours(1));
 
-	timer_one_hour_.async_wait(std::bind(&GameLogic::oneHour, gameLogic_->shared_from_this(), placeholders::_1));
+	timer_one_hour_.async_wait(std::bind(&GameLogic::oneHour, shared_from_this(), placeholders::_1));
 }
 
 void GameLogic::twentyFourHour(const boost::system::error_code&) {
@@ -77,7 +77,7 @@ void GameLogic::twentyFourHour(const boost::system::error_code&) {
 
 	timer_24_hour_.expires_at(timer_24_hour_.expires_at() + boost::posix_time::hours(24));
 
-	timer_24_hour_.async_wait(std::bind(&GameLogic::twentyFourHour, gameLogic_->shared_from_this(), placeholders::_1));
+	timer_24_hour_.async_wait(std::bind(&GameLogic::twentyFourHour, shared_from_this(), placeholders::_1));
 }
 
 void GameLogic::oneSec(const boost::system::error_code&) {
@@ -85,11 +85,10 @@ void GameLogic::oneSec(const boost::system::error_code&) {
 	auto tp = std::chrono::system_clock::now();
 	std::time_t cur_time = std::chrono::system_clock::to_time_t(tp);
 	std::string str_time = std::ctime(&cur_time);
-	std::cout << "One Sec Time: " << str_time;
 
 	cout << "引用指针的数量: " << gameLogic_.use_count() << endl;
 
 	timer_one_second_.expires_at(timer_one_second_.expires_at() + boost::posix_time::seconds(1));
 
-	timer_one_second_.async_wait(std::bind(&GameLogic::oneSec, gameLogic_->shared_from_this(), placeholders::_1));
+	timer_one_second_.async_wait(std::bind(&GameLogic::oneSec, shared_from_this(), placeholders::_1));
 }
