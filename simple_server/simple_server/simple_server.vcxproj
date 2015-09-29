@@ -137,6 +137,7 @@
     <ClCompile Include="ClientCommand\shop.pb.cc" />
     <ClCompile Include="ClientMsgCenter.cpp" />
     <ClCompile Include="ConnectionMsgCenter.cpp" />
+    <ClCompile Include="CsvReader.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerConnection.cpp" />
@@ -144,6 +145,7 @@
     <ClCompile Include="Player_Play.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="simple_server.cpp" />
+    <ClCompile Include="TableManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientCommand\data.pb.h" />
@@ -159,11 +161,13 @@
     <ClInclude Include="ClientCommand\shop.pb.h" />
     <ClInclude Include="ClientMsgCenter.h" />
     <ClInclude Include="ConnectionMsgCenter.h" />
+    <ClInclude Include="CsvReader.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerConnection.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="TableManager.h" />
     <ClInclude Include="Utility\define.h" />
     <ClInclude Include="Utility\singleton.h" />
     <ClInclude Include="Utility\utility.h" />

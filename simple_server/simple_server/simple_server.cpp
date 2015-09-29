@@ -4,6 +4,7 @@
 #include "ClientMsgCenter.h"
 #include "ConnectionMsgCenter.h"
 #include "GameLogic.h"
+#include "TableManager.h"
 
 int main(int argc, char* argv[]) {
 	try {
@@ -16,11 +17,10 @@ int main(int argc, char* argv[]) {
 		// 可以进入和退出游戏
 		// 没有结算
 		// 可以读取csv表格
-
-
-
+		
 		ClientMsgCenter::getInstance().registry();
 		ConnectionMsgCenter::getInstance().registry();
+		TableManager::getInstance().initAll();
 
 		boost::asio::io_service io_service;
 		Server s(io_service, 8001);
