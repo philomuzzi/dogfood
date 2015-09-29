@@ -24,7 +24,7 @@ void CsvReader::readLine(string s, vector<string>& header) {
 	}
 }
 
-int CsvReader::getItemDataInt(int lineID, std::string name) {
+int CsvReader::asInt(int lineID, std::string name) {
 	boost::to_lower(name);
 	auto p = m_header_map.find(name);
 	if (p == m_header_map.end()) {
@@ -41,7 +41,7 @@ int CsvReader::getItemDataInt(int lineID, std::string name) {
 	return boost::lexical_cast<int>(p2->second.at(p->second));
 }
 
-std::string CsvReader::getItemDataString(int lineID, std::string name) {
+std::string CsvReader::asString(int lineID, std::string name) {
 	boost::to_lower(name);
 	auto p = m_header_map.find(name);
 	if (p == m_header_map.end()) {

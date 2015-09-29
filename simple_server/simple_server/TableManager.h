@@ -7,7 +7,7 @@ class CsvReader;
 class TableManager : public SingletonBase<TableManager>
 {
 public:
-	std::shared_ptr<CsvReader> getManager(const std::string csv_string);
+	std::shared_ptr<CsvReader> getTable(const std::string csv_string);
 
 	void initAll();
 

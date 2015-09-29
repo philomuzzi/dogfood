@@ -9,8 +9,8 @@ public:
 	CsvReader(const std::string filename);
 	~CsvReader();
 
-	int getItemDataInt(int lineID, std::string name);
-	std::string getItemDataString(int lineID, std::string name);
+	int asInt(int lineID, std::string name);
+	std::string asString(int lineID, std::string name);
 
 private:
 	void readLine(std::string s, std::vector<std::string>& header);

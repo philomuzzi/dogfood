@@ -52,7 +52,9 @@ bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void* msg, cons
 	}
 
 	self->setName(rev.accid());
-	player->online();
+
+	Player proto_player;
+	player->online(proto_player);
 
 	return true;
 }

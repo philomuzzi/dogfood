@@ -11,7 +11,7 @@ TableManager::~TableManager()
 {
 }
 
-std::shared_ptr<CsvReader> TableManager::getManager(const std::string csv_string) {
+std::shared_ptr<CsvReader> TableManager::getTable(const std::string csv_string) {
 	if (m_tableMap.find(csv_string) == m_tableMap.end())
 		return nullptr;
 
