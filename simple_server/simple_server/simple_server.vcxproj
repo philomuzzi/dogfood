@@ -139,6 +139,7 @@
     <ClCompile Include="ConnectionMsgCenter.cpp" />
     <ClCompile Include="CsvReader.cpp" />
     <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="Game_Shop.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerConnection.cpp" />
     <ClCompile Include="PlayerManager.cpp" />

@@ -18,20 +18,20 @@ void GamePlayer::startGame(network::command::Play::StartGame_CS& msg) {
 		return ProtocolReturn(msg, Play::StartGame_CS::PLAYING, network::command::CMSGResStartGame_CS);
 	}
 
-	//if (bagHasFull())
-	//{
-	//	MDEBUG("背包已满，不能开始游戏");
-	//	return ProtocolReturn(msg, Play::StartGame_CS::NOSPACE, network::command::CMSGResStartGame_CS);
-	//}
+	if (bagHasFull())
+	{
+//		MDEBUG("背包已满，不能开始游戏");
+		return ProtocolReturn(msg, Play::StartGame_CS::NOSPACE, network::command::CMSGResStartGame_CS);
+	}
 
-	//Pilot *pilot = getPilot(msg.pilotid());
-	//Airplane *air = getPlane(msg.airplaneid());
+	Pilot *pilot = getPilot(msg.pilotid());
+	Airplane *air = getPlane(msg.airplaneid());
 
-	//if (pilot == nullptr || air == nullptr)
-	//{
-	//	printf("进入关卡:%u失败，角色和飞机不存在！", msg.fbid());
-	//	return ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, network::command::CMSGResStartGame_CS);
-	//}
+	if (pilot == nullptr || air == nullptr)
+	{
+		printf("进入关卡:%u失败，角色和飞机不存在！", msg.fbid());
+		return ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, network::command::CMSGResStartGame_CS);
+	}
 
 	int fb_type = wls_ptr->asInt(msg.fbid(), "type");
 
@@ -116,9 +116,9 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 		// 统计无尽模式
 		if (tmp_score > m_player.weekrecord().score())
 		{
-//			m_player.mutable_weekrecord()->set_weekindex(GameLogic::m_currentWeek);
+			m_player.mutable_weekrecord()->set_weekindex(GameLogic::getLogicInstance()->getWeek());
 			m_player.mutable_weekrecord()->set_score(tmp_score);
-//			m_player.mutable_weekrecord()->set_time(GameLogic::m_current_time.sec());
+			m_player.mutable_weekrecord()->set_time(GameLogic::m_current_time);
 
 			if (tmp_score > m_player.bestrecord().record().score())
 			{

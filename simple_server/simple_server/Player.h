@@ -6,6 +6,7 @@
 #include <memory>
 #include "ClientCommand/message.pb.h"
 #include "Game_Define.h"
+#include "ClientCommand/shop.pb.h"
 
 class GamePlayer : public std::enable_shared_from_this<GamePlayer> {
 public:
@@ -26,6 +27,29 @@ public:
 	void endGame(network::command::Play::EndGame_CS& msg);
 
 	void checkin(network::command::Play::CheckIn_CS& msg);
+	void buyCurrency(network::command::Shop::BuyCurrency_CS& msg);
+	void buyGold(network::command::Shop::BuyCurrency_CS& msg);
+	void buyDiamond(network::command::Shop::BuyCurrency_CS& msg);
+	void buyEnergy(network::command::Shop::BuyCurrency_CS& msg);
+	void upgradeObject(network::command::Shop::UpgradeObject_CS& msg);
+	void upgradePilot(network::command::Shop::UpgradeObject_CS& msg);
+	void upgradeAirplane(network::command::Shop::UpgradeObject_CS& msg);
+	void upgradePlanePart(network::command::Shop::UpgradeObject_CS& msg);
+	void buyObject(network::command::Shop::BuyObject_CS& msg);
+	void buyAirplane(network::command::Shop::BuyObject_CS& msg);
+	void buyPilot(network::command::Shop::BuyObject_CS& msg);
+	void buyPlanePart(network::command::Shop::BuyObject_CS& msg);
+	void buyItem(network::command::Shop::BuyObject_CS& msg);
+	void buyPileItem(network::command::Shop::BuyObject_CS& msg);
+	void buyBagSpace(network::command::Shop::BuyObject_CS& msg);
+	void installPlanePart(network::command::Shop::InstallPlanePart_CS& msg);
+	void planePartInstall(network::command::Shop::InstallPlanePart_CS& msg, network::command::PlaneSlot* slot, network::command::PlanePart* part);
+	void sellObject(network::command::Shop::SellObject_CS& msg);
+	void sellItem(network::command::Shop::SellObject_CS& msg);
+	void sellPlanePart(network::command::Shop::SellObject_CS& msg);
+	bool checkMoney(network::command::Shop::CurrencyType type, const uint32 num) const;
+	void addMoney(network::command::Shop::CurrencyType type, uint32 num, MoneyAction action);
+	bool subMoney(network::command::Shop::CurrencyType type, const uint32 num, MoneyAction action);
 
 private:
 	void initNewPlayer();
@@ -35,7 +59,12 @@ private:
 	void checkCheckIn();
 	void clearCheckIn();
 	void setLastLoginTime();
-	
+	bool addEnergy(uint32 value);
+	network::command::Pilot* getPilot(uint32 id);
+	network::command::Airplane* getPlane(uint32 id);
+	void addExp(const uint32 value);
+	void levelUp(uint32 value);
+
 	// bag
 	uint32 addPetBag(uint32 pet_id);
 	bool addPlanePartBag(uint32 part_id, const uint32 add_num);
@@ -43,8 +72,8 @@ private:
 	bool subPlanePartBag(uint32 id, uint32 num);
 	bool addPileItemBag(uint32 item_id, const uint32 add_num);
 	bool subPileItemBag(uint32 item_id, const uint32 sub_num);
-	bool addNormalItemBag(uint32 item_id, const uint32 add_num);
-	bool subNormalItemBag(uint32 item_id, const uint32 sub_num);
+	bool addNormalItemBag(uint32 item_id, const uint32 add_num = 1);
+	bool subNormalItemBag(uint32 item_id, const uint32 sub_num = 1);
 	bool addBagSpace(const uint32 space_num);
 	void cacuBagSize();
 	bool bagHasFull();
@@ -52,6 +81,7 @@ private:
 	bool subItemBag(uint32 item_id, uint32 item_num = 1);
 	void addItem(uint32 id, uint32 num);
 	void addGiftToBag(uint32 gift_id);
+	void addAirPlane(uint32 id, bool isBuy = false);
 
 	template <typename T1, typename T2> void ProtocolReturn(T1 &msg, T2 result, network::command::CMSG messageName)
 	{

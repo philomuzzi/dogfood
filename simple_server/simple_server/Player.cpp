@@ -202,3 +202,78 @@ void GamePlayer::setLastLoginTime()
 	m_player.set_lastloginday(GameLogic::getLogicInstance()->getDay());
 	m_player.set_lastloginmonth(GameLogic::getLogicInstance()->getMonth());
 }
+
+bool GamePlayer::addEnergy(uint32 value)
+{
+	uint32 m_energy = 0;
+	m_energy = (m_player.energy() + value);
+	m_player.set_energy(m_energy);
+
+	return true;
+}
+
+Pilot * GamePlayer::getPilot(uint32 id)
+{
+	Pilot *pilot = nullptr;
+	auto pilotlist = m_player.mutable_pilotlist();
+	auto it_pilot = pilotlist->begin();
+	for (; it_pilot != pilotlist->end(); ++it_pilot)
+	{
+		if (it_pilot->id() == id)
+		{
+			pilot = &(*it_pilot);
+			break;
+		}
+	}
+
+	return pilot;
+}
+
+Airplane * GamePlayer::getPlane(uint32 id)
+{
+	Airplane *airplane = nullptr;
+	auto airlist = m_player.mutable_airplanelist();
+	auto it_air = airlist->begin();
+	for (; it_air != airlist->end(); ++it_air)
+	{
+		if (it_air->id() == id)
+		{
+			airplane = &(*it_air);
+			break;
+		}
+	}
+
+	return airplane;
+}
+
+void GamePlayer::addExp(const uint32 value)
+{
+	m_player.set_exp(m_player.exp() + value);
+
+	levelUp(value);
+}
+
+void GamePlayer::levelUp(uint32 value)
+{
+	uint32 max_level = TableManager::getInstance().getTable("PlayerInit")->asInt(0, "max_level");
+	if (m_player.level() == max_level)
+	{
+		m_player.set_extraexp(m_player.extraexp() + value);
+		return;
+	}
+	uint32 m_exp = 0;
+	m_exp = TableManager::getInstance().getTable("LevelUpExp")->asInt(m_player.level(), "exp");
+	while ((m_player.exp() + value) >= m_exp)
+	{
+		m_player.set_level(m_player.level() + 1);
+		if (m_player.level() == max_level)
+		{
+			m_player.set_extraexp(m_player.extraexp() + m_player.exp() + value - m_exp);
+			m_player.set_exp(0);
+			break;
+		}
+		m_player.set_exp(m_player.exp() + value - m_exp);
+		value -= m_exp;
+		m_exp = TableManager::getInstance().getTable("LevelUpExp")->asInt(m_player.level(), "exp");
+	}
+}

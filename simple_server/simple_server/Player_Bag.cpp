@@ -328,7 +328,7 @@ bool GamePlayer::addItemToBag(uint32 item_id, uint32 item_num)
 	case Item_PlanePart:
 		return addPlanePartBag(id, item_num);
 	case Item_WipeStock:
-//		addMoney(network::command::Shop::WipeStock, item_num, AddWipeStockAction_FbDrop);
+		addMoney(network::command::Shop::WipeStock, item_num, AddWipeStockAction_FbDrop);
 		return true;
 	case Item_GiftBag:
 		addGiftToBag(item_id);
@@ -337,20 +337,20 @@ bool GamePlayer::addItemToBag(uint32 item_id, uint32 item_num)
 		addPetBag(id);
 		break;
 	case Item_PlaneInstance:
-//		if (!getPlane(item_id))
-//			addAirPlane(item_id);
+		if (!getPlane(item_id))
+			addAirPlane(item_id);
 		break;
 	case Item_ExpInstance:
-//		addExp(item_num);
+		addExp(item_num);
 		break;
 	case Item_GoldInstance:
-//		addMoney(Shop::Gold, item_num, AddGoldDailyReward);
+		addMoney(Shop::Gold, item_num, AddGoldDailyReward);
 		break;
 	case Item_DiamondInstance:
-//		addMoney(Shop::Diamond, item_num, AddDiamondDailyReward);
+		addMoney(Shop::Diamond, item_num, AddDiamondDailyReward);
 		break;
 	case Item_EnergyInstance:
-//		addEnergy(item_num);
+		addEnergy(item_num);
 		break;
 	default:
 	{
