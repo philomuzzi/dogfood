@@ -635,7 +635,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 	}
 	else {
 		m_material_id = rtptr->asInt(id, "materi1");
-		//		INFO("物品%u没有落在掉落的概率内!", m_material_id);
+		printf("物品%u没有落在掉落的概率内!", m_material_id);
 	}
 	m_pro = rtptr->asInt(id, "pro2");
 	if (Utility::selectByRegion(m_pro, 10000)) {
@@ -648,7 +648,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 	}
 	else {
 		m_material_id = rtptr->asInt(id, "materi2");
-		//		INFO("物品%u没有落在掉落的概率内!", m_material_id);
+		printf("物品%u没有落在掉落的概率内!", m_material_id);
 	}
 	m_pro = rtptr->asInt(id, "pro3");
 	if (Utility::selectByRegion(m_pro, 10000)) {
@@ -661,7 +661,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 	}
 	else {
 		m_material_id = rtptr->asInt(id, "materi3");
-		//		INFO("物品%u没有落在掉落的概率内!", m_material_id);
+		printf("物品%u没有落在掉落的概率内!", m_material_id);
 	}
 	m_pro = rtptr->asInt(id, "pro4");
 	if (Utility::selectByRegion(m_pro, 10000)) {
@@ -674,7 +674,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 	}
 	else {
 		m_material_id = rtptr->asInt(id, "materi4");
-		//		INFO("物品%u没有落在掉落的概率内!", m_material_id);
+		printf("物品%u没有落在掉落的概率内!", m_material_id);
 	}
 }
 
@@ -685,7 +685,7 @@ void GamePlayer::mutexProbDrop(uint32 dropid, uint32& id, uint32& number) {
 	num = Utility::randBetween(0, 10000);
 
 	if (sm_dropOutVector.find(dropid) == sm_dropOutVector.end()) {
-		//		MERROR("传入的dropid有误, %d", dropid);
+		printf("传入的dropid有误, %d", dropid);
 		return;
 	}
 
