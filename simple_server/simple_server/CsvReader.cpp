@@ -7,7 +7,7 @@
 
 using namespace std;
 
-CsvReader::CsvReader(const std::string filename)
+CsvReader::CsvReader(const std::string filename) : m_filename(filename)
 {
 	init(filename);
 }
@@ -29,13 +29,13 @@ int CsvReader::asInt(int lineID, std::string name) {
 	boost::to_lower(name);
 	auto p = m_header_map.find(name);
 	if (p == m_header_map.end()) {
-		cout << "ÁÐÃû´íÎó: " << name << endl;
+		cout << "m_filename" << " ÁÐÃû´íÎó: " << name << endl;
 		return IMPOSSIBLE_RETURN;
 	}
 
 	auto p2 = m_body_map.find(lineID);
 	if (p2 == m_body_map.end()) {
-		cout << "ÐÐºÅ´íÎó: " << lineID << endl;
+		cout << "m_filename" << " ÐÐºÅ´íÎó: " << lineID << endl;
 		return IMPOSSIBLE_RETURN;
 	}
 
@@ -46,13 +46,13 @@ std::string CsvReader::asString(int lineID, std::string name) {
 	boost::to_lower(name);
 	auto p = m_header_map.find(name);
 	if (p == m_header_map.end()) {
-		cout << "ÁÐÃû´íÎó: " << name << endl;
+		cout << "m_filename" << " ÁÐÃû´íÎó: " << name << endl;
 		return "";
 	}
 
 	auto p2 = m_body_map.find(lineID);
 	if (p2 == m_body_map.end()) {
-		cout << "ÐÐºÅ´íÎó: " << lineID << endl;
+		cout << "m_filename" << " ÐÐºÅ´íÎó: " << lineID << endl;
 		return "";
 	}
 

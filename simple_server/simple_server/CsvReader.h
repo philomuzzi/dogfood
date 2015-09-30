@@ -23,4 +23,5 @@ private:
 	std::map<std::string, int> m_header_map;
 	std::map<int, std::vector<std::string>> m_body_map;
 	std::vector<int> m_tableIdList;
+	std::string m_filename;
 };
