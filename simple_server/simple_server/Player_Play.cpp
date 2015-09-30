@@ -110,7 +110,7 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 	int m_add_exp = 0;
 
 	if (FbType_Endless == type) {
-		//		obtainItem(msg, FbType_Endless);
+		obtainItem(msg, FbType_Endless);
 		// 如果更新了记录，则更新
 		// 统计无尽模式
 		if (tmp_score > m_player.weekrecord().score()) {
