@@ -3,6 +3,7 @@
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp> 
+#include "Game_Define.h"
 
 using namespace std;
 
@@ -29,13 +30,13 @@ int CsvReader::asInt(int lineID, std::string name) {
 	auto p = m_header_map.find(name);
 	if (p == m_header_map.end()) {
 		cout << "列名错误: " << name << endl;
-		return (unsigned int)-1;
+		return IMPOSSIBLE_RETURN;
 	}
 
 	auto p2 = m_body_map.find(lineID);
 	if (p2 == m_body_map.end()) {
 		cout << "行号错误: " << lineID << endl;
-		return (unsigned int)-1;
+		return IMPOSSIBLE_RETURN;
 	}
 
 	return boost::lexical_cast<int>(p2->second.at(p->second));
@@ -91,7 +92,10 @@ void CsvReader::init(std::string filename) {
 		auto a = m_body_map.insert({ boost::lexical_cast<int>(body.front()), body });
 		if (!a.second) {
 			cout << "表格" << filename << "有ID相同的行: " << body.front() << endl;
+			continue;
 		}
+
+		m_tableIdList.push_back(boost::lexical_cast<int>(body.front()));
 
 //		cout << line << endl;
 	}

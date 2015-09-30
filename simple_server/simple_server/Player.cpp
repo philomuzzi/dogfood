@@ -213,6 +213,40 @@ bool GamePlayer::addEnergy(uint32 value)
 	return true;
 }
 
+bool GamePlayer::subEnergy(uint32 value)
+{
+	uint32 m_energy = m_player.energy()>value ? (m_player.energy() - value) : 0;
+	m_player.set_energy(m_energy);
+	return true;
+}
+
+bool GamePlayer::subWipeStock(uint32 value)
+{
+	uint32 m_value = m_player.wipestock()>value ? m_player.wipestock() - value : 0;
+	m_player.set_wipestock(m_value);
+	return true;
+}
+
+bool GamePlayer::addWipeStock(uint32 value)
+{
+	m_player.set_wipestock(m_player.wipestock() + value);
+	return true;
+}
+
+bool GamePlayer::subFbUnlockItem(uint32 value)
+{
+	uint32 m_value = m_player.itemnum()>value ? m_player.wipestock() - value : 0;
+	m_player.set_itemnum(m_value);
+	return true;
+}
+
+bool GamePlayer::addFbUnlockItem(uint32 value)
+{
+	m_player.set_itemnum(m_player.itemnum() + value);
+	return true;
+}
+
+
 Pilot * GamePlayer::getPilot(uint32 id)
 {
 	Pilot *pilot = nullptr;

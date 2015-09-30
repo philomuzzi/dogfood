@@ -25,6 +25,18 @@ public:
 	// game play
 	void startGame(network::command::Play::StartGame_CS& msg);
 	void continueGame(network::command::Play::ContinueGame_CS& msg);
+	void calRewardPart(network::command::Play::EndGame_CS& msg, std::string& grade);
+	void obtainItem(network::command::Play::EndGame_CS& msg, uint32 fbType);
+	void obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg);
+	void obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg);
+	bool checkEnterNormalFb(network::command::Play::StartGame_CS& msg);
+	bool checkEnterEndlessFb(network::command::Play::StartGame_CS& msg);
+	bool checkWipeFb(network::command::Play::StartGame_CS& msg);
+	void independProbDrop(network::command::Play::EndGame_CS& msg, uint32 id);
+	void mutexProbDrop(uint32 dropid, uint32& id, uint32& number);
+	void mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 groupid);
+	void storageDropOutTable();
+	void updateWipeTimes();
 	void endGame(network::command::Play::EndGame_CS& msg);
 
 	void checkin(network::command::Play::CheckIn_CS& msg);
@@ -61,6 +73,11 @@ private:
 	void clearCheckIn();
 	void setLastLoginTime();
 	bool addEnergy(uint32 value);
+	bool subEnergy(uint32 value);
+	bool subWipeStock(uint32 value);
+	bool addWipeStock(uint32 value);
+	bool subFbUnlockItem(uint32 value);
+	bool addFbUnlockItem(uint32 value);
 	network::command::Pilot* getPilot(uint32 id);
 	network::command::Airplane* getPlane(uint32 id);
 	void addExp(const uint32 value);
@@ -101,5 +118,8 @@ private:
 	network::command::PlayerStatus m_player_status;
 	bool m_needCheckWeekRank { false };
 	static uint32 m_sequence;
+
+	static std::map<uint32, std::vector<uint32>> sm_fbRewardScoreJudge;
+	static std::map<uint32, std::vector<uint32>> sm_dropOutVector;
 };
 
