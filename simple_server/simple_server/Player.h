@@ -7,6 +7,7 @@
 #include "ClientCommand/message.pb.h"
 #include "Game_Define.h"
 #include "ClientCommand/shop.pb.h"
+#include "ClientCommand/game.pb.h"
 
 class GamePlayer : public std::enable_shared_from_this<GamePlayer> {
 public:
@@ -50,7 +51,7 @@ public:
 	bool checkMoney(network::command::Shop::CurrencyType type, const uint32 num) const;
 	void addMoney(network::command::Shop::CurrencyType type, uint32 num, MoneyAction action);
 	bool subMoney(network::command::Shop::CurrencyType type, const uint32 num, MoneyAction action);
-
+	
 private:
 	void initNewPlayer();
 	void sendPlayerInfo();
@@ -64,7 +65,10 @@ private:
 	network::command::Airplane* getPlane(uint32 id);
 	void addExp(const uint32 value);
 	void levelUp(uint32 value);
-
+	void checkRanking();
+	void getOnlineRankingInfo(network::command::Game::Ranking_SC& cli_msg);
+	void checkLastWeekRank(network::command::Game::Ranking_SC& msg);
+	void checkWeekRanking();
 	// bag
 	uint32 addPetBag(uint32 pet_id);
 	bool addPlanePartBag(uint32 part_id, const uint32 add_num);
@@ -95,6 +99,7 @@ private:
 
 	network::command::Player m_player;
 	network::command::PlayerStatus m_player_status;
+	bool m_needCheckWeekRank { false };
 	static uint32 m_sequence;
 };
 

@@ -93,7 +93,10 @@
     <ClCompile Include="Player_Bag.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Game_Shop.cpp">
+    <ClCompile Include="Player_Rank.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Player_Shop.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

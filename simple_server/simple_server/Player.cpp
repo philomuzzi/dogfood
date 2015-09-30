@@ -20,6 +20,7 @@ void GamePlayer::online(const network::command::Player& pb_player) {
 
 	initNewPlayer();
 
+	checkWeekRanking();
 	setLastLoginTime();
 	checkCheckIn();
 	sendInitInfo();

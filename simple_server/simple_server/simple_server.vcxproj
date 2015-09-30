@@ -139,12 +139,13 @@
     <ClCompile Include="ConnectionMsgCenter.cpp" />
     <ClCompile Include="CsvReader.cpp" />
     <ClCompile Include="GameLogic.cpp" />
-    <ClCompile Include="Game_Shop.cpp" />
+    <ClCompile Include="Player_Shop.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerConnection.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="Player_Bag.cpp" />
     <ClCompile Include="Player_Play.cpp" />
+    <ClCompile Include="Player_Rank.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="simple_server.cpp" />
     <ClCompile Include="TableManager.cpp" />
