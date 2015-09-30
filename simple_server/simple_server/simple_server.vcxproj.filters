@@ -90,6 +90,9 @@
     <ClCompile Include="TableManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Player_Bag.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h">
@@ -159,6 +162,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TableManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game_Define.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

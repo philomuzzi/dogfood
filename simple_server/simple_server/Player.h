@@ -5,16 +5,7 @@
 #include "Utility/utility.h"
 #include <memory>
 #include "ClientCommand/message.pb.h"
-
-enum FbType {
-	FbType_None = -1,
-	FbType_Endless = 1, //无尽模式
-	FbType_Nomal = 2, //闯关模式
-	FbType_Wipe = 3, //扫荡模式
-	FbType_Pvp = 4, //pvp模式
-};
-
-typedef unsigned int uint32;
+#include "Game_Define.h"
 
 class GamePlayer : public std::enable_shared_from_this<GamePlayer> {
 public:
@@ -34,9 +25,33 @@ public:
 	void continueGame(network::command::Play::ContinueGame_CS& msg);
 	void endGame(network::command::Play::EndGame_CS& msg);
 
+	void checkin(network::command::Play::CheckIn_CS& msg);
+
 private:
 	void initNewPlayer();
 	void sendPlayerInfo();
+	uint64 generateUUID();
+	void sendInitInfo();
+	void checkCheckIn();
+	void clearCheckIn();
+	void setLastLoginTime();
+	
+	// bag
+	uint32 addPetBag(uint32 pet_id);
+	bool addPlanePartBag(uint32 part_id, const uint32 add_num);
+	bool subPlanePartBag(uint32 thisid);
+	bool subPlanePartBag(uint32 id, uint32 num);
+	bool addPileItemBag(uint32 item_id, const uint32 add_num);
+	bool subPileItemBag(uint32 item_id, const uint32 sub_num);
+	bool addNormalItemBag(uint32 item_id, const uint32 add_num);
+	bool subNormalItemBag(uint32 item_id, const uint32 sub_num);
+	bool addBagSpace(const uint32 space_num);
+	void cacuBagSize();
+	bool bagHasFull();
+	bool addItemToBag(uint32 item_id, uint32 item_num = 1);
+	bool subItemBag(uint32 item_id, uint32 item_num = 1);
+	void addItem(uint32 id, uint32 num);
+	void addGiftToBag(uint32 gift_id);
 
 	template <typename T1, typename T2> void ProtocolReturn(T1 &msg, T2 result, network::command::CMSG messageName)
 	{
@@ -50,5 +65,6 @@ private:
 
 	network::command::Player m_player;
 	network::command::PlayerStatus m_player_status;
+	static uint32 m_sequence;
 };
 

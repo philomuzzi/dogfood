@@ -18,7 +18,7 @@ public:
 
 	void start();
 	void write(std::string data, std::size_t length);
-	void sendCmdMsg(std::string data, int head);
+	void sendCmdMsg(const char* data, int head);
 
 
 private:

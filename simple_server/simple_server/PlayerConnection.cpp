@@ -27,18 +27,19 @@ void PlayerConnection::write(std::string data, std::size_t length) {
 	);
 }
 
-void PlayerConnection::sendCmdMsg(std::string data, int head) {
+void PlayerConnection::sendCmdMsg(const char* data, int head) {
 	auto self(shared_from_this());
 	std::array<char, sizeof(int)> arrHead;
 	memcpy(arrHead.data(), &head, sizeof(head));
 
 	// 需要注意这里的封装是否能够工作
 	auto it = copy(arrHead.begin(), arrHead.end(), write_buffer_.begin());
-	copy(data.begin(), data.end(), it);
+//	copy(reinterpret_cast<const char*>(data), reinterpret_cast<const char*>(data) + (head & PacketMsgLenMask), it);
+	copy(data, data + (head & PacketMsgLenMask), it);
 
 	boost::asio::async_write(
 		socket_,
-		boost::asio::buffer(write_buffer_, head & PacketMsgLenMask),
+		boost::asio::buffer(write_buffer_, (head & PacketMsgLenMask) + sizeof(head)),
 		[this, self](boost::system::error_code ec, std::size_t len) {
 			if (!ec) {
 				cout << "write success: " << len << endl;
@@ -52,7 +53,7 @@ void PlayerConnection::start() {
 }
 
 // 读取数据之后，解包，然后相应处理
-// 消息格式是: 0xFFFF0000|0x0000FFFF,一个int32，其中前16位表示消息id，后面16位表示消息整体长度。后面跟着的是protobuf压缩过的数据
+// 消息格式是: 0xFFFF0000|0x0000FFFF,一个int32，其中前16位表示消息id，后面16位表示包体整体长度。后面跟着的是protobuf压缩过的数据
 void PlayerConnection::do_read() {
 	auto self(shared_from_this());
 	socket_.async_read_some(
@@ -63,8 +64,8 @@ void PlayerConnection::do_read() {
 				while (already_read_ > PacketHeadLen) {
 					int head = *reinterpret_cast<int *>(read_buffer_);
 					cout << "Head length: " << head << endl;
-					int msgid = (head & PacketMsgIdMask) >> 16;
-					int len = head & PacketMsgLenMask;
+					uint16 msgid = (head & PacketMsgIdMask) >> 16;
+					uint16 len = head & PacketMsgLenMask;
 					if (len > Max_DataBufferSize || len < 0) {
 						cerr << "头长度错误" << endl;
 						already_read_ = 0;
@@ -95,7 +96,8 @@ void PlayerConnection::do_read() {
 			}
 			if (ec != boost::asio::error::operation_aborted) {
 				// 断开连接
-				socket_.close();
+				// notice: 不需要断开连接，自己把自己坑死了
+				cout << "boost::asio::error: " << boost::system::system_error(ec).what() << endl;
 			}
 		}
 	);

@@ -2,6 +2,7 @@
 #include <boost/asio.hpp>
 #include <chrono>
 #include <memory>
+#include "Game_Define.h"
 
 class GameLogic : public std::enable_shared_from_this<GameLogic>
 {
@@ -9,7 +10,7 @@ public:
 	typedef boost::asio::deadline_timer Timer;
 	~GameLogic();
 
-	static std::chrono::system_clock::time_point m_current_time;
+	static std::time_t m_current_time;
 	static std::shared_ptr<GameLogic> getLogicInstance();
 	static void init(boost::asio::io_service &service);
 	void start();
@@ -18,11 +19,23 @@ public:
 		return timer_one_second_;
 	}
 
+	uint32 getWeek() {
+		return m_currentWeek.count();
+	}
+	uint32 getDay() {
+		return m_currentDay.count();
+	}
+	uint32 getMonth() {
+		return m_currentMonth.count();
+	}
+
 private:
 	GameLogic(boost::asio::io_service &service);
 	
 	GameLogic& operator=(GameLogic&) = delete;
 	GameLogic(GameLogic&) = delete;
+
+	void judgeTime();
 
 	void oneSec(const boost::system::error_code&);
 	void oneMin(const boost::system::error_code&);
@@ -35,6 +48,18 @@ private:
 	Timer timer_one_hour_;
 	Timer timer_24_hour_;
 
-	static std::shared_ptr<GameLogic> gameLogic_;
+	std::chrono::system_clock::time_point m_current_clock;
+	std::chrono::system_clock::time_point m_start_clock;
+
+	typedef std::chrono::duration<int, std::ratio<60 * 60 * 24>> days_type;
+	typedef std::chrono::duration<int, std::ratio<60 * 60 * 24 * 7>> weeks_type;
+	typedef std::chrono::duration<int, std::ratio<60 * 60 * 24 * 30>> months_type;
+
+	days_type m_currentDay;
+	weeks_type m_currentWeek;
+	months_type m_currentMonth;
+
+	static std::shared_ptr<GameLogic> m_gameLogic;
+	
 };
 

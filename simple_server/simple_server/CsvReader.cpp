@@ -71,8 +71,8 @@ void CsvReader::init(std::string filename) {
 		readLine(line, header);
 	}
 
-	for (auto i : header)
-		cout << i << endl;
+	//for (auto i : header)
+	//	cout << i << endl;
 
 	for (size_t i = 0; i < header.size(); ++i) {
 		auto a = m_header_map.insert({ header[i], i });
@@ -93,6 +93,6 @@ void CsvReader::init(std::string filename) {
 			cout << "表格" << filename << "有ID相同的行: " << body.front() << endl;
 		}
 
-		cout << line << endl;
+//		cout << line << endl;
 	}
 }

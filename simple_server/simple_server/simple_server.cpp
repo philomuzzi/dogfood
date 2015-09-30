@@ -5,6 +5,8 @@
 #include "ConnectionMsgCenter.h"
 #include "GameLogic.h"
 #include "TableManager.h"
+#include "Player.h"
+
 
 int main(int argc, char* argv[]) {
 	try {
@@ -23,7 +25,7 @@ int main(int argc, char* argv[]) {
 		TableManager::getInstance().initAll();
 
 		boost::asio::io_service io_service;
-		Server s(io_service, 8001);
+		Server s(io_service, ServerPort);
 
 		GameLogic::init(io_service);
 		GameLogic::getLogicInstance()->start();

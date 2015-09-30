@@ -142,6 +142,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerConnection.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
+    <ClCompile Include="Player_Bag.cpp" />
     <ClCompile Include="Player_Play.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="simple_server.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="ConnectionMsgCenter.h" />
     <ClInclude Include="CsvReader.h" />
     <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="Game_Define.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerConnection.h" />
     <ClInclude Include="PlayerManager.h" />
