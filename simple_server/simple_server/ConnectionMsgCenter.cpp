@@ -6,6 +6,8 @@
 #include "Utility/utility.h"
 #include <iostream>
 #include "PlayerManager.h"
+#include "DatabaseConnection.h"
+#include "DatabaseCache.h"
 
 using namespace std;
 using namespace network::command;
@@ -26,9 +28,10 @@ bool ParseLogic_C(shared_ptr<PlayerConnection> self, const void* msg, const shor
 	rev.ParsePartialFromArray(msg, msglen);
 
 	// 解决帐号建立判断，分配网管服务器之类的问题
+	// 根据account找到玩家角色数据库信息
 
 	ServerInfo_S send;
-	send.set_accid("test");
+	send.set_accid(rev.account());
 	send.set_loginid(1);
 	send.set_ip("127.0.0.1");
 	send.set_port(ServerPort);
@@ -56,7 +59,7 @@ bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void* msg, cons
 
 	self->setName(rev.accid());
 
-	Player proto_player;
+	Player proto_player = DatabaseCache::getInstance().getPlayer(rev.accid());
 	player->online(proto_player);
 
 	return true;

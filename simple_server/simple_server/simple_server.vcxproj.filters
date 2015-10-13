@@ -99,6 +99,12 @@
     <ClCompile Include="Player_Shop.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DatabaseConnection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseCache.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Server.h">
@@ -171,6 +177,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game_Define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseConnection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseCache.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

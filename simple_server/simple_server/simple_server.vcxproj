@@ -74,13 +74,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>F:\boost_1_59_0;$(ProjectDir)ClientCommand;F:\protobuf-2.6.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\boost_1_59_0;$(ProjectDir)ClientCommand;F:\protobuf-2.6.1\src;$(ProjectDir)External\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>F:\boost_1_59_0\stage\lib;$(ProjectDir)External\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libprotobuf.lib;sqlite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -138,6 +138,8 @@
     <ClCompile Include="ClientMsgCenter.cpp" />
     <ClCompile Include="ConnectionMsgCenter.cpp" />
     <ClCompile Include="CsvReader.cpp" />
+    <ClCompile Include="DatabaseCache.cpp" />
+    <ClCompile Include="DatabaseConnection.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Player_Shop.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -165,6 +167,8 @@
     <ClInclude Include="ClientMsgCenter.h" />
     <ClInclude Include="ConnectionMsgCenter.h" />
     <ClInclude Include="CsvReader.h" />
+    <ClInclude Include="DatabaseCache.h" />
+    <ClInclude Include="DatabaseConnection.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="Game_Define.h" />
     <ClInclude Include="Player.h" />
