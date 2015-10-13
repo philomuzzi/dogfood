@@ -4,6 +4,7 @@
 #include "Utility/singleton.h"
 #include <string>
 #include "save.pb.h"
+#include "Player.h"
 
 class DatabaseConnection : public SingletonBase<DatabaseConnection>
 {
@@ -22,6 +23,8 @@ class DatabaseConnection : public SingletonBase<DatabaseConnection>
 
 	bool insertNewPlayer(std::string accid);
 	bool getPlayerFromDB(std::string accid, network::command::Player &player);
+
+	char write_buffer_[PlayerConnection::Max_DataBufferSize];
 
 public:
 	bool getPlayerByAccount(std::string, network::command::Player& player);

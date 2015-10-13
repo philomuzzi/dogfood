@@ -20,7 +20,9 @@ GamePlayer::~GamePlayer()
 void GamePlayer::online(const network::command::Player& pb_player) {
 	m_player.CopyFrom(pb_player);
 
-	initNewPlayer();
+	if (m_player.state() == 0) {
+		initNewPlayer();
+	}
 
 	checkWeekRanking();
 	setLastLoginTime();
@@ -115,6 +117,8 @@ void GamePlayer::sendPlayerInfo() {
 	playerMsg.set_allocated_data(player);
 	ConstructMsgMacro(network::command::CMSGPlayerInfo_S, playerMsg);
 	m_connection->sendCmdMsg(playerMsg__, playerMsg_size__);
+
+	save();
 }
 
 uint64 GamePlayer::generateUUID()
@@ -316,6 +320,7 @@ void GamePlayer::levelUp(uint32 value)
 }
 
 void GamePlayer::save() {
+	m_player.set_state(1);
 	DatabaseCache::getInstance().setPlayer(m_player);
 	DatabaseConnection::getInstance().updatePlayer(m_player);
 }
