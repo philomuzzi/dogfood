@@ -25,5 +25,6 @@ class DatabaseConnection : public SingletonBase<DatabaseConnection>
 
 public:
 	bool getPlayerByAccount(std::string, network::command::Player& player);
+	void updatePlayer(network::command::Player& player);
 };
 

@@ -20,3 +20,7 @@ network::command::Player DatabaseCache::getPlayer(const std::string accid) {
 
 	return m_playercache_map.at(accid);
 }
+
+void DatabaseCache::setPlayer(network::command::Player player) {
+	m_playercache_map[player.accid()] = player;
+}

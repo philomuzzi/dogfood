@@ -82,6 +82,7 @@ private:
 	network::command::Airplane* getPlane(uint32 id);
 	void addExp(const uint32 value);
 	void levelUp(uint32 value);
+	void save();	// 需要一个随机时钟来存储它
 	void checkRanking();
 	void getOnlineRankingInfo(network::command::Game::Ranking_SC& cli_msg);
 	void checkLastWeekRank(network::command::Game::Ranking_SC& msg);

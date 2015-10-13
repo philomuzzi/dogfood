@@ -4,6 +4,8 @@
 #include "ClientCommand/login_msg.pb.h"
 #include "GameLogic.h"
 #include "ClientCommand/game.pb.h"
+#include "DatabaseConnection.h"
+#include "DatabaseCache.h"
 
 using namespace std;
 using namespace network::command;
@@ -311,4 +313,9 @@ void GamePlayer::levelUp(uint32 value)
 		value -= m_exp;
 		m_exp = TableManager::getInstance().getTable("LevelUpExp")->asInt(m_player.level(), "exp");
 	}
+}
+
+void GamePlayer::save() {
+	DatabaseCache::getInstance().setPlayer(m_player);
+	DatabaseConnection::getInstance().updatePlayer(m_player);
 }

@@ -14,5 +14,6 @@ class DatabaseCache : public SingletonBase<DatabaseCache>
 
 public:
 	network::command::Player getPlayer(const std::string accid);
+	void setPlayer(network::command::Player);
 };
 

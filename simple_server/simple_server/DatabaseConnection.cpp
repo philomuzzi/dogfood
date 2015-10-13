@@ -25,6 +25,10 @@ DatabaseConnection::~DatabaseConnection()
 
 bool DatabaseConnection::insertNewPlayer(std::string accid) {
 	network::command::Player player;
+	player.set_accid(accid);
+	player.set_name(accid);
+	player.set_state(0);
+
 	sqlite3_stmt *stmt;
 	SerializeMsgMacro(player);
 	std::string seri_player(player__, player_size__);
@@ -78,4 +82,20 @@ bool DatabaseConnection::getPlayerByAccount(std::string accid, network::command:
 
 	cout << "error while get player from db" << endl;
 	return false;
+}
+
+void DatabaseConnection::updatePlayer(network::command::Player& player) {
+	sqlite3_stmt * statement;
+
+	SerializeMsgMacro(player);
+	std::string seri_player(player__, player_size__);
+	std::stringstream strm;
+	strm << "update player set databinary = '" << seri_player << "' where accid = '" << player.accid() << "'";
+	string sql = strm.str();
+
+	if (sqlite3_prepare(db, sql.c_str(), -1, &statement, NULL) == SQLITE_OK) {
+		int res = sqlite3_step(statement);
+
+		sqlite3_finalize(statement);
+	}
 }
