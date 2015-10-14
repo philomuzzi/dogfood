@@ -5,7 +5,7 @@
 #include <memory>
 
 class PlayerConnection;
-typedef bool(*ConnectionMsgCallback)(std::shared_ptr<PlayerConnection> player, const void *msg, const short msglen);
+using ConnectionMsgCallback = bool (*)(std::shared_ptr<PlayerConnection> player, const void *msg, const short msglen);
 class ConnectionMsgCenter : public SingletonBase<ConnectionMsgCenter>
 {
 	ConnectionMsgCenter() = default;

@@ -6,7 +6,7 @@
 #include <memory>
 
 class GamePlayer;
-typedef bool(*ClientMsgCallback)(std::shared_ptr<GamePlayer> player, const void *msg, const uint16 msglen);
+using ClientMsgCallback = bool (*)(std::shared_ptr<GamePlayer> player, const void *msg, const uint16 msglen);
 class ClientMsgCenter : public SingletonBase<ClientMsgCenter>
 {
 	ClientMsgCenter() = default;	

@@ -7,7 +7,8 @@
 class GameLogic : public std::enable_shared_from_this<GameLogic>
 {
 public:
-	typedef boost::asio::deadline_timer Timer;
+	using Timer = boost::asio::deadline_timer;
+
 	~GameLogic();
 
 	static std::time_t m_current_time;
@@ -51,9 +52,9 @@ private:
 	std::chrono::system_clock::time_point m_current_clock;
 	std::chrono::system_clock::time_point m_start_clock;
 
-	typedef std::chrono::duration<int, std::ratio<60 * 60 * 24>> days_type;
-	typedef std::chrono::duration<int, std::ratio<60 * 60 * 24 * 7>> weeks_type;
-	typedef std::chrono::duration<int, std::ratio<60 * 60 * 24 * 30>> months_type;
+	using days_type =std::chrono::duration<int, std::ratio<60 * 60 * 24>> ;
+	using weeks_type = std::chrono::duration<int, std::ratio<60 * 60 * 24 * 7>>;
+	using months_type = std::chrono::duration<int, std::ratio<60 * 60 * 24 * 30>>;
 
 	days_type m_currentDay;
 	weeks_type m_currentWeek;
