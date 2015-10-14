@@ -192,7 +192,7 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 
 	Pilot *pilot = getPilot(id);
 
-	if (pilot == NULL)
+	if (pilot == nullptr)
 	{
 //		INFO("玩家之前不拥有该角色: %d", id);
 
@@ -254,10 +254,10 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 		uint32 next_id = id;
 		uint32 check_id = next_id;
 		uint32 gold = 0;
-		uint32 add_gold = 0;
+		uint32 add_gold;
 		uint32 diamond = 0;
-		uint32 add_diamond = 0;
-		bool ok = false;
+		uint32 add_diamond;
+		bool ok;
 		do
 		{
 			next_id = ptr->asInt(check_id + 1, "pilot_id");
@@ -533,12 +533,12 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 		return ProtocolReturn(msg, Shop::UpgradeObject_CS::UNKNOWN, CMSGUpgradeObject_CS);
 	}
 
-	PlanePart *part = NULL;
+	PlanePart *part = nullptr;
 	Bag *bag = m_player.mutable_bag();
 	if (msg.airplaneid() != -1)
 	{
 		Airplane *airplane = getPlane(msg.airplaneid());
-		if (airplane == NULL)
+		if (airplane == nullptr)
 		{
 //			INFO("玩家之前不拥有该飞机: %d", msg.airplaneid());
 
@@ -618,7 +618,7 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 		::google::protobuf::RepeatedPtrField< Shop::upgradeItem >::iterator it_item = upitemlist->begin();
 
 		int partlist_size = bag->partlist_size();
-		uint32 tmp_exp = 0;
+		uint32 tmp_exp;
 		for (; it_item != upitemlist->end(); ++it_item)
 		{
 			if (it_item->thisid() != 0)
@@ -641,10 +641,10 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 			}
 			else
 			{
-				uint32 exp = TableManager::getInstance().getTable("PlayerItem")->asInt(it_item->id(), "exp");
-				if (exp != IMPOSSIBLE_RETURN)
+				uint32 exp1 = TableManager::getInstance().getTable("PlayerItem")->asInt(it_item->id(), "exp");
+				if (exp1 != IMPOSSIBLE_RETURN)
 				{
-					add_exp += exp;
+					add_exp += exp1;
 				}
 			}
 		}
@@ -1090,7 +1090,7 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 	}
 
 	Airplane *airplane = getPlane(id);
-	if (airplane == NULL)
+	if (airplane == nullptr)
 	{
 //		INFO("安装部件失败，玩家不拥有该飞机: %d", id);
 
@@ -1100,7 +1100,7 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 	if (msg.optype() == Shop::InstallPlanePart_CS::INSTALL)
 	{
 		Bag *bag = m_player.mutable_bag();
-		PlanePart *part = NULL;
+		PlanePart *part = nullptr;
 		::google::protobuf::RepeatedPtrField< ::network::command::PlanePart >* partlist = bag->mutable_partlist();
 		::google::protobuf::RepeatedPtrField< PlanePart >::iterator it_part = partlist->begin();
 		for (; it_part != partlist->end(); it_part++)
@@ -1384,7 +1384,7 @@ void GamePlayer::sellItem(network::command::Shop::SellObject_CS &msg)
 	}
 
 	uint32 pile_num = ptr->asInt(msg.id(), "pile_num");
-	bool ok = false;
+	bool ok;
 
 	if (pile_num == 1)
 		ok = subNormalItemBag(msg.id(), msg.num());
@@ -1411,7 +1411,7 @@ void GamePlayer::sellPlanePart(network::command::Shop::SellObject_CS &msg)
 		return ProtocolReturn(msg, Shop::SellObject_CS::UNKNOWN, CMSGSellObject_CS);
 	}
 
-	PlanePart *part = NULL;
+	PlanePart *part = nullptr;
 	Bag *bag = m_player.mutable_bag();
 
 	::google::protobuf::RepeatedPtrField< ::network::command::PlanePart >* partlist = bag->mutable_partlist();
@@ -1425,7 +1425,7 @@ void GamePlayer::sellPlanePart(network::command::Shop::SellObject_CS &msg)
 		}
 	}
 
-	if (part == NULL)
+	if (part == nullptr)
 	{
 //		INFO("该飞机部件在用户身上中不存在, %d, %d", msg.id(), msg.thisid());
 		return ProtocolReturn(msg, Shop::SellObject_CS::UNEXIST, CMSGSellObject_CS);

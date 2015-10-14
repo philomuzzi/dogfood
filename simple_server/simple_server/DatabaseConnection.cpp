@@ -40,7 +40,7 @@ bool DatabaseConnection::insertNewPlayer(std::string accid) const {
 	if (sqlite3_prepare(db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
 		// 这里的1的意思是第一个？
 		// 在这里纠结了多久啊~
-		sqlite3_bind_blob(stmt, 1, player__, player_size__, NULL);
+		sqlite3_bind_blob(stmt, 1, player__, player_size__, nullptr);
 		int res = sqlite3_step(stmt);
 		if (res == SQLITE_DONE) {
 			sqlite3_finalize(stmt);
@@ -56,7 +56,7 @@ bool DatabaseConnection::getPlayerFromDB(std::string accid, network::command::Pl
 	sqlite3_stmt * statement;
 	std::string sql = "select * from player where account = '" + accid + "';";
 
-	if (sqlite3_prepare(db, sql.c_str(), -1, &statement, NULL) == SQLITE_OK) {
+	if (sqlite3_prepare(db, sql.c_str(), -1, &statement, nullptr) == SQLITE_OK) {
 		int res = sqlite3_step(statement);
 
 		if (res == SQLITE_ROW)
@@ -99,8 +99,8 @@ void DatabaseConnection::updatePlayer(network::command::Player& player) const {
 
 	cout << player.accid() << " 写入数据的大小: " << player_size__ << endl;
 
-	if (sqlite3_prepare(db, sql.c_str(), -1, &statement, NULL) == SQLITE_OK) {
-		sqlite3_bind_blob(statement, 1, player__, player_size__, NULL);
+	if (sqlite3_prepare(db, sql.c_str(), -1, &statement, nullptr) == SQLITE_OK) {
+		sqlite3_bind_blob(statement, 1, player__, player_size__, nullptr);
 		int res = sqlite3_step(statement);
 
 		sqlite3_finalize(statement);

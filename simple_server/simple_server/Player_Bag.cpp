@@ -264,7 +264,7 @@ bool GamePlayer::subNormalItemBag(uint32 item_id, const uint32 sub_num)
 bool GamePlayer::addBagSpace(const uint32 space_num)
 {
 	Bag *bag = m_player.mutable_bag();
-	if (bag == NULL)
+	if (bag == nullptr)
 		return false;
 
 	auto ptr = TableManager::getInstance().getTable("PlayerInit");
