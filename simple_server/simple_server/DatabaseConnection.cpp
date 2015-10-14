@@ -23,7 +23,7 @@ DatabaseConnection::~DatabaseConnection()
 	sqlite3_close(db);
 }
 
-bool DatabaseConnection::insertNewPlayer(std::string accid) {
+bool DatabaseConnection::insertNewPlayer(std::string accid) const {
 	network::command::Player player;
 	player.set_accid(accid);
 	player.set_name(accid);
@@ -52,7 +52,7 @@ bool DatabaseConnection::insertNewPlayer(std::string accid) {
 	return false;
 }
 
-bool DatabaseConnection::getPlayerFromDB(std::string accid, network::command::Player& player) {
+bool DatabaseConnection::getPlayerFromDB(std::string accid, network::command::Player& player) const {
 	sqlite3_stmt * statement;
 	std::string sql = "select * from player where account = '" + accid + "';";
 
@@ -75,7 +75,7 @@ bool DatabaseConnection::getPlayerFromDB(std::string accid, network::command::Pl
 	return false;
 }
 
-bool DatabaseConnection::getPlayerByAccount(std::string accid, network::command::Player& player) {
+bool DatabaseConnection::getPlayerByAccount(std::string accid, network::command::Player& player) const {
 	if (getPlayerFromDB(accid, player)) {
 		return true;
 	} else {
@@ -89,7 +89,7 @@ bool DatabaseConnection::getPlayerByAccount(std::string accid, network::command:
 	return false;
 }
 
-void DatabaseConnection::updatePlayer(network::command::Player& player) {
+void DatabaseConnection::updatePlayer(network::command::Player& player) const {
 	sqlite3_stmt * statement;
 
 	SerializeMsgMacro(player);

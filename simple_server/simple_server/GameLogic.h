@@ -31,7 +31,7 @@ public:
 	}
 
 private:
-	GameLogic(boost::asio::io_service &service);
+	explicit GameLogic(boost::asio::io_service &service);
 	
 	GameLogic& operator=(GameLogic&) = delete;
 	GameLogic(GameLogic&) = delete;

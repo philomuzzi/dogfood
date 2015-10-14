@@ -21,13 +21,11 @@ class DatabaseConnection : public SingletonBase<DatabaseConnection>
 		DATABINARY = 4
 	};
 
-	bool insertNewPlayer(std::string accid);
-	bool getPlayerFromDB(std::string accid, network::command::Player &player);
-
-	char write_buffer_[PlayerConnection::Max_DataBufferSize];
+	bool insertNewPlayer(std::string accid) const;
+	bool getPlayerFromDB(std::string accid, network::command::Player &player) const;
 
 public:
-	bool getPlayerByAccount(std::string, network::command::Player& player);
-	void updatePlayer(network::command::Player& player);
+	bool getPlayerByAccount(std::string, network::command::Player& player) const;
+	void updatePlayer(network::command::Player& player) const;
 };
 
