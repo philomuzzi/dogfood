@@ -38,17 +38,17 @@ void GamePlayer::startGame(network::command::Play::StartGame_CS& msg) {
 	int fb_type = wls_ptr->asInt(msg.fbid(), "type");
 
 	//检测副本的进入条件
-	if (FbType_Endless == fb_type || FbType_Pvp == fb_type)
+	if (static_cast<int>(FbType::FbType_Endless) == fb_type || static_cast<int>(FbType::FbType_Pvp) == fb_type)
 	{
 		if (!checkEnterEndlessFb(msg))
 			return;
 	}
-	else if (FbType_Wipe == msg.fbtype() && FbType_Nomal == fb_type)
+	else if (static_cast<int>(FbType::FbType_Wipe) == msg.fbtype() && static_cast<int>(FbType::FbType_Nomal) == fb_type)
 	{
 		if (!checkWipeFb(msg))
 			return;
 	}
-	else if (FbType_Nomal == fb_type)
+	else if (static_cast<int>(FbType::FbType_Nomal) == fb_type)
 	{
 		if (!checkEnterNormalFb(msg))
 			return;
@@ -96,11 +96,11 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 		return ProtocolReturn(msg, Play::EndGame_CS::UNKNOWN, network::command::CMSGResEndGame_CS);
 	}
 
-	int type = wls_ptr->asInt(msg.fbid(), "type");
-	if ((FbType_Nomal == type) && (Play::EndGame_CS::FAIL == msg.result())) {
+	auto type = static_cast<FbType>(wls_ptr->asInt(msg.fbid(), "type"));
+	if ((FbType::FbType_Nomal == type) && (Play::EndGame_CS::FAIL == msg.result())) {
 		printf("====>玩家闯关:%u--失败======", msg.fbid());
 		m_player_status.set_playing(false);
-		msg.set_fbtype(type);
+		msg.set_fbtype(static_cast<int>(type));
 		return ProtocolReturn(msg, Play::EndGame_CS::FAIL, network::command::CMSGResEndGame_CS);
 	}
 
@@ -109,8 +109,8 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 	int m_add_score = 0;
 	int m_add_exp = 0;
 
-	if (FbType_Endless == type) {
-		obtainItem(msg, FbType_Endless);
+	if (FbType::FbType_Endless == type) {
+		obtainItem(msg, FbType::FbType_Endless);
 		// 如果更新了记录，则更新
 		// 统计无尽模式
 		if (tmp_score > m_player.weekrecord().score()) {
@@ -129,10 +129,10 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 		m_player.mutable_totalstatistics()->set_endlesstimes(m_player.totalstatistics().endlesstimes() + 1);
 		m_player.mutable_dailystatistics()->set_endlesstimes(m_player.dailystatistics().endlesstimes() + 1);
 	}
-	else if (FbType_Pvp == type) {
-		obtainItem(msg, FbType_Pvp);
+	else if (FbType::FbType_Pvp == type) {
+		obtainItem(msg, FbType::FbType_Pvp);
 	}
-	else if (FbType_Nomal == type/*&&Play::EndGame_CS::SUCCESS==msg.result()*/) {
+	else if (FbType::FbType_Nomal == type/*&&Play::EndGame_CS::SUCCESS==msg.result()*/) {
 		obtainItemFromNormalFb(msg);
 	}
 	else {
@@ -256,9 +256,9 @@ void GamePlayer::calRewardPart(network::command::Play::EndGame_CS& msg, std::str
 		grade = "ten";
 }
 
-void GamePlayer::obtainItem(network::command::Play::EndGame_CS& msg, uint32 fbType) {
+void GamePlayer::obtainItem(network::command::Play::EndGame_CS& msg, FbType fbType) {
 	std::string m_grade = "";
-	msg.set_fbtype(fbType);
+	msg.set_fbtype(static_cast<int>(fbType));
 	calRewardPart(msg, m_grade);
 
 	if (m_grade == "") {
@@ -280,7 +280,7 @@ void GamePlayer::obtainItem(network::command::Play::EndGame_CS& msg, uint32 fbTy
 	uint32 gold = rtptr->asInt(id, "gold");
 
 	if (diamond != IMPOSSIBLE_RETURN) {
-		addMoney(Shop::Diamond, diamond, AddDiamondAction_FbDrop);
+		addMoney(Shop::Diamond, diamond, MoneyAction::AddDiamondAction_FbDrop);
 		msg.set_diamond(diamond);
 	}
 
@@ -289,14 +289,14 @@ void GamePlayer::obtainItem(network::command::Play::EndGame_CS& msg, uint32 fbTy
 	}
 
 	if (gold != IMPOSSIBLE_RETURN) {
-		addMoney(Shop::Gold, gold, AddGoldAction_FbDrop);
+		addMoney(Shop::Gold, gold, MoneyAction::AddGoldAction_FbDrop);
 		msg.set_gold(gold);
 	}
 	mutextProDrop(msg, id);
 }
 
 void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg) {
-	msg.set_fbtype(FbType_Nomal);
+	msg.set_fbtype(static_cast<int>(FbType::FbType_Nomal));
 
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
 	auto rtptr = TableManager::getInstance().getTable("RewardTable");
@@ -314,7 +314,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	uint32 gold = rtptr->asInt(thisid, "gold");
 
 	if (diamond != IMPOSSIBLE_RETURN) {
-		addMoney(Shop::Diamond, diamond, AddDiamondScoreReward);
+		addMoney(Shop::Diamond, diamond, MoneyAction::AddDiamondScoreReward);
 		msg.set_diamond(diamond);
 	}
 
@@ -323,7 +323,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 
 	if (gold != IMPOSSIBLE_RETURN) {
-		addMoney(Shop::Gold, gold, AddGoldAction_FbDrop);
+		addMoney(Shop::Gold, gold, MoneyAction::AddGoldAction_FbDrop);
 		msg.set_gold(gold);
 	}
 
@@ -390,7 +390,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 	if (!m_old_fb && m_group_three)//三星关卡存储
 	{
-		::network::command::NormalFbStatistics* m_normalfb = NULL;
+		::network::command::NormalFbStatistics* m_normalfb = nullptr;
 		m_normalfb = m_player.add_normalfbstatistics();
 		m_normalfb->set_id(msg.fbid());
 		m_normalfb->set_wipetimes(m_three_wipetimes);
@@ -398,7 +398,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 	if (!m_old_fb && m_group_two)//二星关卡存储
 	{
-		::network::command::NormalFbStatistics* n_normalfb = NULL;
+		::network::command::NormalFbStatistics* n_normalfb = nullptr;
 		n_normalfb = m_player.add_normalfbstatistics();
 		n_normalfb->set_id(msg.fbid());
 		n_normalfb->set_wipetimes(m_two_wipetimes);
@@ -406,7 +406,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 	if (!m_old_fb && m_group_one && 1 == m_star)//一星关卡存储
 	{
-		::network::command::NormalFbStatistics* j_normalfb = NULL;
+		::network::command::NormalFbStatistics* j_normalfb = nullptr;
 		j_normalfb = m_player.add_normalfbstatistics();
 		j_normalfb->set_id(msg.fbid());
 		j_normalfb->set_wipetimes(m_wipetimes);
@@ -418,7 +418,7 @@ void GamePlayer::obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg) {
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
 	auto rtptr = TableManager::getInstance().getTable("RewardTable");
 
-	msg.set_fbtype(FbType_Wipe);
+	msg.set_fbtype(static_cast<int>(FbType::FbType_Wipe));
 	uint32 id = wlsptr->asInt(msg.fbid(), "one");
 
 	uint32 tmpid = rtptr->asInt(id, "id");
@@ -432,7 +432,7 @@ void GamePlayer::obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg) {
 	uint32 gold = rtptr->asInt(id, "gold");
 
 	if (diamond != IMPOSSIBLE_RETURN) {
-		addMoney(Shop::Diamond, diamond, AddDiamondScoreReward);
+		addMoney(Shop::Diamond, diamond, MoneyAction::AddDiamondScoreReward);
 		msg.set_diamond(diamond);
 	}
 
@@ -441,7 +441,7 @@ void GamePlayer::obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg) {
 	}
 
 	if (gold != IMPOSSIBLE_RETURN) {
-		addMoney(Shop::Gold, gold, AddGoldAction_FbDrop);
+		addMoney(Shop::Gold, gold, MoneyAction::AddGoldAction_FbDrop);
 		msg.set_gold(gold);
 	}
 
@@ -539,7 +539,7 @@ bool GamePlayer::checkWipeFb(network::command::Play::StartGame_CS& msg) {
 	//关卡类型检测
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
 	uint32 m_type = wlsptr->asInt(msg.fbid(), "type");
-	if (m_type != FbType_Nomal) {
+	if (m_type != static_cast<int>(FbType::FbType_Nomal)) {
 		//		MERROR("该关卡：%u不为普通关卡，不能被扫荡!", msg.fbid());
 		ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, network::command::CMSGResStartGame_CS);
 		return false;

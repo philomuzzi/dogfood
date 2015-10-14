@@ -20,7 +20,7 @@
 namespace Utility {
 
 	inline int randBetween(int min, int max) {
-		std::default_random_engine generator(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+		std::default_random_engine generator(static_cast<unsigned int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
 		if (min > max) std::swap(min, max);
 		std::uniform_int_distribution<int> distribution(min, max);
 		return distribution(generator);
@@ -31,7 +31,7 @@ namespace Utility {
 		if (down < 1) return false;
 		if (up < 1) return false;
 		if (up > down - 1) return true;
-		std::default_random_engine generator(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+		std::default_random_engine generator(static_cast<unsigned int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
 		std::uniform_real_distribution<double> distribution(0, 1);
 		m_rand = 1 + static_cast<int>((static_cast<double>(down) * distribution(generator)) / (RAND_MAX + 1.0));
 		return (m_rand <= up);

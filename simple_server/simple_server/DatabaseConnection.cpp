@@ -62,8 +62,8 @@ bool DatabaseConnection::getPlayerFromDB(std::string accid, network::command::Pl
 		if (res == SQLITE_ROW)
 		{
 			// 这里可能是有问题的，因为protobuf序列化后的数据中间可能存在0，所以会导致取回的数据不完整
-			char* s0 = (char*)sqlite3_column_blob(statement, DATABINARY);
-			int len = sqlite3_column_bytes(statement, DATABINARY);
+			char* s0 = (char*)sqlite3_column_blob(statement, static_cast<int>(Player_Field::DATABINARY));
+			int len = sqlite3_column_bytes(statement, static_cast<int>(Player_Field::DATABINARY));
 			cout << accid << " 读取数据的大小: " << len << endl;
 			player.ParsePartialFromArray(s0, len);
 			sqlite3_finalize(statement);

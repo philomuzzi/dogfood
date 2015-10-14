@@ -83,9 +83,9 @@ void GamePlayer::buyGold(network::command::Shop::BuyCurrency_CS &msg)
 	}
 	else
 	{
-		if (subMoney(Shop::Diamond, diamond, SubDiamondForGold))
+		if (subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForGold))
 		{
-			addMoney(Shop::Gold, gold, AddGoldUseDiamond);
+			addMoney(Shop::Gold, gold, MoneyAction::AddGoldUseDiamond);
 			msg.set_result(Shop::BuyCurrency_CS::SUCCESS);
 		}
 		else
@@ -116,7 +116,7 @@ void GamePlayer::buyDiamond(network::command::Shop::BuyCurrency_CS &msg)
 	}
 	else
 	{
-		addMoney(Shop::Diamond, diamond, AddDiamondUseMoney);
+		addMoney(Shop::Diamond, diamond, MoneyAction::AddDiamondUseMoney);
 		msg.set_result(Shop::BuyCurrency_CS::SUCCESS);
 	}
 
@@ -141,7 +141,7 @@ void GamePlayer::buyEnergy(network::command::Shop::BuyCurrency_CS &msg)
 	}
 	else
 	{
-		if (subMoney(Shop::Diamond, diamond, SubDiamondForEnergy))
+		if (subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForEnergy))
 		{
 			addEnergy(energy);
 			msg.set_result(Shop::BuyCurrency_CS::SUCCESS);
@@ -233,8 +233,8 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 			return ProtocolReturn(msg, Shop::UpgradeObject_CS::NODIAMOND, CMSGUpgradeObject_CS);
 		}
 
-		subMoney(Shop::Gold, gold, SubGoldForPilotUpgrade);
-		subMoney(Shop::Diamond, diamond, SubDiamondForPilotUpgrade);
+		subMoney(Shop::Gold, gold, MoneyAction::SubGoldForPilotUpgrade);
+		subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForPilotUpgrade);
 
 		pilot->set_id(next_id);
 		m_player.set_currentpilot(next_id);
@@ -294,8 +294,8 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 			return ProtocolReturn(msg, Shop::UpgradeObject_CS::UNKNOWN, CMSGUpgradeObject_CS);
 		}
 
-		subMoney(Shop::Gold, gold, SubGoldForPilotUpgrade);
-		subMoney(Shop::Diamond, diamond, SubDiamondForPilotUpgrade);
+		subMoney(Shop::Gold, gold, MoneyAction::SubGoldForPilotUpgrade);
+		subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForPilotUpgrade);
 
 		pilot->set_id(check_id);
 		m_player.set_currentpilot(check_id);
@@ -347,8 +347,8 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 			return ProtocolReturn(msg, Shop::UpgradeObject_CS::NODIAMOND, CMSGUpgradeObject_CS);
 		}
 
-		subMoney(Shop::Gold, gold, SubGoldForSkill);
-		subMoney(Shop::Diamond, diamond, SubDiamondForSkill);
+		subMoney(Shop::Gold, gold, MoneyAction::SubGoldForSkill);
+		subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForSkill);
 
 		pilot->set_skill_property_id(skill_id + 1);
 		sendPlayerInfo();
@@ -417,8 +417,8 @@ void GamePlayer::upgradeAirplane(network::command::Shop::UpgradeObject_CS &msg)
 			return ProtocolReturn(msg, Shop::UpgradeObject_CS::NODIAMOND, CMSGUpgradeObject_CS);
 		}
 
-		subMoney(Shop::Gold, gold, SubGoldForAirplaneUpgrade);
-		subMoney(Shop::Diamond, diamond, SubDiamondForAirplaneUpgrade);
+		subMoney(Shop::Gold, gold, MoneyAction::SubGoldForAirplaneUpgrade);
+		subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForAirplaneUpgrade);
 
 		airplane->set_id(next_id);
 		m_player.set_currentairplane(next_id);
@@ -467,8 +467,8 @@ void GamePlayer::upgradeAirplane(network::command::Shop::UpgradeObject_CS &msg)
 			return ProtocolReturn(msg, Shop::UpgradeObject_CS::NODIAMOND, CMSGUpgradeObject_CS);
 		}
 
-		subMoney(Shop::Gold, gold, SubGoldForAirplaneUpgrade);
-		subMoney(Shop::Diamond, diamond, SubDiamondForAirplaneUpgrade);
+		subMoney(Shop::Gold, gold, MoneyAction::SubGoldForAirplaneUpgrade);
+		subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForAirplaneUpgrade);
 
 		airplane->set_id(next_id);
 		m_player.set_currentairplane(next_id);
@@ -509,7 +509,7 @@ void GamePlayer::upgradeAirplane(network::command::Shop::UpgradeObject_CS &msg)
 			return ProtocolReturn(msg, Shop::UpgradeObject_CS::NODIAMOND, CMSGUpgradeObject_CS);
 		}
 
-		subMoney(Shop::Diamond, diamond, SubDiamondForAirplaneUpgrade);
+		subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForAirplaneUpgrade);
 
 		airplane->mutable_slotfive()->set_isopen(true);
 		m_player.set_currentairplane(id);
@@ -706,8 +706,8 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 			}
 		}
 
-		subMoney(Shop::Gold, total_gold, SubGoldForPartsUpgrade);
-		subMoney(Shop::Diamond, total_diamond, SubDiamondForPartsUpgrade);
+		subMoney(Shop::Gold, total_gold, MoneyAction::SubGoldForPartsUpgrade);
+		subMoney(Shop::Diamond, total_diamond, MoneyAction::SubDiamondForPartsUpgrade);
 
 		part->set_exp(total_exp > max_exp ? max_exp : total_exp);
 		part->set_id(next_id);
@@ -769,8 +769,8 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 			}
 		}
 
-		subMoney(Shop::Gold, gold, SubGoldForPartsUpgrade);
-		subMoney(Shop::Diamond, diamond, SubDiamondForPartsUpgrade);
+		subMoney(Shop::Gold, gold, MoneyAction::SubGoldForPartsUpgrade);
+		subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForPartsUpgrade);
 
 		part->set_id(next_id);
 
@@ -887,8 +887,8 @@ void GamePlayer::buyAirplane(network::command::Shop::BuyObject_CS &msg)
 		return ProtocolReturn(msg, Shop::BuyObject_CS::NOGOLD, CMSGBuyObject_CS);
 	}
 
-	subMoney(Shop::Gold, gold, SubGoldForAirplaneBuy);
-	subMoney(Shop::Diamond, diamond, SubDiamondForAirplaneBuy);
+	subMoney(Shop::Gold, gold, MoneyAction::SubGoldForAirplaneBuy);
+	subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForAirplaneBuy);
 
 	addAirPlane(id, true);
 
@@ -978,8 +978,8 @@ void GamePlayer::buyPilot(network::command::Shop::BuyObject_CS &msg)
 		return ProtocolReturn(msg, Shop::BuyObject_CS::NODIAMOND, CMSGBuyObject_CS);
 	}
 
-	subMoney(Shop::Gold, gold, SubGoldForPilotBuy);
-	subMoney(Shop::Diamond, diamond, SubDiamondForPilotBuy);
+	subMoney(Shop::Gold, gold, MoneyAction::SubGoldForPilotBuy);
+	subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForPilotBuy);
 
 	Pilot *pilot = m_player.add_pilotlist();
 	pilot->set_id(pilot_id);
@@ -1062,7 +1062,7 @@ void GamePlayer::buyBagSpace(network::command::Shop::BuyObject_CS &msg)
 		return ProtocolReturn(msg, Shop::BuyObject_CS::UNKNOWN, CMSGBuyObject_CS);
 	}
 
-	subMoney(Shop::Diamond, diamond, SubDiamondForPilotBuy);
+	subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForPilotBuy);
 
 	ok = addBagSpace(space);
 
@@ -1393,7 +1393,7 @@ void GamePlayer::sellItem(network::command::Shop::SellObject_CS &msg)
 
 	if (ok)
 	{
-		addMoney(Shop::Gold, sell_gold * msg.num(), AddGoldSellObject);
+		addMoney(Shop::Gold, sell_gold * msg.num(), MoneyAction::AddGoldSellObject);
 		sendPlayerInfo();
 		return ProtocolReturn(msg, Shop::SellObject_CS::SUCCESS, CMSGSellObject_CS);
 	}
@@ -1440,7 +1440,7 @@ void GamePlayer::sellPlanePart(network::command::Shop::SellObject_CS &msg)
 	}
 
 	subPlanePartBag(msg.thisid());
-	addMoney(Shop::Gold, sellgold, AddGoldSellObject);
+	addMoney(Shop::Gold, sellgold, MoneyAction::AddGoldSellObject);
 	sendPlayerInfo();
 
 	return ProtocolReturn(msg, Shop::SellObject_CS::SUCCESS, CMSGSellObject_CS);

@@ -324,32 +324,32 @@ bool GamePlayer::addItemToBag(uint32 item_id, uint32 item_num)
 		return false;
 	}
 	uint32 type = ptr->asInt(item_id, "type");
-	switch (type) {
-	case Item_PlanePart:
+	switch (static_cast<PlayerItemType>(type)) {
+	case PlayerItemType::Item_PlanePart:
 		return addPlanePartBag(id, item_num);
-	case Item_WipeStock:
-		addMoney(network::command::Shop::WipeStock, item_num, AddWipeStockAction_FbDrop);
+	case PlayerItemType::Item_WipeStock:
+		addMoney(network::command::Shop::WipeStock, item_num, MoneyAction::AddWipeStockAction_FbDrop);
 		return true;
-	case Item_GiftBag:
+	case PlayerItemType::Item_GiftBag:
 		addGiftToBag(item_id);
 		break;
-	case Item_PetInstance:
+	case PlayerItemType::Item_PetInstance:
 		addPetBag(id);
 		break;
-	case Item_PlaneInstance:
+	case PlayerItemType::Item_PlaneInstance:
 		if (!getPlane(item_id))
 			addAirPlane(item_id);
 		break;
-	case Item_ExpInstance:
+	case PlayerItemType::Item_ExpInstance:
 		addExp(item_num);
 		break;
-	case Item_GoldInstance:
-		addMoney(Shop::Gold, item_num, AddGoldDailyReward);
+	case PlayerItemType::Item_GoldInstance:
+		addMoney(Shop::Gold, item_num, MoneyAction::AddGoldDailyReward);
 		break;
-	case Item_DiamondInstance:
-		addMoney(Shop::Diamond, item_num, AddDiamondDailyReward);
+	case PlayerItemType::Item_DiamondInstance:
+		addMoney(Shop::Diamond, item_num, MoneyAction::AddDiamondDailyReward);
 		break;
-	case Item_EnergyInstance:
+	case PlayerItemType::Item_EnergyInstance:
 		addEnergy(item_num);
 		break;
 	default:
@@ -380,7 +380,7 @@ bool GamePlayer::subItemBag(uint32 item_id, uint32 item_num)
 	}
 
 	uint32 type = ptr->asInt(item_id, "type");
-	if (type == Item_PlanePart)
+	if (type == static_cast<int>(PlayerItemType::Item_PlanePart))
 	{
 		return subPlanePartBag(id, item_num);
 	}

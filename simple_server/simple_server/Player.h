@@ -26,7 +26,7 @@ public:
 	void startGame(network::command::Play::StartGame_CS& msg);
 	void continueGame(network::command::Play::ContinueGame_CS& msg);
 	void calRewardPart(network::command::Play::EndGame_CS& msg, std::string& grade);
-	void obtainItem(network::command::Play::EndGame_CS& msg, uint32 fbType);
+	void obtainItem(network::command::Play::EndGame_CS& msg, FbType fbType);
 	void obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg);
 	void obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg);
 	bool checkEnterNormalFb(network::command::Play::StartGame_CS& msg);

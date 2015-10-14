@@ -13,7 +13,7 @@ class DatabaseConnection : public SingletonBase<DatabaseConnection>
 	friend SingletonBase<DatabaseConnection>;
 	sqlite3* db{nullptr};
 
-	enum Player_Field {
+	enum class Player_Field {
 		ACCID = 0,
 		CHARID = 1,
 		NAME = 2,

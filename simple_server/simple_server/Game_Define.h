@@ -5,7 +5,7 @@
 #define ServerPort 9000
 #define IMPOSSIBLE_RETURN (uint32)-1
 
-enum FbType {
+enum class FbType {
 	FbType_None = -1,
 	FbType_Endless = 1, //无尽模式
 	FbType_Nomal = 2, //闯关模式
@@ -13,7 +13,7 @@ enum FbType {
 	FbType_Pvp = 4, //pvp模式
 };
 
-enum PlayerItemType {
+enum class PlayerItemType {
 	Item_Exp = 1,
 	Item_Upgrade,
 	Item_Pet,
@@ -33,7 +33,7 @@ typedef unsigned int uint32;
 typedef unsigned long long uint64;
 typedef unsigned short uint16;
 
-enum MoneyAction {
+enum class MoneyAction {
 	AddGoldUseDiamond,
 	AddDiamondUseMoney,
 	AddEnergyUseDiamond,
