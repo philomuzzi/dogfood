@@ -13,10 +13,6 @@ using namespace network::command;
 uint32 GamePlayer::m_sequence = 0;
 map<string, shared_ptr<map<string, uint32>>> GamePlayer::sm_nextSendMailTime;
 
-GamePlayer::~GamePlayer() {
-	cout << "Destruct GamePlayer" << endl;
-}
-
 void GamePlayer::online(const Player& pb_player) {
 	m_player.CopyFrom(pb_player);
 

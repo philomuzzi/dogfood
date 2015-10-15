@@ -16,7 +16,6 @@ public:
 	GamePlayer(std::shared_ptr<PlayerConnection> conn, const std::string accid) : m_connection(conn) {
 		m_player.set_accid(accid);
 	}
-	~GamePlayer();
 
 	std::string getAccid() const {
 		return m_player.accid();
