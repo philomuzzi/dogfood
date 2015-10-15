@@ -25,7 +25,7 @@ void GamePlayer::checkRanking()
 		checkLastWeekRank(cli_msg);
 	}
 
-//	sendFriendNextMailTime();
+	sendFriendNextMailTime();
 }
 
 void GamePlayer::getOnlineRankingInfo(Game::Ranking_SC &cli_msg) const {

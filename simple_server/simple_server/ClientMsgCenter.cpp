@@ -5,6 +5,7 @@
 #include <iostream>
 #include "ClientCommand/pet.pb.h"
 #include "ClientCommand/mail.pb.h"
+#include "GameMail.h"
 
 using namespace std;
 using namespace network::command;
@@ -109,7 +110,7 @@ bool ParseReadMail_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 
 	Mail::ReadMail_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-//	self->readMail(rev);
+	self->readMail(rev);
 
 	return true;
 }
@@ -120,16 +121,18 @@ bool ParseCreateUserMail_CS(shared_ptr<GamePlayer>self, const void* msg, const u
 	Mail::CreateUserMail_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-//	self->createUserMail(rev);
+	self->createUserMail(rev);
 
 	return true;
 }
 
 bool ParseCreateSystemMail_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
+	cout << __FUNCTION__ << endl;
+
 	Mail::CreateSystemMail_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-//	MailManager::getInstance().createSystemMail(rev);
+	MailManager::getInstance().createSystemMail(rev);
 
 	return true;
 }
@@ -151,7 +154,7 @@ bool ParsePlayerSetting_CS(shared_ptr<GamePlayer>self, const void* msg, const ui
 	Game::PlayerSetting_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-//	self->setting(rev);
+	self->setting(rev);
 
 	return true;
 }

@@ -11,16 +11,28 @@ using namespace std;
 using namespace network::command;
 
 uint32 GamePlayer::m_sequence = 0;
+map<string, shared_ptr<map<string, uint32>>> GamePlayer::sm_nextSendMailTime;
 
 GamePlayer::~GamePlayer() {
 	cout << "Destruct GamePlayer" << endl;
 }
 
-void GamePlayer::online(const network::command::Player& pb_player) {
+void GamePlayer::online(const Player& pb_player) {
 	m_player.CopyFrom(pb_player);
 
 	if (m_player.state() == 0) {
 		initNewPlayer();
+	}
+
+	auto f_it = sm_nextSendMailTime.find(m_player.accid());
+	if (f_it == sm_nextSendMailTime.end())
+	{
+		m_nextSendClientTime = make_shared<map<string, uint32>>();
+		sm_nextSendMailTime.insert(make_pair(m_player.accid(), m_nextSendClientTime));
+	}
+	else
+	{
+		m_nextSendClientTime = f_it->second;
 	}
 
 	checkWeekRanking();
@@ -28,6 +40,8 @@ void GamePlayer::online(const network::command::Player& pb_player) {
 	checkCheckIn();
 	sendInitInfo();
 	sendPlayerInfo();
+
+	checkRanking();
 }
 
 void GamePlayer::initNewPlayer() {
@@ -296,4 +310,44 @@ void GamePlayer::save() {
 	m_player.set_state(1);
 	DatabaseCache::getInstance().setPlayer(m_player);
 	DatabaseConnection::getInstance().updatePlayer(m_player);
+}
+
+void GamePlayer::sendFriendNextMailTime() const {
+	Mail::FriendMailNextTime_S sf_msg;
+	auto it = m_nextSendClientTime->begin();
+	for (;it != m_nextSendClientTime->end(); ++it)
+	{
+		if (it->second > GameLogic::m_current_time)
+		{
+			auto tmp = sf_msg.add_nexttimelist();
+			tmp->set_accid(it->first);
+			tmp->set_nextsendtime(it->second);
+		}
+	}
+
+	if (sf_msg.nexttimelist_size())
+	{
+		ConstructMsgMacro(CMSGFriendMailNextTime_S, sf_msg);
+		m_connection->sendCmdMsg(sf_msg__, sf_msg_size__);
+	}
+}
+
+void GamePlayer::setting(Game::PlayerSetting_CS &msg)
+{
+	m_player.set_allowenergymail(msg.allowenergymail());
+
+	sendPlayerInfo();
+	msg.set_result(Game::PlayerSetting_CS::SUCCESS);
+	ConstructMsgMacro(CMSGPlayerSetting_CS, msg);
+	m_connection->sendCmdMsg(msg__, msg_size__);
+}
+
+void GamePlayer::requestUserMail()
+{
+	network::command::Mail_SS msg;
+	msg.set_accid(m_player.accid());
+//	SerializeMsgMacro(msg);
+
+//	INFO("启动时，向数据库请求用户%s邮件", m_player.accid().c_str());
+//	databaseClient->sendClientCmdToDatabase(network::command::CMSGMail_SS, msg__, msg_size__);
 }

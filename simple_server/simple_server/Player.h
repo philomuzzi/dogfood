@@ -72,6 +72,7 @@ public:
 	void createUserMail(network::command::Mail::CreateUserMail_CS& msg);
 	void sendNewSystemMail(const network::command::MailInfo& r_info);
 	void checkMail();
+	void setting(network::command::Game::PlayerSetting_CS& msg);
 
 private:
 	void initNewPlayer();
@@ -92,6 +93,8 @@ private:
 	void addExp(const uint32 value);
 	void levelUp(uint32 value);
 	void save();	// 需要一个随机时钟来存储它
+	void sendFriendNextMailTime() const;
+	void requestUserMail();
 	void checkRanking();
 	void getOnlineRankingInfo(network::command::Game::Ranking_SC& cli_msg) const;
 	void checkLastWeekRank(network::command::Game::Ranking_SC& msg);
@@ -131,6 +134,8 @@ private:
 
 	static std::map<uint32, std::vector<uint32>> sm_fbRewardScoreJudge;
 	static std::map<uint32, std::vector<uint32>> sm_dropOutVector;
+	static std::map<std::string, std::shared_ptr<std::map<std::string, uint32>>> sm_nextSendMailTime;
+
 	std::shared_ptr<std::map<std::string, uint32>> m_nextSendClientTime;
 };
 
