@@ -141,6 +141,8 @@
     <ClCompile Include="DatabaseCache.cpp" />
     <ClCompile Include="DatabaseConnection.cpp" />
     <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="GameMail.cpp" />
+    <ClCompile Include="Player_Mail.cpp" />
     <ClCompile Include="Player_Shop.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerConnection.cpp" />
@@ -170,6 +172,7 @@
     <ClInclude Include="DatabaseCache.h" />
     <ClInclude Include="DatabaseConnection.h" />
     <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="GameMail.h" />
     <ClInclude Include="Game_Define.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerConnection.h" />

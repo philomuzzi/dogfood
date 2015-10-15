@@ -8,6 +8,8 @@
 #include "Game_Define.h"
 #include "ClientCommand/shop.pb.h"
 #include "ClientCommand/game.pb.h"
+#include "ClientCommand/server.pb.h"
+#include "ClientCommand/mail.pb.h"
 
 class GamePlayer : public std::enable_shared_from_this<GamePlayer> {
 public:
@@ -63,7 +65,14 @@ public:
 	bool checkMoney(network::command::Shop::CurrencyType type, const uint32 num) const;
 	void addMoney(network::command::Shop::CurrencyType type, uint32 num, MoneyAction action);
 	bool subMoney(network::command::Shop::CurrencyType type, const uint32 num, MoneyAction action);
-	
+	void loadUserMail(network::command::Mail_SS& msg);
+	void sendSystemMail();
+	void readMail(network::command::Mail::ReadMail_CS& msg);
+	void readMailAttach(std::shared_ptr<network::command::MailInfo> info);
+	void createUserMail(network::command::Mail::CreateUserMail_CS& msg);
+	void sendNewSystemMail(const network::command::MailInfo& r_info);
+	void checkMail();
+
 private:
 	void initNewPlayer();
 	void sendPlayerInfo();
@@ -122,5 +131,6 @@ private:
 
 	static std::map<uint32, std::vector<uint32>> sm_fbRewardScoreJudge;
 	static std::map<uint32, std::vector<uint32>> sm_dropOutVector;
+	std::shared_ptr<std::map<std::string, uint32>> m_nextSendClientTime;
 };
 
