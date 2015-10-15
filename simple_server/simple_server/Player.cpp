@@ -35,10 +35,13 @@ void GamePlayer::online(const Player& pb_player) {
 		m_nextSendClientTime = f_it->second;
 	}
 
+	sendSystemMail();
+	checkQuestActivity();
 	checkWeekRanking();
 	setLastLoginTime();
 	checkCheckIn();
 	sendInitInfo();
+	loginJustfiy();
 	sendPlayerInfo();
 
 	checkRanking();
@@ -344,10 +347,186 @@ void GamePlayer::setting(Game::PlayerSetting_CS &msg)
 
 void GamePlayer::requestUserMail()
 {
-	network::command::Mail_SS msg;
+	Mail_SS msg;
 	msg.set_accid(m_player.accid());
 //	SerializeMsgMacro(msg);
 
 //	INFO("启动时，向数据库请求用户%s邮件", m_player.accid().c_str());
 //	databaseClient->sendClientCmdToDatabase(network::command::CMSGMail_SS, msg__, msg_size__);
+}
+
+
+void GamePlayer::loginJustfiy()
+{
+	if (m_player.lastofflinetime() == 0)
+		return;
+
+	// 这里不精确，但是每小时的固定减少将会补偿回来
+	int nhour = (GameLogic::m_current_time - m_player.lastofflinetime()) / ONE_HOUR;
+	if (nhour)
+	{
+		adjustPilotFriendliness(nhour);
+	}
+}
+
+void GamePlayer::addPilotFriendliness(Pilot *pilot, const uint32 value) const {
+	uint32 cap = TableManager::getInstance().getTable("PilotProperty")->asInt(pilot->id(), "friendlinesscap");
+	printf("pilot %d 的友好度上限为 %d, add: %d, now: %d\n", pilot->id(), cap, value, pilot->friendliness());
+	if (value != IMPOSSIBLE_RETURN)
+	{
+		if (cap >= pilot->friendliness())
+		{
+			if (cap > pilot->friendliness() + value)
+				pilot->set_friendliness(pilot->friendliness() + value);
+			else
+				pilot->set_friendliness(cap);
+		}
+	}
+}
+
+void GamePlayer::subPilotFriendliness(Pilot *pilot, const uint32 value) const {
+	if (pilot->friendliness() == 0)
+		return;
+	if (value != IMPOSSIBLE_RETURN)
+	{
+		if (pilot->friendliness() <= value)
+			pilot->set_friendliness(0);
+		else
+			pilot->set_friendliness(pilot->friendliness() - value);
+	}
+}
+
+void GamePlayer::adjustPilotFriendliness()
+{
+	adjustPilotFriendliness(1);
+}
+
+void GamePlayer::adjustPilotFriendliness(uint32 hours)
+{
+	uint32 value = TableManager::getInstance().getTable("PlayerInit")->asInt(0, "friendliness_drop_timer");
+	if (value && value != IMPOSSIBLE_RETURN)
+	{
+		for (int i = 0; i < m_player.pilotlist_size(); ++i)
+		{
+			Pilot *pilot = m_player.mutable_pilotlist(i);
+			if (pilot)
+			{
+				if (pilot->notdropfriendlinesstime() == 0)
+				{
+					subPilotFriendliness(pilot, value * hours);
+				}
+				else if (pilot->notdropfriendlinesstime() >= hours * ONE_HOUR)
+				{
+					pilot->set_notdropfriendlinesstime(pilot->notdropfriendlinesstime() - hours * ONE_HOUR);
+				}
+				else
+				{
+					pilot->set_notdropfriendlinesstime(0);
+					hours -= pilot->notdropfriendlinesstime() / ONE_HOUR;
+					subPilotFriendliness(pilot, hours * value);
+				}
+			}
+		}
+	}
+}
+
+
+void GamePlayer::checkQuestActivity()
+{
+	if (GameLogic::getLogicInstance()->getDay() > m_player.lastloginday())
+		clearQuestActivity();
+}
+
+void GamePlayer::clearQuestActivity()
+{
+	m_player.clear_finisheddailyquestid();
+	m_player.clear_dailystatistics();
+}
+
+void GamePlayer::updatePilotFriendliness(Game::FriendlinessInteract_CS &msg)
+{
+	printf("更新用户和飞行员的亲密度\n");
+
+	Pilot *pilot = getPilot(msg.pilotid());
+	if (pilot == nullptr)
+	{
+		printf("传入的飞行员ID错误, %d\n", msg.pilotid());
+		return ProtocolReturn(msg, Game::FriendlinessInteract_CS::UNKNOWN, CMSGFriendlinessInteract_CS);
+	}
+
+	uint32 id = TableManager::getInstance().getTable("InteractDialog")->asInt(msg.interactid(), "id");
+	if (id != msg.interactid())
+	{
+		printf("传入的交互ID错误, %d\n", id);
+		return ProtocolReturn(msg, Game::FriendlinessInteract_CS::UNKNOWN, CMSGFriendlinessInteract_CS);
+	}
+
+	if (msg.type() == Game::FriendlinessInteract_CS::Add)
+	{
+		uint32 value = TableManager::getInstance().getTable("InteractDialog")->asInt(msg.interactid(), "addfriendliness");
+		addPilotFriendliness(pilot, value);
+	}
+	else
+	{
+		uint32 value = TableManager::getInstance().getTable("InteractDialog")->asInt(msg.interactid(), "reducefriendliness");
+		subPilotFriendliness(pilot, value);
+	}
+
+	msg.set_currentfriendliness(pilot->friendliness());
+	return ProtocolReturn(msg, Game::FriendlinessInteract_CS::SUCCESS, CMSGFriendlinessInteract_CS);
+}
+
+void GamePlayer::itemForFriendliness(Game::ItemForFriendliness_CS &msg)
+{
+	printf("用户亲密度道具交互\n");
+
+	Pilot *pilot = getPilot(msg.pilotid());
+	if (pilot == nullptr)
+	{
+		printf("传入的飞行员ID错误\n");
+		return ProtocolReturn(msg, Game::ItemForFriendliness_CS::UNKNOWN, CMSGItemForFriendliness_CS);
+	}
+
+	auto ptr = TableManager::getInstance().getTable("PlayerItem");
+	uint32 type = ptr->asInt(msg.itemid(), "type");
+	uint32 subtype = ptr->asInt(msg.itemid(), "subtype");
+	if (type == static_cast<int>(PlayerItemType::Item_Interact))
+	{
+		uint32 exp = ptr->asInt(msg.itemid(), "exp");
+		if (subtype == static_cast<int>(InteractItemSubType::Interact_Add))
+		{
+			addPilotFriendliness(pilot, exp);
+		}
+		else if (subtype == static_cast<int>(InteractItemSubType::Interact_Stop))
+		{
+			pilot->set_notdropfriendlinesstime(pilot->notdropfriendlinesstime() + exp);
+		}
+		else if (subtype == static_cast<int>(InteractItemSubType::Interact_Random))
+		{
+			uint32 interact_prop = ptr->asInt(msg.itemid(), "interact_prop");
+			uint32 rand = Utility::randBetween(0, 100);
+			if (rand <= interact_prop)
+			{
+				addPilotFriendliness(pilot, exp);
+			}
+			else
+			{
+				uint32 interact_sub_exp = ptr->asInt(msg.itemid(), "interact_sub_exp");
+
+				subPilotFriendliness(pilot, interact_sub_exp);
+			}
+		}
+		else
+		{
+			printf("互动道具交互，物品信息: id %d, type %d, subtype %d\n", msg.itemid(), type, subtype);
+			return ProtocolReturn(msg, Game::ItemForFriendliness_CS::UNKNOWN, CMSGItemForFriendliness_CS);
+		}
+
+		subItemBag(msg.itemid());
+		sendPlayerInfo();
+		return ProtocolReturn(msg, Game::ItemForFriendliness_CS::SUCCESS, CMSGItemForFriendliness_CS);
+	}
+
+	printf("互动道具交互，物品信息: id %d, type %d, subtype %d\n", msg.itemid(), type, subtype);
+	return ProtocolReturn(msg, Game::ItemForFriendliness_CS::UNKNOWN, CMSGItemForFriendliness_CS);
 }

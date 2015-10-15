@@ -4,6 +4,7 @@
 #define DailyRewardID 120300000
 #define ServerPort 9000
 #define IMPOSSIBLE_RETURN (uint32)-1
+#define ONE_HOUR 60*60
 
 enum class FbType {
 	FbType_None = -1,
@@ -75,4 +76,11 @@ enum class MoneyAction {
 	AddDiamondDailyReward,
 
 	MoneyAction_Max = 255
+};
+
+
+enum class InteractItemSubType {
+	Interact_Add = 1,
+	Interact_Stop = 2,
+	Interact_Random = 3,
 };

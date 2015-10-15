@@ -20,13 +20,13 @@ public:
 		return timer_one_second_;
 	}
 
-	uint32 getWeek() {
+	uint32 getWeek() const {
 		return m_currentWeek.count();
 	}
-	uint32 getDay() {
+	uint32 getDay() const {
 		return m_currentDay.count();
 	}
-	uint32 getMonth() {
+	uint32 getMonth() const {
 		return m_currentMonth.count();
 	}
 
@@ -52,7 +52,7 @@ private:
 	std::chrono::system_clock::time_point m_current_clock;
 	std::chrono::system_clock::time_point m_start_clock;
 
-	using days_type =std::chrono::duration<int, std::ratio<60 * 60 * 24>> ;
+	using days_type = std::chrono::duration<int, std::ratio<60 * 60 * 24>> ;
 	using weeks_type = std::chrono::duration<int, std::ratio<60 * 60 * 24 * 7>>;
 	using months_type = std::chrono::duration<int, std::ratio<60 * 60 * 24 * 30>>;
 

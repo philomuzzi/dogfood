@@ -73,6 +73,8 @@ public:
 	void sendNewSystemMail(const network::command::MailInfo& r_info);
 	void checkMail();
 	void setting(network::command::Game::PlayerSetting_CS& msg);
+	void updatePilotFriendliness(network::command::Game::FriendlinessInteract_CS& msg);
+	void itemForFriendliness(network::command::Game::ItemForFriendliness_CS& msg);
 
 private:
 	void initNewPlayer();
@@ -95,6 +97,13 @@ private:
 	void save();	// 需要一个随机时钟来存储它
 	void sendFriendNextMailTime() const;
 	void requestUserMail();
+	void loginJustfiy();
+	void addPilotFriendliness(network::command::Pilot* pilot, const uint32 value) const;
+	void subPilotFriendliness(network::command::Pilot* pilot, const uint32 value) const;
+	void adjustPilotFriendliness();
+	void adjustPilotFriendliness(uint32 hours);
+	void checkQuestActivity();
+	void clearQuestActivity();
 	void checkRanking();
 	void getOnlineRankingInfo(network::command::Game::Ranking_SC& cli_msg) const;
 	void checkLastWeekRank(network::command::Game::Ranking_SC& msg);

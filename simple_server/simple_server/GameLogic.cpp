@@ -4,7 +4,7 @@
 using namespace std;
 using namespace chrono;
 
-std::time_t GameLogic::m_current_time;
+time_t GameLogic::m_current_time;
 shared_ptr<GameLogic> GameLogic::m_gameLogic;
 
 GameLogic::GameLogic(boost::asio::io_service& service) : timer_one_second_(service, boost::posix_time::seconds(1)),

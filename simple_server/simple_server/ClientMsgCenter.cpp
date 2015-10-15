@@ -165,7 +165,7 @@ bool ParseFriendlinessInteract_CS(shared_ptr<GamePlayer>self, const void* msg, c
 	Game::FriendlinessInteract_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-//	self->updatePilotFriendliness(rev);
+	self->updatePilotFriendliness(rev);
 
 	return true;
 }
@@ -176,7 +176,7 @@ bool ParseItemForFriendliness_CS(shared_ptr<GamePlayer>self, const void* msg, co
 	Game::ItemForFriendliness_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-//	self->itemForFriendliness(rev);
+	self->itemForFriendliness(rev);
 
 	return true;
 }
