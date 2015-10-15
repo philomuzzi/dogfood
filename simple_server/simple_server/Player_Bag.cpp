@@ -15,7 +15,7 @@ uint32 GamePlayer::addPetBag(uint32 pet_id)
 		return -1;
 	}
 
-	PetStatistics *pet = m_player.add_petstatistics();
+	auto pet = m_player.add_petstatistics();
 	pet->set_thisid(generateUUID());
 	pet->set_petid(id);
 	printf("获得宠物, %d, %d\n", id, pet->thisid());
@@ -39,10 +39,10 @@ bool GamePlayer::addPlanePartBag(uint32 part_id, const uint32 add_num)
 		return false;
 	}
 
-	Bag *bag = m_player.mutable_bag();
+	auto bag = m_player.mutable_bag();
 	for (uint32 i = 0; i != add_num; ++i)
 	{
-		PlanePart *part = bag->add_partlist();
+		auto part = bag->add_partlist();
 		part->set_id(part_id);
 		part->set_thisid(generateUUID());
 		part->set_exp(0);
@@ -56,7 +56,7 @@ bool GamePlayer::addPlanePartBag(uint32 part_id, const uint32 add_num)
 
 bool GamePlayer::subPlanePartBag(uint32 thisid)
 {
-	Bag *bag = m_player.mutable_bag();
+	auto bag = m_player.mutable_bag();
 	for (int i = 0; i != bag->partlist_size(); ++i)
 	{
 		if (bag->partlist(i).thisid() == thisid)
@@ -74,9 +74,9 @@ bool GamePlayer::subPlanePartBag(uint32 thisid)
 
 bool GamePlayer::subPlanePartBag(uint32 id, uint32 num)
 {
-	Bag *bag = m_player.mutable_bag();
+	auto bag = m_player.mutable_bag();
 	uint32 tmp_num = 0;
-	for (int i = 0; i != bag->partlist_size() && tmp_num != num; ++i)
+	for (auto i = 0; i != bag->partlist_size() && tmp_num != num; ++i)
 	{
 		if (bag->partlist(i).id() == id)
 		{
@@ -87,7 +87,7 @@ bool GamePlayer::subPlanePartBag(uint32 id, uint32 num)
 	if (tmp_num < num)
 		return false;
 
-	for (int i = 0; i != bag->partlist_size() && tmp_num > 0; ++i)
+	for (auto i = 0; i != bag->partlist_size() && tmp_num > 0; ++i)
 	{
 		if (bag->partlist(i).id() == id)
 		{
@@ -118,9 +118,9 @@ bool GamePlayer::addPileItemBag(uint32 item_id, const uint32 add_num)
 		return false;
 	}
 
-	Bag *bag = m_player.mutable_bag();
-	bool bFound = false;
-	for (int i = 0; i != bag->pileitemlist_size(); ++i)
+	auto bag = m_player.mutable_bag();
+	auto bFound = false;
+	for (auto i = 0; i != bag->pileitemlist_size(); ++i)
 	{
 		if (bag->pileitemlist(i).id() == item_id)
 		{
@@ -132,7 +132,7 @@ bool GamePlayer::addPileItemBag(uint32 item_id, const uint32 add_num)
 
 	if (!bFound)
 	{
-		Item *item = bag->add_pileitemlist();
+		auto item = bag->add_pileitemlist();
 		item->set_id(item_id);
 		item->set_num(add_num);
 	}
@@ -158,8 +158,8 @@ bool GamePlayer::subPileItemBag(uint32 item_id, const uint32 sub_num)
 		return false;
 	}
 
-	Bag *bag = m_player.mutable_bag();
-	for (int i = 0; i != bag->pileitemlist_size(); ++i)
+	auto bag = m_player.mutable_bag();
+	for (auto i = 0; i != bag->pileitemlist_size(); ++i)
 	{
 		if (bag->pileitemlist(i).id() == item_id)
 		{
@@ -198,9 +198,9 @@ bool GamePlayer::addNormalItemBag(uint32 item_id, const uint32 add_num)
 		return false;
 	}
 
-	Bag *bag = m_player.mutable_bag();
-	bool bFound = false;
-	for (int i = 0; i != bag->itemlist_size(); ++i)
+	auto bag = m_player.mutable_bag();
+	auto bFound = false;
+	for (auto i = 0; i != bag->itemlist_size(); ++i)
 	{
 		if (bag->itemlist(i).id() == item_id)
 		{
@@ -212,7 +212,7 @@ bool GamePlayer::addNormalItemBag(uint32 item_id, const uint32 add_num)
 
 	if (!bFound)
 	{
-		Item *item = bag->add_itemlist();
+		auto item = bag->add_itemlist();
 		item->set_id(item_id);
 		item->set_num(add_num);
 	}
@@ -238,8 +238,8 @@ bool GamePlayer::subNormalItemBag(uint32 item_id, const uint32 sub_num)
 		return false;
 	}
 
-	Bag *bag = m_player.mutable_bag();
-	for (int i = 0; i != bag->itemlist_size(); ++i)
+	auto bag = m_player.mutable_bag();
+	for (auto i = 0; i != bag->itemlist_size(); ++i)
 	{
 		if (bag->itemlist(i).id() == item_id)
 		{
@@ -263,7 +263,7 @@ bool GamePlayer::subNormalItemBag(uint32 item_id, const uint32 sub_num)
 
 bool GamePlayer::addBagSpace(const uint32 space_num)
 {
-	Bag *bag = m_player.mutable_bag();
+	auto bag = m_player.mutable_bag();
 	if (bag == nullptr)
 		return false;
 
@@ -280,9 +280,9 @@ bool GamePlayer::addBagSpace(const uint32 space_num)
 
 void GamePlayer::cacuBagSize()
 {
-	const Bag& bag = m_player.bag();
+	const auto& bag = m_player.bag();
 	uint32 size = 0;
-	for (int i = 0; i != bag.itemlist_size(); ++i)
+	for (auto i = 0; i != bag.itemlist_size(); ++i)
 	{
 		size += bag.itemlist(i).num();
 	}
@@ -292,7 +292,7 @@ void GamePlayer::cacuBagSize()
 	// 这是可堆叠的物品，可能还要计算堆叠的堆数量
 	for (int i = 0; i != bag.pileitemlist_size(); ++i)
 	{
-		uint32 num = bag.pileitemlist(i).num();
+		auto num = bag.pileitemlist(i).num();
 		if (num)
 		{
 			auto ptr = TableManager::getInstance().getTable("PlayerItem");
@@ -308,9 +308,8 @@ void GamePlayer::cacuBagSize()
 	m_player.mutable_bag()->set_usedsize(size);
 }
 
-bool GamePlayer::bagHasFull()
-{
-	const Bag& bag = m_player.bag();
+bool GamePlayer::bagHasFull() const {
+	const auto& bag = m_player.bag();
 	return bag.usedsize() >= bag.size();
 }
 
@@ -411,8 +410,8 @@ void GamePlayer::addGiftToBag(uint32 gift_id)
 		return;
 	}
 
-	uint32 item_id = 0;
-	uint32 num = 0;
+	uint32 item_id;
+	uint32 num;
 #define ADD_GIFTBAG_ITEM(key, index) \
     item_id = ptr->asInt(key, "item_id"#index); \
     num = ptr->asInt(key, "quantity"#index); \

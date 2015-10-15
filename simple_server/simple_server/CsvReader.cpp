@@ -16,7 +16,7 @@ CsvReader::~CsvReader()
 {
 }
 
-void CsvReader::readLine(string s, vector<string>& header) {
+void CsvReader::readLine(string s, vector<string>& header) const {
 	boost::split(header, s, boost::is_any_of(","), boost::token_compress_on);
 
 	for (size_t i = 0; i < header.size(); ++i) {

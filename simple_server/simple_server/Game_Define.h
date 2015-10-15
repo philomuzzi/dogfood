@@ -29,9 +29,9 @@ enum class PlayerItemType {
 	Item_EnergyInstance
 };
 
-typedef unsigned int uint32;
-typedef unsigned long long uint64;
-typedef unsigned short uint16;
+using uint32 = unsigned int;
+using uint64 = unsigned long long;
+using uint16 = unsigned short;
 
 enum class MoneyAction {
 	AddGoldUseDiamond,

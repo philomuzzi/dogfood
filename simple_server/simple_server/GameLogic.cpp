@@ -12,11 +12,11 @@ GameLogic::GameLogic(boost::asio::io_service& service) : timer_one_second_(servi
                                                          timer_one_hour_(service, boost::posix_time::hours(1)),
                                                          timer_24_hour_(service, boost::posix_time::hours(24))
 {
-	tm timeinfo = tm();
+	auto timeinfo = tm();
 	timeinfo.tm_year = 115;
 	timeinfo.tm_mon = 8;      // month: january
 	timeinfo.tm_mday = 30;     // day: 1st
-	time_t tt = mktime(&timeinfo);
+	auto tt = mktime(&timeinfo);
 
 	m_start_clock = system_clock::from_time_t(tt);
 	judgeTime();
@@ -70,7 +70,7 @@ void GameLogic::oneSec(const boost::system::error_code&) {
 }
 
 void GameLogic::judgeTime() {
-	system_clock::duration d = system_clock::now() - m_start_clock;
+	auto d = system_clock::now() - m_start_clock;
 
 	m_currentDay = duration_cast<days_type> (d);
 	m_currentWeek = duration_cast<weeks_type> (d);

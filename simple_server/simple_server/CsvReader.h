@@ -16,7 +16,7 @@ public:
 	}
 
 private:
-	void readLine(std::string s, std::vector<std::string>& header);
+	void readLine(std::string s, std::vector<std::string>& header) const;
 	void init(std::string filename);
 
 private:

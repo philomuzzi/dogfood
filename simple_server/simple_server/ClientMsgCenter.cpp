@@ -106,7 +106,7 @@ bool ParseInstallPlanePart(shared_ptr<GamePlayer>self, const void* msg, const ui
 bool ParseReadMail_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
 	cout << __FUNCTION__ << endl;
 
-	network::command::Mail::ReadMail_CS rev;
+	Mail::ReadMail_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 //	self->readMail(rev);
@@ -117,7 +117,7 @@ bool ParseReadMail_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 
 bool ParseCreateUserMail_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
 	cout << __FUNCTION__ << endl;
 
-	network::command::Mail::CreateUserMail_CS rev;
+	Mail::CreateUserMail_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 //	self->createUserMail(rev);
@@ -126,7 +126,7 @@ bool ParseCreateUserMail_CS(shared_ptr<GamePlayer>self, const void* msg, const u
 }
 
 bool ParseCreateSystemMail_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
-	network::command::Mail::CreateSystemMail_CS rev;
+	Mail::CreateSystemMail_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 //	MailManager::getInstance().createSystemMail(rev);
@@ -137,7 +137,7 @@ bool ParseCreateSystemMail_CS(shared_ptr<GamePlayer>self, const void* msg, const
 bool ParseFinishQuest_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
 	cout << __FUNCTION__ << endl;
 
-	network::command::Game::FinishQuest_CS rev;
+	Game::FinishQuest_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 //	self->finishQuest(rev);
@@ -148,7 +148,7 @@ bool ParseFinishQuest_CS(shared_ptr<GamePlayer>self, const void* msg, const uint
 bool ParsePlayerSetting_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
 	cout << __FUNCTION__ << endl;
 
-	network::command::Game::PlayerSetting_CS rev;
+	Game::PlayerSetting_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 //	self->setting(rev);
@@ -159,7 +159,7 @@ bool ParsePlayerSetting_CS(shared_ptr<GamePlayer>self, const void* msg, const ui
 bool ParseFriendlinessInteract_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
 	cout << __FUNCTION__ << endl;
 
-	network::command::Game::FriendlinessInteract_CS rev;
+	Game::FriendlinessInteract_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 //	self->updatePilotFriendliness(rev);
@@ -170,7 +170,7 @@ bool ParseFriendlinessInteract_CS(shared_ptr<GamePlayer>self, const void* msg, c
 bool ParseItemForFriendliness_CS(shared_ptr<GamePlayer>self, const void* msg, const uint16 msglen) {
 	cout << __FUNCTION__ << endl;
 
-	network::command::Game::ItemForFriendliness_CS rev;
+	Game::ItemForFriendliness_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 //	self->itemForFriendliness(rev);
@@ -206,20 +206,20 @@ bool ClientMsgCenter::registry() {
 	registry(CMSGResStartGame_CS, ParseStartGame_CS);
 	registry(CMSGResContinueGame_CS, ParseContinueGame_CS);
 	registry(CMSGResEndGame_CS, ParseEndGame_CS);	
-	registry(network::command::CMSGBuyCurrency_CS, ParseBuyCurrency);
-	registry(network::command::CMSGUpgradeObject_CS, ParseUpgradeObject);
-	registry(network::command::CMSGBuyObject_CS, ParseBuyObject);
-	registry(network::command::CMSGInstallPlanePart_CS, ParseInstallPlanePart);
-	registry(network::command::CMSGSellObject_CS, ParseSellObject);
-	registry(network::command::CMSGReadMail_CS, ParseReadMail_CS);
-	registry(network::command::CMSGCreateUserMail_CS, ParseCreateUserMail_CS);
-	registry(network::command::CMSGCreateSystemMail_CS, ParseCreateSystemMail_CS);
-	registry(network::command::CMSGFinishQuest_CS, ParseFinishQuest_CS);
-	registry(network::command::CMSGPlayerSetting_CS, ParsePlayerSetting_CS);
-	registry(network::command::CMSGFriendlinessInteract_CS, ParseFriendlinessInteract_CS);
-	registry(network::command::CMSGItemForFriendliness_CS, ParseItemForFriendliness_CS);
-	registry(network::command::CMSGPetInfo_CS, ParseStrPet_CS);
-	registry(network::command::CMSGPetScraw_C, ParsePetScraw_C);
+	registry(CMSGBuyCurrency_CS, ParseBuyCurrency);
+	registry(CMSGUpgradeObject_CS, ParseUpgradeObject);
+	registry(CMSGBuyObject_CS, ParseBuyObject);
+	registry(CMSGInstallPlanePart_CS, ParseInstallPlanePart);
+	registry(CMSGSellObject_CS, ParseSellObject);
+	registry(CMSGReadMail_CS, ParseReadMail_CS);
+	registry(CMSGCreateUserMail_CS, ParseCreateUserMail_CS);
+	registry(CMSGCreateSystemMail_CS, ParseCreateSystemMail_CS);
+	registry(CMSGFinishQuest_CS, ParseFinishQuest_CS);
+	registry(CMSGPlayerSetting_CS, ParsePlayerSetting_CS);
+	registry(CMSGFriendlinessInteract_CS, ParseFriendlinessInteract_CS);
+	registry(CMSGItemForFriendliness_CS, ParseItemForFriendliness_CS);
+	registry(CMSGPetInfo_CS, ParseStrPet_CS);
+	registry(CMSGPetScraw_C, ParsePetScraw_C);
 	registry(CMSGCheckIn_CS, ParseCheckIn_CS);
 	return true;
 }

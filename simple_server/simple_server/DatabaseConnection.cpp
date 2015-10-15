@@ -41,7 +41,7 @@ bool DatabaseConnection::insertNewPlayer(std::string accid) const {
 		// 这里的1的意思是第一个？
 		// 在这里纠结了多久啊~
 		sqlite3_bind_blob(stmt, 1, player__, player_size__, nullptr);
-		int res = sqlite3_step(stmt);
+		auto res = sqlite3_step(stmt);
 		if (res == SQLITE_DONE) {
 			sqlite3_finalize(stmt);
 			return true;
@@ -54,7 +54,7 @@ bool DatabaseConnection::insertNewPlayer(std::string accid) const {
 
 bool DatabaseConnection::getPlayerFromDB(std::string accid, network::command::Player& player) const {
 	sqlite3_stmt * statement;
-	std::string sql = "select * from player where account = '" + accid + "';";
+	auto sql = "select * from player where account = '" + accid + "';";
 
 	if (sqlite3_prepare(db, sql.c_str(), -1, &statement, nullptr) == SQLITE_OK) {
 		int res = sqlite3_step(statement);
@@ -62,8 +62,8 @@ bool DatabaseConnection::getPlayerFromDB(std::string accid, network::command::Pl
 		if (res == SQLITE_ROW)
 		{
 			// 这里可能是有问题的，因为protobuf序列化后的数据中间可能存在0，所以会导致取回的数据不完整
-			char* s0 = (char*)sqlite3_column_blob(statement, static_cast<int>(Player_Field::DATABINARY));
-			int len = sqlite3_column_bytes(statement, static_cast<int>(Player_Field::DATABINARY));
+			auto* s0 = static_cast<const char*>(sqlite3_column_blob(statement, static_cast<int>(Player_Field::DATABINARY)));
+			auto len = sqlite3_column_bytes(statement, static_cast<int>(Player_Field::DATABINARY));
 			cout << accid << " 读取数据的大小: " << len << endl;
 			player.ParsePartialFromArray(s0, len);
 			sqlite3_finalize(statement);
@@ -95,13 +95,13 @@ void DatabaseConnection::updatePlayer(network::command::Player& player) const {
 	SerializeMsgMacro(player);
 	std::stringstream strm;
 	strm << "update player set databinary = ? where accid = '" << player.accid() << "';";
-	string sql = strm.str();
+	auto sql = strm.str();
 
 	cout << player.accid() << " 写入数据的大小: " << player_size__ << endl;
 
 	if (sqlite3_prepare(db, sql.c_str(), -1, &statement, nullptr) == SQLITE_OK) {
 		sqlite3_bind_blob(statement, 1, player__, player_size__, nullptr);
-		int res = sqlite3_step(statement);
+		auto res = sqlite3_step(statement);
 
 		sqlite3_finalize(statement);
 	}

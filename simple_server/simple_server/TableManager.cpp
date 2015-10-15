@@ -43,6 +43,6 @@ void TableManager::initAll() {
 }
 
 void TableManager::init(const string filename) {
-	shared_ptr<CsvReader> buy_diamond_ptr = make_shared<CsvReader>(filename);
+	auto buy_diamond_ptr = make_shared<CsvReader>(filename);
 	m_tableMap.insert({ filename, buy_diamond_ptr->shared_from_this() });
 }

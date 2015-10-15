@@ -10,53 +10,49 @@ using namespace std;
 map<uint32, vector<uint32>> GamePlayer::sm_fbRewardScoreJudge;
 map<uint32, vector<uint32>> GamePlayer::sm_dropOutVector;
 
-void GamePlayer::startGame(network::command::Play::StartGame_CS& msg) {
+void GamePlayer::startGame(Play::StartGame_CS& msg) {
 	auto wls_ptr = TableManager::getInstance().getTable("WayLevelStage");
 	int fb_id = wls_ptr->asInt(msg.fbid(), "id");
 	if (msg.fbid() != fb_id) {
 		printf("客户端传来的副本ID：%u非法！", msg.fbid());
-		return ProtocolReturn(msg, Play::StartGame_CS::PARAMETER, network::command::CMSGResStartGame_CS);
+		return ProtocolReturn(msg, Play::StartGame_CS::PARAMETER, CMSGResStartGame_CS);
 	}
 	if (m_player_status.playing() == true) {
 		printf("正在游戏中, %s", m_player.name().c_str());
-		return ProtocolReturn(msg, Play::StartGame_CS::PLAYING, network::command::CMSGResStartGame_CS);
+		return ProtocolReturn(msg, Play::StartGame_CS::PLAYING, CMSGResStartGame_CS);
 	}
 
 	if (bagHasFull()) {
 		//		MDEBUG("背包已满，不能开始游戏");
-		return ProtocolReturn(msg, Play::StartGame_CS::NOSPACE, network::command::CMSGResStartGame_CS);
+		return ProtocolReturn(msg, Play::StartGame_CS::NOSPACE, CMSGResStartGame_CS);
 	}
 
-	Pilot* pilot = getPilot(msg.pilotid());
-	Airplane* air = getPlane(msg.airplaneid());
+	auto pilot = getPilot(msg.pilotid());
+	auto air = getPlane(msg.airplaneid());
 
 	if (pilot == nullptr || air == nullptr) {
 		printf("进入关卡:%u失败，角色和飞机不存在！", msg.fbid());
-		return ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, network::command::CMSGResStartGame_CS);
+		return ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, CMSGResStartGame_CS);
 	}
 
-	int fb_type = wls_ptr->asInt(msg.fbid(), "type");
+	auto fb_type = wls_ptr->asInt(msg.fbid(), "type");
 
 	//检测副本的进入条件
-	if (static_cast<int>(FbType::FbType_Endless) == fb_type || static_cast<int>(FbType::FbType_Pvp) == fb_type)
-	{
+	if (static_cast<int>(FbType::FbType_Endless) == fb_type || static_cast<int>(FbType::FbType_Pvp) == fb_type) {
 		if (!checkEnterEndlessFb(msg))
 			return;
 	}
-	else if (static_cast<int>(FbType::FbType_Wipe) == msg.fbtype() && static_cast<int>(FbType::FbType_Nomal) == fb_type)
-	{
+	else if (static_cast<int>(FbType::FbType_Wipe) == msg.fbtype() && static_cast<int>(FbType::FbType_Nomal) == fb_type) {
 		if (!checkWipeFb(msg))
 			return;
 	}
-	else if (static_cast<int>(FbType::FbType_Nomal) == fb_type)
-	{
+	else if (static_cast<int>(FbType::FbType_Nomal) == fb_type) {
 		if (!checkEnterNormalFb(msg))
 			return;
 	}
-	else
-	{
-//		MERROR("非法的副本类型:%u", fb_type);
-		return ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, network::command::CMSGResStartGame_CS);
+	else {
+		//		MERROR("非法的副本类型:%u", fb_type);
+		return ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, CMSGResStartGame_CS);
 	}
 
 	m_player_status.set_playing(true);
@@ -77,23 +73,23 @@ void GamePlayer::startGame(network::command::Play::StartGame_CS& msg) {
 	//	return ProtocolReturn(emsg, Play::EndGame_CS::SUCCESS, network::command::CMSGResEndGame_CS);
 	//}
 
-	return ProtocolReturn(msg, Play::StartGame_CS::SUCCESS, network::command::CMSGResStartGame_CS);
+	return ProtocolReturn(msg, Play::StartGame_CS::SUCCESS, CMSGResStartGame_CS);
 }
 
-void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
+void GamePlayer::endGame(Play::EndGame_CS& msg) {
 	if (m_player_status.playing() == false) {
 		printf("没有正在进行的游戏, %s", m_player.name().c_str());
-		return ProtocolReturn(msg, Play::EndGame_CS::NOPLAYING, network::command::CMSGResEndGame_CS);
+		return ProtocolReturn(msg, Play::EndGame_CS::NOPLAYING, CMSGResEndGame_CS);
 	}
 	//此处有个判断是否作弊的接口
 	auto wls_ptr = TableManager::getInstance().getTable("WayLevelStage");
-	int tmp_id = wls_ptr->asInt(msg.fbid(), "id");
+	auto tmp_id = wls_ptr->asInt(msg.fbid(), "id");
 	if (msg.fbid() != tmp_id)//防止客户端传入参数错误
 	{
 		printf("客户端传入的无限副本唯一标示符错误:%u, %d", msg.fbid(), tmp_id);
 
 		m_player_status.set_playing(false);
-		return ProtocolReturn(msg, Play::EndGame_CS::UNKNOWN, network::command::CMSGResEndGame_CS);
+		return ProtocolReturn(msg, Play::EndGame_CS::UNKNOWN, CMSGResEndGame_CS);
 	}
 
 	auto type = static_cast<FbType>(wls_ptr->asInt(msg.fbid(), "type"));
@@ -101,13 +97,13 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 		printf("====>玩家闯关:%u--失败======", msg.fbid());
 		m_player_status.set_playing(false);
 		msg.set_fbtype(static_cast<int>(type));
-		return ProtocolReturn(msg, Play::EndGame_CS::FAIL, network::command::CMSGResEndGame_CS);
+		return ProtocolReturn(msg, Play::EndGame_CS::FAIL, CMSGResEndGame_CS);
 	}
 
 	//-----------------副本的结算------------------
-	uint32 tmp_score = msg.score();
-	int m_add_score = 0;
-	int m_add_exp = 0;
+	auto tmp_score = msg.score();
+	auto m_add_score = 0;
+	auto m_add_exp = 0;
 
 	if (FbType::FbType_Endless == type) {
 		obtainItem(msg, FbType::FbType_Endless);
@@ -119,7 +115,7 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 			m_player.mutable_weekrecord()->set_time(GameLogic::m_current_time);
 
 			if (tmp_score > m_player.bestrecord().record().score()) {
-				WeekRecord* record = new WeekRecord(m_player.weekrecord());
+				auto record = new WeekRecord(m_player.weekrecord());
 				m_player.mutable_bestrecord()->set_allocated_record(record);
 			}
 		}
@@ -155,10 +151,10 @@ void GamePlayer::endGame(network::command::Play::EndGame_CS& msg) {
 
 	sendPlayerInfo();
 	checkRanking();
-	return ProtocolReturn(msg, Play::EndGame_CS::SUCCESS, network::command::CMSGResEndGame_CS);
+	return ProtocolReturn(msg, Play::EndGame_CS::SUCCESS, CMSGResEndGame_CS);
 }
 
-void GamePlayer::continueGame(network::command::Play::ContinueGame_CS& msg) {
+void GamePlayer::continueGame(Play::ContinueGame_CS& msg) {
 	if (msg.type() == Play::ContinueGame_CS::FREE) {
 		msg.set_result(Play::ContinueGame_CS::SUCCESS);
 		msg.set_type(Play::ContinueGame_CS::FREE);
@@ -205,22 +201,22 @@ void GamePlayer::continueGame(network::command::Play::ContinueGame_CS& msg) {
 	}
 }
 
-void GamePlayer::calRewardPart(network::command::Play::EndGame_CS& msg, std::string& grade) {
-	uint32 score = msg.score();
-	uint32 id = msg.fbid();
+void GamePlayer::calRewardPart(Play::EndGame_CS& msg, string& grade) const {
+	auto score = msg.score();
+	auto id = msg.fbid();
 	//	INFO("客户端发来的副本%u的分数为%u", id, msg.score());
 
 	if (sm_fbRewardScoreJudge.empty()) {
-		std::vector<std::string> str_score;
-		std::vector<uint32> score_vec;
-		std::string tmp_score;
+		vector<string> str_score;
+		vector<uint32> score_vec;
+		string tmp_score;
 		uint32 m_temp = 0;
 
 		tmp_score = TableManager::getInstance().getTable("WayLevelStage")->asString(id, "grade");
 		str_score.clear();
 		score_vec.clear();
 
-		boost::split(str_score, tmp_score, boost::is_any_of("|"), boost::token_compress_on);
+		split(str_score, tmp_score, boost::is_any_of("|"), boost::token_compress_on);
 		for (uint32 i = 0; i < str_score.size(); ++i) {
 			boost::trim(str_score[i]);
 			m_temp = boost::lexical_cast<uint32>(str_score[i]);
@@ -256,8 +252,8 @@ void GamePlayer::calRewardPart(network::command::Play::EndGame_CS& msg, std::str
 		grade = "ten";
 }
 
-void GamePlayer::obtainItem(network::command::Play::EndGame_CS& msg, FbType fbType) {
-	std::string m_grade = "";
+void GamePlayer::obtainItem(Play::EndGame_CS& msg, FbType fbType) {
+	string m_grade = "";
 	msg.set_fbtype(static_cast<int>(fbType));
 	calRewardPart(msg, m_grade);
 
@@ -295,7 +291,7 @@ void GamePlayer::obtainItem(network::command::Play::EndGame_CS& msg, FbType fbTy
 	mutextProDrop(msg, id);
 }
 
-void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg) {
+void GamePlayer::obtainItemFromNormalFb(Play::EndGame_CS& msg) {
 	msg.set_fbtype(static_cast<int>(FbType::FbType_Nomal));
 
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
@@ -336,10 +332,10 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	uint32 m_wipetimes = wlsptr->asInt(msg.fbid(), "times");
 	uint32 m_star = wlsptr->asInt(msg.fbid(), "starlevel");
 
-	bool m_group_one = true;
-	bool m_group_two = false;
-	bool m_group_three = false;
-	bool m_old_fb = false;
+	auto m_group_one = true;
+	auto m_group_two = false;
+	auto m_group_three = false;
+	auto m_old_fb = false;
 	uint32 m_three_i = 0;
 	uint32 m_two_i = 0;
 	uint32 m_three_wipetimes = 0;
@@ -390,7 +386,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 	if (!m_old_fb && m_group_three)//三星关卡存储
 	{
-		::network::command::NormalFbStatistics* m_normalfb = nullptr;
+		NormalFbStatistics* m_normalfb;
 		m_normalfb = m_player.add_normalfbstatistics();
 		m_normalfb->set_id(msg.fbid());
 		m_normalfb->set_wipetimes(m_three_wipetimes);
@@ -398,7 +394,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 	if (!m_old_fb && m_group_two)//二星关卡存储
 	{
-		::network::command::NormalFbStatistics* n_normalfb = nullptr;
+		NormalFbStatistics* n_normalfb;
 		n_normalfb = m_player.add_normalfbstatistics();
 		n_normalfb->set_id(msg.fbid());
 		n_normalfb->set_wipetimes(m_two_wipetimes);
@@ -406,7 +402,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 	if (!m_old_fb && m_group_one && 1 == m_star)//一星关卡存储
 	{
-		::network::command::NormalFbStatistics* j_normalfb = nullptr;
+		NormalFbStatistics* j_normalfb;
 		j_normalfb = m_player.add_normalfbstatistics();
 		j_normalfb->set_id(msg.fbid());
 		j_normalfb->set_wipetimes(m_wipetimes);
@@ -414,7 +410,7 @@ void GamePlayer::obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg)
 	}
 }
 
-void GamePlayer::obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg) {
+void GamePlayer::obtainItemFromWipeFb(Play::EndGame_CS& msg) {
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
 	auto rtptr = TableManager::getInstance().getTable("RewardTable");
 
@@ -448,28 +444,28 @@ void GamePlayer::obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg) {
 	mutextProDrop(msg, id);
 }
 
-bool GamePlayer::checkEnterNormalFb(network::command::Play::StartGame_CS& msg) {
+bool GamePlayer::checkEnterNormalFb(Play::StartGame_CS& msg) {
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
 
 	//体力检测
 	uint32 m_energy = wlsptr->asInt(msg.fbid(), "energy");
 	if (m_player.energy() < m_energy) {
 		//		MDEBUG("进入关卡:%u的体力不足！", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::ENERGY, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::ENERGY, CMSGResStartGame_CS);
 		return false;
 	}
 	//道具检测
 	uint32 m_item = wlsptr->asInt(msg.fbid(), "item");
 	if (m_player.itemnum() < m_item && m_item != IMPOSSIBLE_RETURN) {
 		//		MDEBUG("进入关卡:%u的道具不足!", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::ITEM, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::ITEM, CMSGResStartGame_CS);
 		return false;
 	}
 	//等级检测
 	uint32 m_lev = wlsptr->asInt(msg.fbid(), "lev");
 	if (m_player.level() < m_lev) {
 		//		MDEBUG("进入关卡:%u的等级不够!", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::LEVEL, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::LEVEL, CMSGResStartGame_CS);
 		return false;
 	}
 	//判断前置关卡是否通过
@@ -477,8 +473,8 @@ bool GamePlayer::checkEnterNormalFb(network::command::Play::StartGame_CS& msg) {
 	auto it_norfbsta = m_normalfbstatistics->begin();
 
 	uint32 pre_fb_id = wlsptr->asInt(msg.fbid(), "pre_id");
-	uint32 m_fbid = msg.fbid();
-	bool m_pre_flag = false;
+	auto m_fbid = msg.fbid();
+	auto m_pre_flag = false;
 
 	if (pre_fb_id != IMPOSSIBLE_RETURN) {
 		while (it_norfbsta != m_normalfbstatistics->end()) {
@@ -496,7 +492,7 @@ bool GamePlayer::checkEnterNormalFb(network::command::Play::StartGame_CS& msg) {
 		{
 
 			//			MDEBUG("进入关卡:%u失败，前置关卡:%u未通过！", msg.fbid(), pre_fb_id);
-			ProtocolReturn(msg, Play::StartGame_CS::PREFBNOPASS, network::command::CMSGResStartGame_CS);
+			ProtocolReturn(msg, Play::StartGame_CS::PREFBNOPASS, CMSGResStartGame_CS);
 			return false;
 		}
 	}
@@ -511,23 +507,23 @@ bool GamePlayer::checkEnterNormalFb(network::command::Play::StartGame_CS& msg) {
 	return true;
 }
 
-bool GamePlayer::checkEnterEndlessFb(network::command::Play::StartGame_CS& msg) {
-	uint32 fb_energy = 0;
-	uint32 m_lev = 0;
+bool GamePlayer::checkEnterEndlessFb(Play::StartGame_CS& msg) {
+	uint32 fb_energy;
+	uint32 m_lev;
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
 
 	//体力检测
 	fb_energy = wlsptr->asInt(msg.fbid(), "energy");
 	if (m_player.energy() < fb_energy) {
 		//		MDEBUG("进入关卡:%u失败，体力不够！", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::ENERGY, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::ENERGY, CMSGResStartGame_CS);
 		return false;
 	}
 	//等级检测
 	m_lev = wlsptr->asInt(msg.fbid(), "lev");
 	if (m_player.level() < m_lev) {
 		//		MDEBUG("进入关卡:%u的等级不够!", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::LEVEL, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::LEVEL, CMSGResStartGame_CS);
 		return false;
 	}
 	//扣体力
@@ -535,13 +531,13 @@ bool GamePlayer::checkEnterEndlessFb(network::command::Play::StartGame_CS& msg) 
 	return true;
 }
 
-bool GamePlayer::checkWipeFb(network::command::Play::StartGame_CS& msg) {
+bool GamePlayer::checkWipeFb(Play::StartGame_CS& msg) {
 	//关卡类型检测
 	auto wlsptr = TableManager::getInstance().getTable("WayLevelStage");
 	uint32 m_type = wlsptr->asInt(msg.fbid(), "type");
 	if (m_type != static_cast<int>(FbType::FbType_Nomal)) {
 		//		MERROR("该关卡：%u不为普通关卡，不能被扫荡!", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, CMSGResStartGame_CS);
 		return false;
 	}
 	//该关卡是否已经通过,且扫荡次数是否够
@@ -554,7 +550,7 @@ bool GamePlayer::checkWipeFb(network::command::Play::StartGame_CS& msg) {
 	}
 	if (it_norfbsta == normalfbstatistics->end()) {
 		//		MDEBUG("该关卡:%u没有被通关，不能被扫荡！", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::FBNOPASS, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::FBNOPASS, CMSGResStartGame_CS);
 		return false;
 	}
 	//扫荡次数检测
@@ -562,42 +558,42 @@ bool GamePlayer::checkWipeFb(network::command::Play::StartGame_CS& msg) {
 	for (int i = 0; i < m_player.normalfbstatistics_size(); ++i) {
 		if (m_player.normalfbstatistics(i).id() == msg.fbid() && (m_player.normalfbstatistics(i).wipetimes() < 1 || m_player.normalfbstatistics(i).wipetimes() > m_times)) {
 			//			MDEBUG("该关卡:%u的剩余次数为0或者保存的剩余扫荡次数非法，不能被扫荡！", msg.fbid());
-			ProtocolReturn(msg, Play::StartGame_CS::NOWIPETIMES, network::command::CMSGResStartGame_CS);
+			ProtocolReturn(msg, Play::StartGame_CS::NOWIPETIMES, CMSGResStartGame_CS);
 			return false;
 		}
 	}
 	//扫荡券的数量检测
 	if (m_player.wipestock() < 1) {
 		//		MDEBUG("该关卡:%u需要的扫荡券不足，不能被扫荡！", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::NOWIPESTOCK, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::NOWIPESTOCK, CMSGResStartGame_CS);
 		return false;
 	}
 	//体力检测
 	uint32 m_energy = wlsptr->asInt(msg.fbid(), "energy");
 	if (m_player.energy() < m_energy) {
 		//		MDEBUG("进入关卡:%u的体力不足！", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::ENERGY, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::ENERGY, CMSGResStartGame_CS);
 		return false;
 	}
 	//道具检测
 	uint32 m_item = wlsptr->asInt(msg.fbid(), "item");
 	if (m_player.itemnum() < m_item && m_item != IMPOSSIBLE_RETURN) {
 		//		MDEBUG("进入关卡:%u的道具不足!", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::ITEM, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::ITEM, CMSGResStartGame_CS);
 		return false;
 	}
 	//等级检测
 	uint32 m_lev = wlsptr->asInt(msg.fbid(), "lev");
 	if (m_player.level() < m_lev) {
 		//		MDEBUG("进入关卡:%u的等级不够!", msg.fbid());
-		ProtocolReturn(msg, Play::StartGame_CS::LEVEL, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::LEVEL, CMSGResStartGame_CS);
 		return false;
 	}
 	//扣除扫荡次数----------后期要对下面的遍历代码进行优化
 	uint32 m_group = wlsptr->asInt(msg.fbid(), "groupid");
 	if (it_norfbsta->groupid() != m_group) {
 		//		MDEBUG("进入关卡:%u时，服务器存储的关卡组id:%u与策划表中对应的关卡组id:%u不相同!", msg.fbid(), it_norfbsta->groupid(), m_group);
-		ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, network::command::CMSGResStartGame_CS);
+		ProtocolReturn(msg, Play::StartGame_CS::UNKNOWN, CMSGResStartGame_CS);
 		return false;
 	}
 	it_norfbsta = normalfbstatistics->begin();
@@ -618,17 +614,17 @@ bool GamePlayer::checkWipeFb(network::command::Play::StartGame_CS& msg) {
 	return true;
 }
 
-void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint32 id) {
-	uint32 m_pro = 0;
-	uint32 m_material_id = 0;
-	uint32 m_material_num = 0;
+void GamePlayer::independProbDrop(Play::EndGame_CS& msg, uint32 id) {
+	uint32 m_pro;
+	uint32 m_material_id;
+	uint32 m_material_num;
 	auto rtptr = TableManager::getInstance().getTable("RewardTable");
 
 	m_pro = rtptr->asInt(id, "pro1");
 	if (Utility::selectByRegion(m_pro, 10000)) {
 		m_material_id = rtptr->asInt(id, "materi1");
 		m_material_num = rtptr->asInt(id, "materi1num");
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_material_id);
 		m_reward->set_materialnum(m_material_num);
 		addItemToBag(m_material_id, m_material_num);
@@ -641,7 +637,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 	if (Utility::selectByRegion(m_pro, 10000)) {
 		m_material_id = rtptr->asInt(id, "materi2");
 		m_material_num = rtptr->asInt(id, "materi2num");
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_material_id);
 		m_reward->set_materialnum(m_material_num);
 		addItemToBag(m_material_id, m_material_num);
@@ -654,7 +650,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 	if (Utility::selectByRegion(m_pro, 10000)) {
 		m_material_id = rtptr->asInt(id, "materi3");
 		m_material_num = rtptr->asInt(id, "materi3num");
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_material_id);
 		m_reward->set_materialnum(m_material_num);
 		addItemToBag(m_material_id, m_material_num);
@@ -667,7 +663,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 	if (Utility::selectByRegion(m_pro, 10000)) {
 		m_material_id = rtptr->asInt(id, "materi4");
 		m_material_num = rtptr->asInt(id, "materi4num");
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_material_id);
 		m_reward->set_materialnum(m_material_num);
 		addItemToBag(m_material_id, m_material_num);
@@ -679,7 +675,7 @@ void GamePlayer::independProbDrop(network::command::Play::EndGame_CS& msg, uint3
 }
 
 void GamePlayer::mutexProbDrop(uint32 dropid, uint32& id, uint32& number) {
-	uint32 num = 0;
+	uint32 num;
 	if (sm_dropOutVector.empty())
 		storageDropOutTable();
 	num = Utility::randBetween(0, 10000);
@@ -737,7 +733,7 @@ void GamePlayer::mutexProbDrop(uint32 dropid, uint32& id, uint32& number) {
 	}
 }
 
-void GamePlayer::mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 groupid) {
+void GamePlayer::mutextProDrop(Play::EndGame_CS& msg, uint32 groupid) {
 	auto rtptr = TableManager::getInstance().getTable("RewardTable");
 	auto doptr = TableManager::getInstance().getTable("DropOut");
 	uint32 m_dropid1 = rtptr->asInt(groupid, "dropid1");
@@ -760,7 +756,7 @@ void GamePlayer::mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 g
 	uint32 m_num = 0;
 	for (uint32 i = 0; i < m_pro1 && m_dropid1 != IMPOSSIBLE_RETURN; ++i) {
 		mutexProbDrop(m_dropid1, m_id, m_num);
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_id);
 		m_reward->set_materialnum(m_num);
 		addItemToBag(m_id, m_num);
@@ -768,7 +764,7 @@ void GamePlayer::mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 g
 	}
 	for (uint32 j = 0; j < m_pro2 && m_dropid2 != IMPOSSIBLE_RETURN; ++j) {
 		mutexProbDrop(m_dropid2, m_id, m_num);
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_id);
 		m_reward->set_materialnum(m_num);
 		addItemToBag(m_id, m_num);
@@ -776,7 +772,7 @@ void GamePlayer::mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 g
 	}
 	for (uint32 k = 0; k < m_pro3 && m_dropid3 != IMPOSSIBLE_RETURN; ++k) {
 		mutexProbDrop(m_dropid3, m_id, m_num);
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_id);
 		m_reward->set_materialnum(m_num);
 		addItemToBag(m_id, m_num);
@@ -784,7 +780,7 @@ void GamePlayer::mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 g
 	}
 	for (uint32 l = 0; l < m_pro4 && m_dropid4 != IMPOSSIBLE_RETURN; ++l) {
 		mutexProbDrop(m_dropid4, m_id, m_num);
-		network::command::RewardGoods* m_reward = msg.add_rewardgoods();
+		auto m_reward = msg.add_rewardgoods();
 		m_reward->set_materialid(m_id);
 		m_reward->set_materialnum(m_num);
 		addItemToBag(m_id, m_num);
@@ -792,8 +788,8 @@ void GamePlayer::mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 g
 	}
 }
 
-void GamePlayer::storageDropOutTable() {
-	std::vector<uint32> rand_vec;
+void GamePlayer::storageDropOutTable() const {
+	vector<uint32> rand_vec;
 	//std::vector<uint32> idlist = TaskInfoManager::getInstance().getTableId();
 	auto doptr = TableManager::getInstance().getTable("DropOut");
 	auto idlist = TableManager::getInstance().getTable("DropOut")->getTableIdList();
@@ -827,8 +823,8 @@ void GamePlayer::storageDropOutTable() {
 }
 
 void GamePlayer::updateWipeTimes() {
-	for (int i = 0; i < m_player.normalfbstatistics_size(); ++i) {
-		network::command::NormalFbStatistics* m_norfb = nullptr;
+	for (auto i = 0; i < m_player.normalfbstatistics_size(); ++i) {
+		NormalFbStatistics* m_norfb;
 		m_norfb = m_player.mutable_normalfbstatistics(i);
 		m_norfb->set_wipetimes(4);
 	}

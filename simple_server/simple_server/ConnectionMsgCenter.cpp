@@ -13,7 +13,7 @@ using namespace std;
 using namespace network::command;
 
 bool ParseTest_C(shared_ptr<PlayerConnection> self, const void* msg, const short msglen) {
-	std::string str(static_cast<const char*>(msg));
+	string str(static_cast<const char*>(msg));
 	cout << "msg len: " << msglen << endl;
 	cout << "msg content: " << str << endl;
 	self->write(str, msglen);
@@ -47,7 +47,7 @@ bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void* msg, cons
 	EnterGame_CSS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-	shared_ptr<GamePlayer> player = PlayerManager::getInstance().getPlayerByName(rev.accid());
+	auto player = PlayerManager::getInstance().getPlayerByName(rev.accid());
 	if (player) {
 		PlayerManager::getInstance().removePlayer(player);
 	}
@@ -59,7 +59,7 @@ bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void* msg, cons
 
 	self->setName(rev.accid());
 
-	Player proto_player = DatabaseCache::getInstance().getPlayer(rev.accid());
+	auto proto_player = DatabaseCache::getInstance().getPlayer(rev.accid());
 	player->online(proto_player);
 
 	return true;

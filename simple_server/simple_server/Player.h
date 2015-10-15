@@ -25,7 +25,7 @@ public:
 	// game play
 	void startGame(network::command::Play::StartGame_CS& msg);
 	void continueGame(network::command::Play::ContinueGame_CS& msg);
-	void calRewardPart(network::command::Play::EndGame_CS& msg, std::string& grade);
+	void calRewardPart(network::command::Play::EndGame_CS& msg, std::string& grade) const;
 	void obtainItem(network::command::Play::EndGame_CS& msg, FbType fbType);
 	void obtainItemFromNormalFb(network::command::Play::EndGame_CS& msg);
 	void obtainItemFromWipeFb(network::command::Play::EndGame_CS& msg);
@@ -35,7 +35,7 @@ public:
 	void independProbDrop(network::command::Play::EndGame_CS& msg, uint32 id);
 	void mutexProbDrop(uint32 dropid, uint32& id, uint32& number);
 	void mutextProDrop(network::command::Play::EndGame_CS& msg, uint32 groupid);
-	void storageDropOutTable();
+	void storageDropOutTable() const;
 	void updateWipeTimes();
 	void endGame(network::command::Play::EndGame_CS& msg);
 
@@ -68,7 +68,7 @@ private:
 	void initNewPlayer();
 	void sendPlayerInfo();
 	uint64 generateUUID();
-	void sendInitInfo();
+	void sendInitInfo() const;
 	void checkCheckIn();
 	void clearCheckIn();
 	void setLastLoginTime();
@@ -84,7 +84,7 @@ private:
 	void levelUp(uint32 value);
 	void save();	// 需要一个随机时钟来存储它
 	void checkRanking();
-	void getOnlineRankingInfo(network::command::Game::Ranking_SC& cli_msg);
+	void getOnlineRankingInfo(network::command::Game::Ranking_SC& cli_msg) const;
 	void checkLastWeekRank(network::command::Game::Ranking_SC& msg);
 	void checkWeekRanking();
 	// bag
@@ -98,7 +98,7 @@ private:
 	bool subNormalItemBag(uint32 item_id, const uint32 sub_num = 1);
 	bool addBagSpace(const uint32 space_num);
 	void cacuBagSize();
-	bool bagHasFull();
+	bool bagHasFull() const;
 	bool addItemToBag(uint32 item_id, uint32 item_num = 1);
 	bool subItemBag(uint32 item_id, uint32 item_num = 1);
 	void addItem(uint32 id, uint32 num);

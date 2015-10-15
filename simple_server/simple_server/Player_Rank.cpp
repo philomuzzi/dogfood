@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "ClientCommand/server.pb.h"
 #include "ClientCommand/game.pb.h"
 #include "PlayerManager.h"
 #include "GameLogic.h"
@@ -29,17 +28,15 @@ void GamePlayer::checkRanking()
 //	sendFriendNextMailTime();
 }
 
-void GamePlayer::getOnlineRankingInfo(network::command::Game::Ranking_SC &cli_msg)
-{
-	RankingInfo *info = nullptr;
+void GamePlayer::getOnlineRankingInfo(Game::Ranking_SC &cli_msg) const {
+	RankingInfo *info;
 	shared_ptr<GamePlayer> fri = nullptr;
-	for (int i = 0; i < m_player.friendlist_size(); i++)
+	for (auto i = 0; i < m_player.friendlist_size(); i++)
 	{
 		fri = nullptr;
 		fri = PlayerManager::getInstance().getPlayerByName(m_player.friendlist(i).c_str());
 		if (fri != nullptr)
 		{
-			info = nullptr;
 			info = cli_msg.add_rankinginfolist();
 			info->set_name(fri->m_player.name());
 			info->set_accid(m_player.friendlist(i));
@@ -49,12 +46,12 @@ void GamePlayer::getOnlineRankingInfo(network::command::Game::Ranking_SC &cli_ms
 			info->set_allowenergymail(fri->m_player.allowenergymail());
 			if (fri->m_player.has_bestrecord())
 			{
-				network::command::BestRecord *record = new network::command::BestRecord(fri->m_player.bestrecord());
+				auto record = new BestRecord(fri->m_player.bestrecord());
 				info->set_allocated_bestrecord(record);
 			}
 			if (fri->m_player.has_weekrecord())
 			{
-				network::command::WeekRecord *record = new network::command::WeekRecord(fri->m_player.weekrecord());
+				auto record = new WeekRecord(fri->m_player.weekrecord());
 				info->set_allocated_weekrecord(record);
 			}
 
@@ -69,15 +66,15 @@ void GamePlayer::getOnlineRankingInfo(network::command::Game::Ranking_SC &cli_ms
 	}
 }
 
-void GamePlayer::checkLastWeekRank(network::command::Game::Ranking_SC &msg)     // 借用排行榜信息来排行成绩
+void GamePlayer::checkLastWeekRank(Game::Ranking_SC &msg)     // 借用排行榜信息来排行成绩
 {
 	m_needCheckWeekRank = false;
 
-	int rank = 1;
-	uint32 record = m_player.lastweekrecord();
-	for (int i = 0; i < msg.rankinginfolist_size(); ++i)
+	auto rank = 1;
+	auto record = m_player.lastweekrecord();
+	for (auto i = 0; i < msg.rankinginfolist_size(); ++i)
 	{
-		const RankingInfo &info = msg.rankinginfolist(i);
+		const auto& info = msg.rankinginfolist(i);
 		if (info.lastloginweek() == GameLogic::getLogicInstance()->getWeek())
 		{
 			if (record < info.lastweekrecord())

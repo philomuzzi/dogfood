@@ -53,7 +53,7 @@ const char* MoneyActionLog[] = {
 	"ERROR"
 };
 
-void GamePlayer::buyCurrency(network::command::Shop::BuyCurrency_CS &msg)
+void GamePlayer::buyCurrency(Shop::BuyCurrency_CS &msg)
 {
 	switch (msg.itemtype())
 	{
@@ -70,10 +70,10 @@ void GamePlayer::buyCurrency(network::command::Shop::BuyCurrency_CS &msg)
 //	MERROR("未解析的购买类型:%u", msg.itemtype());
 }
 
-void GamePlayer::buyGold(network::command::Shop::BuyCurrency_CS &msg)
+void GamePlayer::buyGold(Shop::BuyCurrency_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("ExchangeGold");
-	uint32 itemid = msg.buyitemid();
+	auto itemid = msg.buyitemid();
 	uint32 gold = ptr->asInt(itemid, "gold");
 	uint32 diamond = ptr->asInt(itemid, "diamond");
 //	INFO("player: %s, itemid: %d, exchange gold, gold add: %d, diamond need: %d", m_player.name().c_str(), itemid, gold, diamond);
@@ -101,10 +101,10 @@ void GamePlayer::buyGold(network::command::Shop::BuyCurrency_CS &msg)
 }
 
 // 购买钻石需要和支付平台交互
-void GamePlayer::buyDiamond(network::command::Shop::BuyCurrency_CS &msg)
+void GamePlayer::buyDiamond(Shop::BuyCurrency_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("BuyDiamond");
-	uint32 itemid = msg.buyitemid();
+	auto itemid = msg.buyitemid();
 	uint32 money = ptr->asInt(itemid, "money");
 	uint32 diamond = ptr->asInt(itemid, "diamond");
 
@@ -126,9 +126,9 @@ void GamePlayer::buyDiamond(network::command::Shop::BuyCurrency_CS &msg)
 	sendPlayerInfo();
 }
 
-void GamePlayer::buyEnergy(network::command::Shop::BuyCurrency_CS &msg)
+void GamePlayer::buyEnergy(Shop::BuyCurrency_CS &msg)
 {
-	uint32 itemid = msg.buyitemid();
+	auto itemid = msg.buyitemid();
 	auto ptr = TableManager::getInstance().getTable("BuyEnergy");
 	uint32 energy = ptr->asInt(itemid, "energy");
 	uint32 diamond = ptr->asInt(itemid, "diamond");
@@ -160,7 +160,7 @@ void GamePlayer::buyEnergy(network::command::Shop::BuyCurrency_CS &msg)
 
 
 
-void GamePlayer::upgradeObject(network::command::Shop::UpgradeObject_CS &msg)
+void GamePlayer::upgradeObject(Shop::UpgradeObject_CS &msg)
 {
 	switch (msg.obtype())
 	{
@@ -177,7 +177,7 @@ void GamePlayer::upgradeObject(network::command::Shop::UpgradeObject_CS &msg)
 }
 
 // 读取pilot表格，获取升级要求，检查下级的项目是否存在，然后扣除金钱，返回
-void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
+void GamePlayer::upgradePilot(Shop::UpgradeObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("PilotProperty");
 	uint32 id = ptr->asInt(msg.id(), "pilot_id");
@@ -190,7 +190,7 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 		return ProtocolReturn(msg, Shop::UpgradeObject_CS::UNKNOWN, CMSGUpgradeObject_CS);
 	}
 
-	Pilot *pilot = getPilot(id);
+	auto pilot = getPilot(id);
 
 	if (pilot == nullptr)
 	{
@@ -251,8 +251,8 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 	}
 	else if (msg.uptype() == Shop::UpgradeObject_CS::OneClick && can_levelup == 1)
 	{
-		uint32 next_id = id;
-		uint32 check_id = next_id;
+		auto next_id = id;
+		auto check_id = next_id;
 		uint32 gold = 0;
 		uint32 add_gold;
 		uint32 diamond = 0;
@@ -306,7 +306,7 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 	}
 	else if (msg.uptype() == Shop::UpgradeObject_CS::Skill)
 	{
-		uint32 skill_id = pilot->skill_property_id();
+		auto skill_id = pilot->skill_property_id();
 		if (skill_id == 0)
 		{
 			skill_id = ptr->asInt(id, "skill_property_id");
@@ -331,7 +331,7 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 		gold = gold == (uint32)-1 ? 0 : gold;
 		diamond = diamond == (uint32)-1 ? 0 : diamond;
 
-		bool ok = checkMoney(Shop::Gold, gold);
+		auto ok = checkMoney(Shop::Gold, gold);
 		if (!ok)
 		{
 //			INFO("金钱不足: gold, %d; diamond, %d", gold, diamond);
@@ -361,7 +361,7 @@ void GamePlayer::upgradePilot(network::command::Shop::UpgradeObject_CS &msg)
 	return ProtocolReturn(msg, Shop::UpgradeObject_CS::UNKNOWN, CMSGUpgradeObject_CS);
 }
 
-void GamePlayer::upgradeAirplane(network::command::Shop::UpgradeObject_CS &msg)
+void GamePlayer::upgradeAirplane(Shop::UpgradeObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("PlaneProperty");
 
@@ -374,7 +374,7 @@ void GamePlayer::upgradeAirplane(network::command::Shop::UpgradeObject_CS &msg)
 		return ProtocolReturn(msg, Shop::UpgradeObject_CS::UNKNOWN, CMSGUpgradeObject_CS);
 	}
 
-	Airplane *airplane = getPlane(id);
+	auto airplane = getPlane(id);
 
 	if (airplane == nullptr)
 	{
@@ -401,7 +401,7 @@ void GamePlayer::upgradeAirplane(network::command::Shop::UpgradeObject_CS &msg)
 		gold = gold == IMPOSSIBLE_RETURN ? 0 : gold;
 		diamond = diamond == IMPOSSIBLE_RETURN ? 0 : diamond;
 
-		bool ok = checkMoney(Shop::Gold, gold);
+		auto ok = checkMoney(Shop::Gold, gold);
 		if (!ok)
 		{
 //			INFO("金钱不足: gold, %d; diamond, %d", gold, diamond);
@@ -523,7 +523,7 @@ void GamePlayer::upgradeAirplane(network::command::Shop::UpgradeObject_CS &msg)
 	return ProtocolReturn(msg, Shop::UpgradeObject_CS::UNKNOWN, CMSGUpgradeObject_CS);
 }
 
-void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
+void GamePlayer::upgradePlanePart(Shop::UpgradeObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("PlanePartsProperty");
 	uint32 id = ptr->asInt(msg.id(), "engineid");
@@ -534,10 +534,10 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 	}
 
 	PlanePart *part = nullptr;
-	Bag *bag = m_player.mutable_bag();
+	auto bag = m_player.mutable_bag();
 	if (msg.airplaneid() != -1)
 	{
-		Airplane *airplane = getPlane(msg.airplaneid());
+		auto airplane = getPlane(msg.airplaneid());
 		if (airplane == nullptr)
 		{
 //			INFO("玩家之前不拥有该飞机: %d", msg.airplaneid());
@@ -583,9 +583,8 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 	}
 	else
 	{
-		::google::protobuf::RepeatedPtrField< ::network::command::PlanePart >* partlist = bag->mutable_partlist();
-		::google::protobuf::RepeatedPtrField< PlanePart >::iterator it_part = partlist->begin();
-		for (; it_part != partlist->end(); it_part++)
+		auto partlist = bag->mutable_partlist();		
+		for (auto it_part = partlist->begin(); it_part != partlist->end(); ++it_part)
 		{
 			if (it_part->id() == id && it_part->thisid() == msg.thisid())
 			{
@@ -614,16 +613,13 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 
 		uint32 add_exp = 0;
 
-		::google::protobuf::RepeatedPtrField< ::network::command::Shop::upgradeItem >* upitemlist = msg.mutable_itemlist();
-		::google::protobuf::RepeatedPtrField< Shop::upgradeItem >::iterator it_item = upitemlist->begin();
-
-		int partlist_size = bag->partlist_size();
+		auto upitemlist = msg.mutable_itemlist();		
 		uint32 tmp_exp;
-		for (; it_item != upitemlist->end(); ++it_item)
+		for (auto it_item = upitemlist->begin(); it_item != upitemlist->end(); ++it_item)
 		{
 			if (it_item->thisid() != 0)
 			{
-				for (int i = 0; i != partlist_size; ++i)
+				for (auto i = 0; i != bag->partlist_size(); ++i)
 				{
 					if (bag->partlist(i).thisid() == it_item->thisid())
 					{
@@ -649,9 +645,9 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 			}
 		}
 
-		uint32 next_id = id;
+		auto next_id = id;
 		uint32 max_exp = ptr->asInt(next_id, "exp");
-		uint32 total_exp = add_exp + part->exp();
+		auto total_exp = add_exp + part->exp();
 		while (max_exp <= total_exp)
 		{
 			next_id++;
@@ -663,9 +659,9 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 
 		uint32 total_gold = 0;
 		uint32 total_diamond = 0;
-		uint32 gold = 0;
-		uint32 diamond = 0;
-		for (uint32 i = id; i < next_id; ++i)
+		uint32 gold;
+		uint32 diamond;
+		for (auto i = id; i < next_id; ++i)
 		{
 			gold = ptr->asInt(i, "levelupgold");
 			diamond = ptr->asInt(i, "levelupdiamond");
@@ -675,10 +671,10 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 				total_diamond += diamond;
 		}
 
-		gold = gold == IMPOSSIBLE_RETURN ? 0 : gold;
-		diamond = diamond == IMPOSSIBLE_RETURN ? 0 : diamond;
+		total_gold = total_gold == IMPOSSIBLE_RETURN ? 0 : total_gold;
+		total_diamond = total_diamond == IMPOSSIBLE_RETURN ? 0 : total_diamond;
 
-		bool ok = checkMoney(Shop::Gold, total_gold);
+		auto ok = checkMoney(Shop::Gold, total_gold);
 		if (!ok)
 		{
 //			INFO("金钱不足: gold, %d; diamond, %d", total_gold, total_diamond);
@@ -694,7 +690,7 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 			return ProtocolReturn(msg, Shop::UpgradeObject_CS::NODIAMOND, CMSGUpgradeObject_CS);
 		}
 
-		for (it_item = upitemlist->begin(); it_item != upitemlist->end(); ++it_item)
+		for (auto it_item = upitemlist->begin(); it_item != upitemlist->end(); ++it_item)
 		{
 			if (it_item->thisid() != 0)
 			{
@@ -783,7 +779,7 @@ void GamePlayer::upgradePlanePart(network::command::Shop::UpgradeObject_CS &msg)
 	return ProtocolReturn(msg, Shop::UpgradeObject_CS::UNKNOWN, CMSGUpgradeObject_CS);
 }
 
-void GamePlayer::buyObject(network::command::Shop::BuyObject_CS &msg)
+void GamePlayer::buyObject(Shop::BuyObject_CS &msg)
 {
 	if (msg.type() == Shop::BuyObject_CS::Airplane)
 	{
@@ -838,7 +834,7 @@ void GamePlayer::buyObject(network::command::Shop::BuyObject_CS &msg)
 //	DEBUG("暂时还不支持这些购买类型, %d", msg.type());
 }
 
-void GamePlayer::buyAirplane(network::command::Shop::BuyObject_CS &msg)
+void GamePlayer::buyAirplane(Shop::BuyObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("BuyPlane");
 	uint32 id = ptr->asInt(msg.id(), "airplane_id");
@@ -897,7 +893,7 @@ void GamePlayer::buyAirplane(network::command::Shop::BuyObject_CS &msg)
 	return ProtocolReturn(msg, Shop::BuyObject_CS::SUCCESS, CMSGBuyObject_CS);
 }
 
-void GamePlayer::buyPilot(network::command::Shop::BuyObject_CS &msg)
+void GamePlayer::buyPilot(Shop::BuyObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("BuyPilot");
 	uint32 pilot_id = ptr->asInt(msg.id(), "pilot_id");
@@ -940,7 +936,7 @@ void GamePlayer::buyPilot(network::command::Shop::BuyObject_CS &msg)
 			return ProtocolReturn(msg, Shop::BuyObject_CS::UNKNOWN, CMSGBuyObject_CS);
 		}
 
-		Pilot *pilot = getPilot(pre_pilot_id);
+		auto pilot = getPilot(pre_pilot_id);
 
 		if (pilot == nullptr)
 		{
@@ -981,7 +977,7 @@ void GamePlayer::buyPilot(network::command::Shop::BuyObject_CS &msg)
 	subMoney(Shop::Gold, gold, MoneyAction::SubGoldForPilotBuy);
 	subMoney(Shop::Diamond, diamond, MoneyAction::SubDiamondForPilotBuy);
 
-	Pilot *pilot = m_player.add_pilotlist();
+	auto pilot = m_player.add_pilotlist();
 	pilot->set_id(pilot_id);
 	pilot->set_skill_property_id(ppptr->asInt(pilot_id, "skill_property_id"));
 	m_player.set_currentpilot(pilot_id);
@@ -991,9 +987,9 @@ void GamePlayer::buyPilot(network::command::Shop::BuyObject_CS &msg)
 	return ProtocolReturn(msg, Shop::BuyObject_CS::SUCCESS, CMSGBuyObject_CS);
 }
 
-void GamePlayer::buyPlanePart(network::command::Shop::BuyObject_CS &msg)
+void GamePlayer::buyPlanePart(Shop::BuyObject_CS &msg)
 {
-	bool ok = addItemToBag(msg.id());
+	auto ok = addItemToBag(msg.id());
 	if (ok)
 	{
 		sendPlayerInfo();
@@ -1003,9 +999,9 @@ void GamePlayer::buyPlanePart(network::command::Shop::BuyObject_CS &msg)
 	return ProtocolReturn(msg, Shop::BuyObject_CS::UNKNOWN, CMSGBuyObject_CS);
 }
 
-void GamePlayer::buyItem(network::command::Shop::BuyObject_CS &msg)
+void GamePlayer::buyItem(Shop::BuyObject_CS &msg)
 {
-	bool ok = addItemToBag(msg.id());
+	auto ok = addItemToBag(msg.id());
 	if (ok)
 	{
 		sendPlayerInfo();
@@ -1015,9 +1011,9 @@ void GamePlayer::buyItem(network::command::Shop::BuyObject_CS &msg)
 	return ProtocolReturn(msg, Shop::BuyObject_CS::UNKNOWN, CMSGBuyObject_CS);
 }
 
-void GamePlayer::buyPileItem(network::command::Shop::BuyObject_CS &msg)
+void GamePlayer::buyPileItem(Shop::BuyObject_CS &msg)
 {
-	bool ok = addItemToBag(msg.id());
+	auto ok = addItemToBag(msg.id());
 	if (ok)
 	{
 		sendPlayerInfo();
@@ -1027,7 +1023,7 @@ void GamePlayer::buyPileItem(network::command::Shop::BuyObject_CS &msg)
 	return ProtocolReturn(msg, Shop::BuyObject_CS::UNKNOWN, CMSGBuyObject_CS);
 }
 
-void GamePlayer::buyBagSpace(network::command::Shop::BuyObject_CS &msg)
+void GamePlayer::buyBagSpace(Shop::BuyObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("BuyBagSpace");
 	uint32 id = ptr->asInt(msg.id(), "id");
@@ -1077,7 +1073,7 @@ void GamePlayer::buyBagSpace(network::command::Shop::BuyObject_CS &msg)
 
 
 
-void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &msg)
+void GamePlayer::installPlanePart(Shop::InstallPlanePart_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("PilotProperty");
 	uint32 id = ptr->asInt(msg.planeid(), "plane_id");
@@ -1089,7 +1085,7 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 		return ProtocolReturn(msg, Shop::InstallPlanePart_CS::UNKNOWN, CMSGInstallPlanePart_CS);
 	}
 
-	Airplane *airplane = getPlane(id);
+	auto airplane = getPlane(id);
 	if (airplane == nullptr)
 	{
 //		INFO("安装部件失败，玩家不拥有该飞机: %d", id);
@@ -1099,11 +1095,10 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 
 	if (msg.optype() == Shop::InstallPlanePart_CS::INSTALL)
 	{
-		Bag *bag = m_player.mutable_bag();
+		auto bag = m_player.mutable_bag();
 		PlanePart *part = nullptr;
-		::google::protobuf::RepeatedPtrField< ::network::command::PlanePart >* partlist = bag->mutable_partlist();
-		::google::protobuf::RepeatedPtrField< PlanePart >::iterator it_part = partlist->begin();
-		for (; it_part != partlist->end(); it_part++)
+		auto partlist = bag->mutable_partlist();		
+		for (auto it_part = partlist->begin(); it_part != partlist->end(); ++it_part)
 		{
 			if (it_part->thisid() == msg.thisid())
 			{
@@ -1114,7 +1109,7 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 
 		if (part == nullptr)
 		{
-			Airplane *ex_plane = getPlane(msg.explaneid());
+			auto ex_plane = getPlane(msg.explaneid());
 			if (ex_plane)
 			{
 				switch (msg.exslot())
@@ -1227,8 +1222,8 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 				return ProtocolReturn(msg, Shop::InstallPlanePart_CS::UNKNOWN, CMSGInstallPlanePart_CS);
 			}
 
-			Bag *bag = m_player.mutable_bag();
-			PlanePart *part = bag->add_partlist();
+			auto bag = m_player.mutable_bag();
+			auto part = bag->add_partlist();
 			part->CopyFrom(airplane->slotone().part());
 			airplane->mutable_slotone()->clear_part();
 
@@ -1242,8 +1237,8 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 				return ProtocolReturn(msg, Shop::InstallPlanePart_CS::UNKNOWN, CMSGInstallPlanePart_CS);
 			}
 
-			Bag *bag = m_player.mutable_bag();
-			PlanePart *part = bag->add_partlist();
+			auto bag = m_player.mutable_bag();
+			auto part = bag->add_partlist();
 			part->CopyFrom(airplane->slottwo().part());
 			airplane->mutable_slottwo()->clear_part();
 
@@ -1257,8 +1252,8 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 				return ProtocolReturn(msg, Shop::InstallPlanePart_CS::UNKNOWN, CMSGInstallPlanePart_CS);
 			}
 
-			Bag *bag = m_player.mutable_bag();
-			PlanePart *part = bag->add_partlist();
+			auto bag = m_player.mutable_bag();
+			auto part = bag->add_partlist();
 			part->CopyFrom(airplane->slotthree().part());
 			airplane->mutable_slotthree()->clear_part();
 
@@ -1272,8 +1267,8 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 				return ProtocolReturn(msg, Shop::InstallPlanePart_CS::UNKNOWN, CMSGInstallPlanePart_CS);
 			}
 
-			Bag *bag = m_player.mutable_bag();
-			PlanePart *part = bag->add_partlist();
+			auto bag = m_player.mutable_bag();
+			auto part = bag->add_partlist();
 			part->CopyFrom(airplane->slotfour().part());
 			airplane->mutable_slotfour()->clear_part();
 
@@ -1287,8 +1282,8 @@ void GamePlayer::installPlanePart(network::command::Shop::InstallPlanePart_CS &m
 				return ProtocolReturn(msg, Shop::InstallPlanePart_CS::UNKNOWN, CMSGInstallPlanePart_CS);
 			}
 
-			Bag *bag = m_player.mutable_bag();
-			PlanePart *part = bag->add_partlist();
+			auto bag = m_player.mutable_bag();
+			auto part = bag->add_partlist();
 			part->CopyFrom(airplane->slotfive().part());
 			airplane->mutable_slotfive()->clear_part();
 
@@ -1314,10 +1309,10 @@ void GamePlayer::planePartInstall(Shop::InstallPlanePart_CS &msg, PlaneSlot *slo
 	}
 	else
 	{
-		PlanePart *install_part = new PlanePart(*part);
+		auto install_part = new PlanePart(*part);
 		slot->set_allocated_part(install_part);
 
-		Airplane *ex_plane = getPlane(msg.explaneid());
+		auto ex_plane = getPlane(msg.explaneid());
 		if (ex_plane)
 		{
 			switch (msg.exslot())
@@ -1348,7 +1343,7 @@ void GamePlayer::planePartInstall(Shop::InstallPlanePart_CS &msg, PlaneSlot *slo
 
 
 
-void GamePlayer::sellObject(network::command::Shop::SellObject_CS &msg)
+void GamePlayer::sellObject(Shop::SellObject_CS &msg)
 {
 	if (msg.type() == Shop::SellObject_CS::PlanePart)
 	{
@@ -1364,7 +1359,7 @@ void GamePlayer::sellObject(network::command::Shop::SellObject_CS &msg)
 //	DEBUG("暂时还不支持这些购买类型, %d", msg.type());
 }
 
-void GamePlayer::sellItem(network::command::Shop::SellObject_CS &msg)
+void GamePlayer::sellItem(Shop::SellObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("PlayerItem");
 	uint32 id = ptr->asInt(msg.id(), "itemid");
@@ -1401,7 +1396,7 @@ void GamePlayer::sellItem(network::command::Shop::SellObject_CS &msg)
 	return ProtocolReturn(msg, Shop::SellObject_CS::UNKNOWN, CMSGSellObject_CS);
 }
 
-void GamePlayer::sellPlanePart(network::command::Shop::SellObject_CS &msg)
+void GamePlayer::sellPlanePart(Shop::SellObject_CS &msg)
 {
 	auto ptr = TableManager::getInstance().getTable("PlanePartsProperty");
 	uint32 id = ptr->asInt(msg.id(), "engineid");
@@ -1414,9 +1409,8 @@ void GamePlayer::sellPlanePart(network::command::Shop::SellObject_CS &msg)
 	PlanePart *part = nullptr;
 	Bag *bag = m_player.mutable_bag();
 
-	::google::protobuf::RepeatedPtrField< ::network::command::PlanePart >* partlist = bag->mutable_partlist();
-	::google::protobuf::RepeatedPtrField< PlanePart >::iterator it_part = partlist->begin();
-	for (; it_part != partlist->end(); it_part++)
+	auto partlist = bag->mutable_partlist();	
+	for (auto it_part = partlist->begin(); it_part != partlist->end(); ++it_part)
 	{
 		if (it_part->id() == id && it_part->thisid() == msg.thisid())
 		{
@@ -1454,21 +1448,21 @@ void GamePlayer::sellPlanePart(network::command::Shop::SellObject_CS &msg)
 
 
 
-bool GamePlayer::checkMoney(network::command::Shop::CurrencyType type, const uint32 num) const
+bool GamePlayer::checkMoney(Shop::CurrencyType type, const uint32 num) const
 {
 //	CheckCondition(network::command::Shop::Gold == type || network::command::Shop::Diamond == type, false);
-	if (network::command::Shop::Gold == type)
+	if (Shop::Gold == type)
 		return m_player.gold() >= num;
 	else
 		return m_player.diamond() >= num;
 }
 
-void GamePlayer::addMoney(network::command::Shop::CurrencyType type, uint32 num, MoneyAction action)
+void GamePlayer::addMoney(Shop::CurrencyType type, uint32 num, MoneyAction action)
 {
 //	CheckConditionVoid(network::command::Shop::Gold == type || network::command::Shop::Diamond == type || network::command::Shop::WipeStock);
-	if (network::command::Shop::Gold == type)
+	if (Shop::Gold == type)
 		m_player.set_gold(m_player.gold() + num);
-	else if (network::command::Shop::Diamond == type)
+	else if (Shop::Diamond == type)
 		m_player.set_diamond(m_player.diamond() + num);
 	else
 		m_player.set_wipestock(m_player.wipestock() + num);
@@ -1477,10 +1471,10 @@ void GamePlayer::addMoney(network::command::Shop::CurrencyType type, uint32 num,
 //	INFO("加钱的类型:%u,数量:%u,动作：%s", type, num, MoneyActionLog[action]);
 }
 
-bool GamePlayer::subMoney(network::command::Shop::CurrencyType type, const uint32 num, MoneyAction action)
+bool GamePlayer::subMoney(Shop::CurrencyType type, const uint32 num, MoneyAction action)
 {
 //	LogCheckCondition(checkMoney(type, num), false, "金钱或钻石数量不足！");
-	if (network::command::Shop::Gold == type)
+	if (Shop::Gold == type)
 		m_player.set_gold(m_player.gold() - num);
 	else
 		m_player.set_diamond(m_player.diamond() - num);
