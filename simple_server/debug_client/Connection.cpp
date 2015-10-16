@@ -101,7 +101,7 @@ void Connection::do_enterGame(ServerInfo_S rev) {
 	send.set_version(0);
 	ConstructMsgMacro(network::command::CMSGEnterGame_CSS, send);
 	sendCmdMsg(send__, send_size__);
-	cout << "登录GS服务器" << endl;
+//	cout << "登录GS服务器" << endl;
 
 	do_read();
 }
@@ -116,7 +116,7 @@ void Connection::do_connectToPL() {
 	send.set_account(m_name);
 	ConstructMsgMacro(network::command::CMSGLoginGame_C, send);
 	sendCmdMsg(send__, send_size__);
-	cout << "登录PL服务器" << endl;
+//	cout << "登录PL服务器" << endl;
 
 	do_read();
 }
@@ -168,6 +168,7 @@ void Connection::do_read() {
 						}
 					}
 					else {
+						cout << m_name << " 消息读取问题, msgid = " << msgid << " len = " << len << endl;
 						break;
 					}
 				}
@@ -177,7 +178,7 @@ void Connection::do_read() {
 			if (ec != error::operation_aborted) {
 				// 断开连接
 				// notice: 不需要断开连接，自己把自己坑死了
-				cout << "boost::asio::error: " << boost::system::system_error(ec).what() << endl;
+				cout << m_name << " boost::asio::error: " << boost::system::system_error(ec).what() << endl;
 			}
 		}
 	);

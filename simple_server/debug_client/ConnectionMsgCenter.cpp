@@ -38,6 +38,7 @@ bool ParseStartGame_CS(shared_ptr<Connection> self, const void* msg, const short
 
 	if (rev.result() == Play::StartGame_CS::SUCCESS) {
 		cout << "游戏开始: " << rev.fbid() << endl;
+		std::this_thread::sleep_for(std::chrono::seconds(59));
 		self->end_game();
 	} else {
 		cout << "游戏开始失败： " << rev.result() << endl;
@@ -53,6 +54,7 @@ bool ParseEndGame_CS(shared_ptr<Connection> self, const void* msg, const short m
 
 	if (rev.result() == Play::EndGame_CS::SUCCESS) {
 		cout << "游戏结束: " << rev.fbid() << endl;
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		self->start_game();
 	} else {
 		cout << "游戏结束失败: " << rev.result() << endl;

@@ -4,22 +4,31 @@
 #include "../Utility/define.h"
 #include "Connection.h"
 #include <thread>
+#include <cstdlib>
 
 int main() {
 	try {
 		ConnectionMsgCenter::getInstance().registry();
 
 		boost::asio::io_service io_service;	
-		boost::asio::ip::tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), ServerPort);
+		boost::asio::ip::tcp::endpoint ep(boost::asio::ip::address::from_string("58.67.194.141"), ServerPort);
 
-		std::thread t([&]{
-			auto conn = std::make_shared<Connection>(io_service);
-			conn->start(ep, "123");
+		char name[255];
+		std::vector<std::shared_ptr<std::thread>> thread_pool;
+		for (int i = 0; i < 1000; ++i) {
+			std::this_thread::sleep_for(std::chrono::seconds(3));
+			std::shared_ptr<std::thread> t = std::make_shared<std::thread>([&] {
+				auto conn = std::make_shared<Connection>(io_service);
+				conn->start(ep, _itoa(i, name, 10));
 
-			io_service.run();
-		});
+				io_service.run();
+			});
 
-		t.join();
+			thread_pool.push_back(t);
+		}
+		
+		for (auto k : thread_pool)
+			k->join();
 	}
 	catch (std::exception& e) {
 		std::cerr << "Exception: " << e.what() << "\n";
