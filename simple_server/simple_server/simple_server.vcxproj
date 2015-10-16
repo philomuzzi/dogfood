@@ -74,12 +74,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>F:\boost_1_59_0;$(ProjectDir)ClientCommand;F:\protobuf-2.6.1\src;$(ProjectDir)External\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\boost_1_59_0;$(ProjectDir)..\ClientCommand;F:\protobuf-2.6.1\src;$(ProjectDir)..\External\Include;$(ProjectDir)..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0501;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>F:\boost_1_59_0\stage\lib;$(ProjectDir)External\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>F:\boost_1_59_0\stage\lib;$(ProjectDir)..\External\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>libprotobuf.lib;sqlite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -124,17 +124,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ClientCommand\data.pb.cc" />
-    <ClCompile Include="ClientCommand\game.pb.cc" />
-    <ClCompile Include="ClientCommand\gm.pb.cc" />
-    <ClCompile Include="ClientCommand\login_msg.pb.cc" />
-    <ClCompile Include="ClientCommand\mail.pb.cc" />
-    <ClCompile Include="ClientCommand\message.pb.cc" />
-    <ClCompile Include="ClientCommand\pet.pb.cc" />
-    <ClCompile Include="ClientCommand\play.pb.cc" />
-    <ClCompile Include="ClientCommand\save.pb.cc" />
-    <ClCompile Include="ClientCommand\server.pb.cc" />
-    <ClCompile Include="ClientCommand\shop.pb.cc" />
+    <ClCompile Include="..\ClientCommand\data.pb.cc" />
+    <ClCompile Include="..\ClientCommand\game.pb.cc" />
+    <ClCompile Include="..\ClientCommand\gm.pb.cc" />
+    <ClCompile Include="..\ClientCommand\login_msg.pb.cc" />
+    <ClCompile Include="..\ClientCommand\mail.pb.cc" />
+    <ClCompile Include="..\ClientCommand\message.pb.cc" />
+    <ClCompile Include="..\ClientCommand\pet.pb.cc" />
+    <ClCompile Include="..\ClientCommand\play.pb.cc" />
+    <ClCompile Include="..\ClientCommand\save.pb.cc" />
+    <ClCompile Include="..\ClientCommand\server.pb.cc" />
+    <ClCompile Include="..\ClientCommand\shop.pb.cc" />
     <ClCompile Include="ClientMsgCenter.cpp" />
     <ClCompile Include="ConnectionMsgCenter.cpp" />
     <ClCompile Include="CsvReader.cpp" />
@@ -155,17 +155,20 @@
     <ClCompile Include="TableManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ClientCommand\data.pb.h" />
-    <ClInclude Include="ClientCommand\game.pb.h" />
-    <ClInclude Include="ClientCommand\gm.pb.h" />
-    <ClInclude Include="ClientCommand\login_msg.pb.h" />
-    <ClInclude Include="ClientCommand\mail.pb.h" />
-    <ClInclude Include="ClientCommand\message.pb.h" />
-    <ClInclude Include="ClientCommand\pet.pb.h" />
-    <ClInclude Include="ClientCommand\play.pb.h" />
-    <ClInclude Include="ClientCommand\save.pb.h" />
-    <ClInclude Include="ClientCommand\server.pb.h" />
-    <ClInclude Include="ClientCommand\shop.pb.h" />
+    <ClInclude Include="..\ClientCommand\data.pb.h" />
+    <ClInclude Include="..\ClientCommand\game.pb.h" />
+    <ClInclude Include="..\ClientCommand\gm.pb.h" />
+    <ClInclude Include="..\ClientCommand\login_msg.pb.h" />
+    <ClInclude Include="..\ClientCommand\mail.pb.h" />
+    <ClInclude Include="..\ClientCommand\message.pb.h" />
+    <ClInclude Include="..\ClientCommand\pet.pb.h" />
+    <ClInclude Include="..\ClientCommand\play.pb.h" />
+    <ClInclude Include="..\ClientCommand\save.pb.h" />
+    <ClInclude Include="..\ClientCommand\server.pb.h" />
+    <ClInclude Include="..\ClientCommand\shop.pb.h" />
+    <ClInclude Include="..\Utility\define.h" />
+    <ClInclude Include="..\Utility\singleton.h" />
+    <ClInclude Include="..\Utility\utility.h" />
     <ClInclude Include="ClientMsgCenter.h" />
     <ClInclude Include="ConnectionMsgCenter.h" />
     <ClInclude Include="CsvReader.h" />
@@ -179,22 +182,19 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="TableManager.h" />
-    <ClInclude Include="Utility\define.h" />
-    <ClInclude Include="Utility\singleton.h" />
-    <ClInclude Include="Utility\utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClientCommand\data.proto" />
-    <None Include="ClientCommand\game.proto" />
-    <None Include="ClientCommand\gm.proto" />
-    <None Include="ClientCommand\login_msg.proto" />
-    <None Include="ClientCommand\mail.proto" />
-    <None Include="ClientCommand\message.proto" />
-    <None Include="ClientCommand\pet.proto" />
-    <None Include="ClientCommand\play.proto" />
-    <None Include="ClientCommand\save.proto" />
-    <None Include="ClientCommand\server.proto" />
-    <None Include="ClientCommand\shop.proto" />
+    <None Include="..\ClientCommand\data.proto" />
+    <None Include="..\ClientCommand\game.proto" />
+    <None Include="..\ClientCommand\gm.proto" />
+    <None Include="..\ClientCommand\login_msg.proto" />
+    <None Include="..\ClientCommand\mail.proto" />
+    <None Include="..\ClientCommand\message.proto" />
+    <None Include="..\ClientCommand\pet.proto" />
+    <None Include="..\ClientCommand\play.proto" />
+    <None Include="..\ClientCommand\save.proto" />
+    <None Include="..\ClientCommand\server.proto" />
+    <None Include="..\ClientCommand\shop.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -217,3 +217,4 @@ ModelManifest.xml
 *.pb.cc
 *.exe
 /simple_server/simple_server/ClientCommand/csv/8976AB00
+/simple_server/ClientCommand/csv/8976AB00
