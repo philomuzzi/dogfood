@@ -3,11 +3,11 @@
 #include <fstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp> 
-#include "Game_Define.h"
+#include <Utility/define.h>
 
 using namespace std;
 
-CsvReader::CsvReader(const std::string filename) : m_filename(filename)
+CsvReader::CsvReader(const string filename) : m_filename(filename)
 {
 	init(filename);
 }
@@ -17,7 +17,7 @@ CsvReader::~CsvReader()
 }
 
 void CsvReader::readLine(string s, vector<string>& header) const {
-	boost::split(header, s, boost::is_any_of(","), boost::token_compress_on);
+	split(header, s, boost::is_any_of(","), boost::token_compress_on);
 
 	for (size_t i = 0; i < header.size(); ++i) {
 		boost::trim(header[i]);
@@ -25,7 +25,7 @@ void CsvReader::readLine(string s, vector<string>& header) const {
 	}
 }
 
-int CsvReader::asInt(int lineID, std::string name) {
+int CsvReader::asInt(int lineID, string name) {
 	boost::to_lower(name);
 	auto p = m_header_map.find(name);
 	if (p == m_header_map.end()) {
@@ -42,7 +42,7 @@ int CsvReader::asInt(int lineID, std::string name) {
 	return boost::lexical_cast<int>(p2->second.at(p->second));
 }
 
-std::string CsvReader::asString(int lineID, std::string name) {
+string CsvReader::asString(int lineID, string name) {
 	boost::to_lower(name);
 	auto p = m_header_map.find(name);
 	if (p == m_header_map.end()) {
@@ -59,11 +59,11 @@ std::string CsvReader::asString(int lineID, std::string name) {
 	return p2->second.at(p->second);
 }
 
-void CsvReader::init(std::string filename) {
+void CsvReader::init(string filename) {
 	filename = string("ClientCommand/csv/") + filename + ".csv";
-	std::ifstream is(filename);
+	ifstream is(filename);
 	if (!is) {
-		std::cout << "打开文件" << filename << "失败" << endl;
+		cout << "打开文件" << filename << "失败" << endl;
 	}
 
 	string line;

@@ -10,6 +10,7 @@
 #include "ClientCommand/game.pb.h"
 #include "ClientCommand/server.pb.h"
 #include "ClientCommand/mail.pb.h"
+#include <Utility/define.h>
 
 class GamePlayer : public std::enable_shared_from_this<GamePlayer> {
 public:

@@ -3,9 +3,9 @@
 #include "ClientCommand/mail.pb.h"
 #include "ClientCommand/data.pb.h"
 #include "ClientCommand/server.pb.h"
-#include "Game_Define.h"
 #include "Utility/singleton.h"
 #include <memory>
+#include <Utility/define.h>
 
 using SystemMailMap = std::map<uint64, std::shared_ptr<network::command::MailInfo>> ;
 

@@ -2,9 +2,6 @@
 
 
 #define DailyRewardID 120300000
-#define ServerPort 9000
-#define IMPOSSIBLE_RETURN (uint32)-1
-#define ONE_HOUR 60*60
 
 enum class FbType {
 	FbType_None = -1,
@@ -29,10 +26,6 @@ enum class PlayerItemType {
 	Item_DiamondInstance,
 	Item_EnergyInstance
 };
-
-using uint32 = unsigned int;
-using uint64 = unsigned long long;
-using uint16 = unsigned short;
 
 enum class MoneyAction {
 	AddGoldUseDiamond,

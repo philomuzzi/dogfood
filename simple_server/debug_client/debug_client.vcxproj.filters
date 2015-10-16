@@ -63,6 +63,9 @@
     <ClCompile Include="ConnectionMsgCenter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Connection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ClientCommand\data.pb.h">
@@ -108,6 +111,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="ConnectionMsgCenter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

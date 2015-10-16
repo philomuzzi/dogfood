@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Utility/singleton.h"
-#include "Game_Define.h"
 #include <map>
 #include <memory>
+#include <Utility/define.h>
 
 class GamePlayer;
 using ClientMsgCallback = bool (*)(std::shared_ptr<GamePlayer> player, const void *msg, const uint16 msglen);

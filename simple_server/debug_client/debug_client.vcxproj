@@ -133,6 +133,7 @@
     <ClCompile Include="..\ClientCommand\save.pb.cc" />
     <ClCompile Include="..\ClientCommand\server.pb.cc" />
     <ClCompile Include="..\ClientCommand\shop.pb.cc" />
+    <ClCompile Include="Connection.cpp" />
     <ClCompile Include="ConnectionMsgCenter.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="..\Utility\define.h" />
     <ClInclude Include="..\Utility\singleton.h" />
     <ClInclude Include="..\Utility\utility.h" />
+    <ClInclude Include="Connection.h" />
     <ClInclude Include="ConnectionMsgCenter.h" />
   </ItemGroup>
   <ItemGroup>

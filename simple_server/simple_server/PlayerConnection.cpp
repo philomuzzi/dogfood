@@ -3,6 +3,7 @@
 #include "ConnectionMsgCenter.h"
 #include "PlayerManager.h"
 #include "ClientMsgCenter.h"
+#include <Utility/define.h>
 
 using namespace std;
 

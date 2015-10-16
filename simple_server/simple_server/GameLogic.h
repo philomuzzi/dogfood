@@ -2,7 +2,7 @@
 #include <boost/asio.hpp>
 #include <chrono>
 #include <memory>
-#include "Game_Define.h"
+#include <Utility/define.h>
 
 class GameLogic : public std::enable_shared_from_this<GameLogic>
 {
