@@ -156,17 +156,18 @@ void Connection::do_read() {
 					}
 					else if (already_read_ >= len) {
 						string content(len, '\0');
-						copy(read_buffer_ + sizeof(head), read_buffer_ + sizeof(head) + len, content.begin());
-						copy(read_buffer_ + sizeof(head) + len, read_buffer_ + already_read_, read_buffer_); // 后面的数据没有清空
-						already_read_ -= sizeof(head) + len;
+						copy(read_buffer_ + PacketHeadLen, read_buffer_ + PacketHeadLen + len, content.begin());
+						copy(read_buffer_ + PacketHeadLen + len, read_buffer_ + already_read_, read_buffer_); // 后面的数据没有清空
+						already_read_ -= PacketHeadLen + len;
+//						cout << "剩余读取长度： " << already_read_ << endl;
 
+//						cout << "接收消息长度: " << PacketHeadLen + len << endl;
 						//将msgid和content放入消息处理函数中
 						if (!ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len)) {
 							cout << "消息没有处理: " << msgid << endl;
 						}
 					}
 					else {
-						cout << "消息接受错误" << endl;
 						break;
 					}
 				}
