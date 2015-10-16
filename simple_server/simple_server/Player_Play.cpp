@@ -128,7 +128,7 @@ void GamePlayer::endGame(Play::EndGame_CS& msg) {
 	else if (FbType::FbType_Pvp == type) {
 		obtainItem(msg, FbType::FbType_Pvp);
 	}
-	else if (FbType::FbType_Nomal == type/*&&Play::EndGame_CS::SUCCESS==msg.result()*/) {
+	else if (FbType::FbType_Nomal == type) {
 		obtainItemFromNormalFb(msg);
 	}
 	else {

@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 		ConnectionMsgCenter::getInstance().registry();
 
 		boost::asio::io_service io_service;
-		boost::asio::ip::tcp::endpoint ep(boost::asio::ip::tcp::v4(), ServerPort);
+		boost::asio::ip::tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), ServerPort);
 		auto conn = std::make_shared<Connection>(io_service);
 		conn->start(ep, "123");
 

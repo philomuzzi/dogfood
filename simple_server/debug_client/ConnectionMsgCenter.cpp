@@ -10,8 +10,6 @@
 using namespace std;
 using namespace network::command;
 
-#define ENDLESSFBID 131000001
-
 bool PraseServerInfo_S(shared_ptr<Connection> self, const void* msg, const short msglen) {
 	cout << __FUNCTION__ << endl;
 	ServerInfo_S rev;
@@ -27,14 +25,8 @@ bool ParsePlayerInfo_S(shared_ptr<Connection> self, const void* msg, const short
 	PlayerInfo_S rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-	Play::StartGame_CS send;
-	send.set_accid(rev.data().accid());
-	send.set_fbid(ENDLESSFBID);
-	send.set_airplaneid(rev.data().currentairplane());
-	send.set_pilotid(rev.data().currentpilot());
-
-	ConstructMsgMacro(CMSGResStartGame_CS, send);
-	self->sendCmdMsg(send__, send_size__);
+	self->setPlayer(rev.data());
+	self->start_game();
 
 	return true;
 }
@@ -45,14 +37,9 @@ bool ParseStartGame_CS(shared_ptr<Connection> self, const void* msg, const short
 	rev.ParsePartialFromArray(msg, msglen);
 
 	if (rev.result() == Play::StartGame_CS::SUCCESS) {
+		cout << "游戏开始: " << rev.fbid() << endl;
 		std::this_thread::sleep_for(std::chrono::seconds(10));
-		Play::EndGame_CS send;
-		send.set_accid(rev.accid());
-		send.set_fbid(rev.fbid());
-		send.set_score(1000);
-
-		ConstructMsgMacro(CMSGResEndGame_CS, send);
-		self->sendCmdMsg(send__, send_size__);
+		self->end_game();
 	} else {
 		cout << "游戏开始失败： " << rev.result() << endl;
 	}
@@ -64,6 +51,14 @@ bool ParseEndGame_CS(shared_ptr<Connection> self, const void* msg, const short m
 	cout << __FUNCTION__ << endl;
 	Play::EndGame_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
+
+	if (rev.result() == Play::EndGame_CS::SUCCESS) {
+		cout << "游戏结束: " << rev.fbid() << endl;
+		std::this_thread::sleep_for(std::chrono::seconds(10));
+		self->start_game();
+	} else {
+		cout << "游戏结束失败: " << rev.result() << endl;
+	}
 
 	return true;
 }

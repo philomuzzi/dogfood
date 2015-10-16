@@ -5,10 +5,13 @@
 #include <login_msg.pb.h>
 #include <message.pb.h>
 #include "../Utility/utility.h"
+#include <play.pb.h>
 
 using namespace std;
 using namespace boost::asio;
 using namespace network::command;
+
+#define ENDLESSFBID 131000001
 
 // Connection的生命周期问题
 
@@ -52,16 +55,46 @@ void Connection::sendCmdMsg(const char* data, int head) {
 	);
 }
 
-void Connection::do_connectToGS(ServerInfo_S& rev) {
+void Connection::do_connectToGS(ServerInfo_S rev) {
 	auto self(shared_from_this());
+	if (socket_.is_open())
+		socket_.close();
 	socket_.async_connect(ip::tcp::endpoint(ip::address::from_string(rev.ip()), rev.port()),
-	                      [self, &rev](boost::system::error_code ec) {
+	                      [self, rev](boost::system::error_code ec) {
 		                      if (!ec) self->do_enterGame(rev);
 		                      else self->stop();
 	                      });
 }
 
-void Connection::do_enterGame(ServerInfo_S& rev) {
+void Connection::start_game() {
+	if (m_startLoop)
+		return;
+
+	m_startLoop = true;
+
+	Play::StartGame_CS send;
+	send.set_accid(m_player.accid());
+	send.set_fbid(ENDLESSFBID);
+	send.set_airplaneid(m_player.currentairplane());
+	send.set_pilotid(m_player.currentpilot());
+
+	ConstructMsgMacro(CMSGResStartGame_CS, send);
+	sendCmdMsg(send__, send_size__);
+}
+
+void Connection::end_game() {
+	m_startLoop = false;
+
+	Play::EndGame_CS send;
+	send.set_accid(m_player.accid());
+	send.set_fbid(ENDLESSFBID);
+	send.set_score(1000);
+
+	ConstructMsgMacro(CMSGResEndGame_CS, send);
+	sendCmdMsg(send__, send_size__);
+}
+
+void Connection::do_enterGame(ServerInfo_S rev) {
 	EnterGame_CSS send;
 	send.set_loginid(rev.loginid());
 	send.set_accid(rev.accid());
@@ -69,6 +102,8 @@ void Connection::do_enterGame(ServerInfo_S& rev) {
 	ConstructMsgMacro(network::command::CMSGEnterGame_CSS, send);
 	sendCmdMsg(send__, send_size__);
 	cout << "登录GS服务器" << endl;
+
+	do_read();
 }
 
 void Connection::stop() {
@@ -111,7 +146,7 @@ void Connection::do_read() {
 				already_read_ += length;
 				while (already_read_ > PacketHeadLen) {
 					int head = *reinterpret_cast<int *>(read_buffer_);
-					cout << "Head length: " << head << endl;
+//					cout << "Head length: " << head << endl;
 					uint16 msgid = (head & PacketMsgIdMask) >> 16;
 					uint16 len = head & PacketMsgLenMask;
 					if (len > Max_DataBufferSize || len < 0) {
@@ -126,9 +161,12 @@ void Connection::do_read() {
 						already_read_ -= sizeof(head) + len;
 
 						//将msgid和content放入消息处理函数中
-						ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len);
+						if (!ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len)) {
+							cout << "消息没有处理: " << msgid << endl;
+						}
 					}
 					else {
+						cout << "消息接受错误" << endl;
 						break;
 					}
 				}

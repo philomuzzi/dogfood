@@ -3,7 +3,7 @@
 #include <memory>
 #include <boost/asio.hpp>
 #include "../Utility/define.h"
-#include <google/protobuf/stubs/atomicops.h>
+#include <save.pb.h>
 
 namespace network{namespace command{
 	class ServerInfo_S;
@@ -19,10 +19,12 @@ public:
 	void start(boost::asio::ip::tcp::endpoint ep, std::string name);
 	void write(std::string data, std::size_t length);
 	void sendCmdMsg(const char* data, int head);
-	void do_connectToGS(network::command::ServerInfo_S& rev);
+	void do_connectToGS(network::command::ServerInfo_S rev);
+	void start_game();
+	void end_game();
 
 private:
-	void do_enterGame(network::command::ServerInfo_S& rev);
+	void do_enterGame(network::command::ServerInfo_S rev);
 	void stop();
 	void do_connectToPL();
 	void do_connection(boost::asio::ip::tcp::endpoint ep);
@@ -35,4 +37,16 @@ private:
 	int already_read_{0};
 
 	std::string m_name;
+
+	bool m_startLoop { false };
+	network::command::Player m_player;
+
+public:
+	void setPlayer(const network::command::Player& player) {
+		m_player = player;
+	}
+
+	network::command::Player getPlayer() const {
+		return m_player;
+	}
 };
