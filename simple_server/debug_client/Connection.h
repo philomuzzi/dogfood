@@ -2,42 +2,37 @@
 
 #include <memory>
 #include <boost/asio.hpp>
+#include "../Utility/define.h"
+#include <google/protobuf/stubs/atomicops.h>
 
-class Connection : public std::enable_shared_from_this<Connection> {
-public:
-	const static int PacketHeadLen = sizeof(int32_t);
-	const static int PacketMsgIdMask = 0x7fff0000;
-	const static int PacketMsgLenMask = 0x0000ffff;
-	const static int Max_DataBufferSize = 64 * 1024 - 1;
-	const static int Max_DataSize = Max_DataBufferSize - PacketHeadLen;
-	const static int Max_UserDataSize = Max_DataSize - 128;
+namespace network{namespace command{
+	class ServerInfo_S;
+}}
 
+class Connection : public std::enable_shared_from_this<Connection>, boost::noncopyable {
 public:
-	explicit Connection(boost::asio::ip::tcp::socket socket) : socket_(std::move(socket)) {}
+	explicit Connection(boost::asio::io_service& io) : socket_(io) {
+	}
+
 	~Connection();
 
-	void start();
+	void start(boost::asio::ip::tcp::endpoint ep, std::string name);
 	void write(std::string data, std::size_t length);
 	void sendCmdMsg(const char* data, int head);
-
+	void do_connectToGS(network::command::ServerInfo_S& rev);
 
 private:
+	void do_enterGame(network::command::ServerInfo_S& rev);
+	void stop();
+	void do_connectToPL();
+	void do_connection(boost::asio::ip::tcp::endpoint ep);
 	void do_read();
 
 	boost::asio::ip::tcp::socket socket_;
 	char read_buffer_[Max_DataBufferSize];
 	std::array<char, Max_DataBufferSize> write_buffer_;
 
-	int already_read_{ 0 };
+	int already_read_{0};
 
-	std::string name;
-
-public:
-	std::string getName() const {
-		return name;
-	}
-
-	void setName(const std::string& name) {
-		this->name = name;
-	}
+	std::string m_name;
 };

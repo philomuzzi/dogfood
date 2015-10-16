@@ -1,6 +1,8 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include "ConnectionMsgCenter.h"
+#include "../Utility/define.h"
+#include "Connection.h"
 
 int main(int argc, char* argv[]) {
 	try {
@@ -12,6 +14,9 @@ int main(int argc, char* argv[]) {
 		ConnectionMsgCenter::getInstance().registry();
 
 		boost::asio::io_service io_service;
+		boost::asio::ip::tcp::endpoint ep(boost::asio::ip::tcp::v4(), ServerPort);
+		auto conn = std::make_shared<Connection>(io_service);
+		conn->start(ep, "123");
 
 //		GameLogic::init(io_service);
 //		GameLogic::getLogicInstance()->start();

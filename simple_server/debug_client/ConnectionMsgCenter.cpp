@@ -3,70 +3,75 @@
 #include "login_msg.pb.h"
 #include "../Utility/utility.h"
 #include <iostream>
+#include "Connection.h"
+#include <play.pb.h>
+#include <thread>
 
 using namespace std;
 using namespace network::command;
 
-/*
-bool ParseTest_C(shared_ptr<PlayerConnection> self, const void* msg, const short msglen) {
-	string str(static_cast<const char*>(msg));
-	cout << "msg len: " << msglen << endl;
-	cout << "msg content: " << str << endl;
-	self->write(str, msglen);
+#define ENDLESSFBID 131000001
 
-	cout << "player size: " << sizeof(PlayerConnection) << endl;
+bool PraseServerInfo_S(shared_ptr<Connection> self, const void* msg, const short msglen) {
+	cout << __FUNCTION__ << endl;
+	ServerInfo_S rev;
+	rev.ParsePartialFromArray(msg, msglen);
+
+	self->do_connectToGS(rev);
+
 	return true;
 }
 
-bool ParseLogic_C(shared_ptr<PlayerConnection> self, const void* msg, const short msglen) {
+bool ParsePlayerInfo_S(shared_ptr<Connection> self, const void* msg, const short msglen) {
 	cout << __FUNCTION__ << endl;
-	LoginGame_C rev;
+	PlayerInfo_S rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-	// 解决帐号建立判断，分配网管服务器之类的问题
-	// 根据account找到玩家角色数据库信息
+	Play::StartGame_CS send;
+	send.set_accid(rev.data().accid());
+	send.set_fbid(ENDLESSFBID);
+	send.set_airplaneid(rev.data().currentairplane());
+	send.set_pilotid(rev.data().currentpilot());
 
-	ServerInfo_S send;
-	send.set_accid(rev.account());
-	send.set_loginid(1);
-	send.set_ip("127.0.0.1");
-	send.set_port(ServerPort);
-	ConstructMsgMacro(CMSGServerInfo_S, send);
+	ConstructMsgMacro(CMSGResStartGame_CS, send);
 	self->sendCmdMsg(send__, send_size__);
-	cout << "期待服务器登录成功" << endl;
 
 	return true;
 }
 
-bool ParseEnterGame_CSS(shared_ptr<PlayerConnection> self, const void* msg, const short msglen) {
+bool ParseStartGame_CS(shared_ptr<Connection> self, const void* msg, const short msglen) {
 	cout << __FUNCTION__ << endl;
-	EnterGame_CSS rev;
+	Play::StartGame_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-	auto player = PlayerManager::getInstance().getPlayerByName(rev.accid());
-	if (player) {
-		PlayerManager::getInstance().removePlayer(player);
+	if (rev.result() == Play::StartGame_CS::SUCCESS) {
+		std::this_thread::sleep_for(std::chrono::seconds(10));
+		Play::EndGame_CS send;
+		send.set_accid(rev.accid());
+		send.set_fbid(rev.fbid());
+		send.set_score(1000);
+
+		ConstructMsgMacro(CMSGResEndGame_CS, send);
+		self->sendCmdMsg(send__, send_size__);
+	} else {
+		cout << "游戏开始失败： " << rev.result() << endl;
 	}
-
-	player = make_shared<GamePlayer>(self, rev.accid());
-	if (player) {
-		PlayerManager::getInstance().addPlayer(player);
-	}
-
-	self->setName(rev.accid());
-
-	auto proto_player = DatabaseCache::getInstance().getPlayer(rev.accid());
-	player->online(proto_player);
 
 	return true;
 }
-*/
+
+bool ParseEndGame_CS(shared_ptr<Connection> self, const void* msg, const short msglen) {
+	cout << __FUNCTION__ << endl;
+	Play::EndGame_CS rev;
+	rev.ParsePartialFromArray(msg, msglen);
+
+	return true;
+}
 
 bool ConnectionMsgCenter::registry() {
-	/*
-	registry(10000, ParseTest_C);
-	registry(CMSGLoginGame_C, ParseLogic_C);
-	registry(CMSGEnterGame_CSS, ParseEnterGame_CSS);
-	*/
+	registry(CMSGServerInfo_S, PraseServerInfo_S);
+	registry(CMSGPlayerInfo_S, ParsePlayerInfo_S);
+	registry(CMSGResStartGame_CS, ParseStartGame_CS);
+	registry(CMSGResEndGame_CS, ParseEndGame_CS);
 	return true;
 }
