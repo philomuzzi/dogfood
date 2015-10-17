@@ -15,7 +15,7 @@ int main() {
 
 		char name[255];
 		std::vector<std::shared_ptr<std::thread>> thread_pool;
-		for (int i = 0; i < 1000; ++i) {
+		for (auto i = 0; i < 1000; ++i) {
 			std::this_thread::sleep_for(std::chrono::seconds(3));
 			std::shared_ptr<std::thread> t = std::make_shared<std::thread>([&] {
 				auto conn = std::make_shared<Connection>(io_service);
@@ -27,6 +27,7 @@ int main() {
 			thread_pool.push_back(t);
 		}
 		
+		io_service.stop();
 		for (auto k : thread_pool)
 			k->join();
 	}

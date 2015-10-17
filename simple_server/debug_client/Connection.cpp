@@ -168,6 +168,7 @@ void Connection::do_read() {
 						}
 					}
 					else {
+						// 初步怀疑是因为网络上传下载带宽限制导致消息丢失。
 						cout << m_name << " 消息读取问题, msgid = " << msgid << " len = " << len << endl;
 						break;
 					}
