@@ -61,16 +61,16 @@ void Connection::do_connectToGS(ServerInfo_S rev) {
 		socket_.close();
 	socket_.async_connect(ip::tcp::endpoint(ip::address::from_string(rev.ip()), rev.port()),
 	                      [self, rev](boost::system::error_code ec) {
-		                      if (!ec) self->do_enterGame(rev);
-		                      else self->stop();
+		                      if (!ec) {
+			                      self->do_enterGame(rev);
+		                      }
+		                      else
+			                      self->stop();
 	                      });
 }
 
 void Connection::start_game() {
-	if (m_startLoop)
-		return;
-
-	m_startLoop = true;
+	m_startGame = true;
 
 	Play::StartGame_CS send;
 	send.set_accid(m_player.accid());
@@ -83,8 +83,7 @@ void Connection::start_game() {
 }
 
 void Connection::end_game() {
-	m_startLoop = false;
-
+	m_startGame = false;
 	Play::EndGame_CS send;
 	send.set_accid(m_player.accid());
 	send.set_fbid(ENDLESSFBID);
@@ -101,7 +100,7 @@ void Connection::do_enterGame(ServerInfo_S rev) {
 	send.set_version(0);
 	ConstructMsgMacro(network::command::CMSGEnterGame_CSS, send);
 	sendCmdMsg(send__, send_size__);
-//	cout << "登录GS服务器" << endl;
+	//	cout << "登录GS服务器" << endl;
 
 	do_read();
 }
@@ -116,7 +115,7 @@ void Connection::do_connectToPL() {
 	send.set_account(m_name);
 	ConstructMsgMacro(network::command::CMSGLoginGame_C, send);
 	sendCmdMsg(send__, send_size__);
-//	cout << "登录PL服务器" << endl;
+	//	cout << "登录PL服务器" << endl;
 
 	do_read();
 }
@@ -135,8 +134,25 @@ void Connection::start(ip::tcp::endpoint ep, string name) {
 	do_connection(ep);
 }
 
+void Connection::startGSLogic() {
+	if (m_startLoop)
+		return;
+
+	m_startLoop = true;
+
+	timer_one_second_.async_wait(std::bind(&Connection::oneSec, shared_from_this(), std::placeholders::_1));
+}
+
+void Connection::oneSec(const boost::system::error_code&) {
+	if (m_startGame) end_game();
+	else start_game();
+
+	timer_one_second_.expires_at(timer_one_second_.expires_at() + boost::posix_time::seconds(1));
+	timer_one_second_.async_wait(std::bind(&Connection::oneSec, shared_from_this(), std::placeholders::_1));
+}
+
 // 读取数据之后，解包，然后相应处理
-// 消息格式是: 0xFFFF0000|0x0000FFFF,一个int32，其中前16位表示消息id，后面16位表示包体整体长度。后面跟着的是protobuf压缩过的数据
+// 消息格式是: 0x7FFF0000|0x0000FFFF,一个int32，其中前16位表示消息id，后面16位表示包体整体长度。后面跟着的是protobuf压缩过的数据
 void Connection::do_read() {
 	auto self(shared_from_this());
 	socket_.async_read_some(
@@ -146,9 +162,9 @@ void Connection::do_read() {
 				already_read_ += length;
 				while (already_read_ > PacketHeadLen) {
 					int head = *reinterpret_cast<int *>(read_buffer_);
-//					cout << "Head length: " << head << endl;
 					uint16 msgid = (head & PacketMsgIdMask) >> 16;
 					uint16 len = head & PacketMsgLenMask;
+					cout << m_name << " msgid: " << msgid << " len: " << len << " length = " << length << endl;
 					if (len > Max_DataBufferSize || len < 0) {
 						cerr << "头长度错误" << endl;
 						already_read_ = 0;
@@ -159,16 +175,16 @@ void Connection::do_read() {
 						copy(read_buffer_ + PacketHeadLen, read_buffer_ + PacketHeadLen + len, content.begin());
 						copy(read_buffer_ + PacketHeadLen + len, read_buffer_ + already_read_, read_buffer_); // 后面的数据没有清空
 						already_read_ -= PacketHeadLen + len;
-//						cout << "剩余读取长度： " << already_read_ << endl;
+						cout << m_name << " 剩余读取长度： " << already_read_ << endl;
 
-//						cout << "接收消息长度: " << PacketHeadLen + len << endl;
+						cout << m_name << " 使用消息长度: " << PacketHeadLen + len << endl;
 						//将msgid和content放入消息处理函数中
 						if (!ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len)) {
-							cout << "消息没有处理: " << msgid << endl;
+							cout << m_name << " 消息没有处理: " << msgid << endl;
 						}
 					}
 					else {
-						// 初步怀疑是因为网络上传下载带宽限制导致消息丢失。
+						// 原因好像是第二个消息的消息体和第一个消息的消息体混淆了
 						cout << m_name << " 消息读取问题, msgid = " << msgid << " len = " << len << endl;
 						break;
 					}

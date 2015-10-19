@@ -38,12 +38,13 @@ void PlayerConnection::sendCmdMsg(const char* data, int head) {
 //	copy(reinterpret_cast<const char*>(data), reinterpret_cast<const char*>(data) + (head & PacketMsgLenMask), it);
 	copy(data, data + (head & PacketMsgLenMask), it);
 
+	cout << name << " begin write: msgid: " << ((head & PacketMsgIdMask) >> 16) << " len: " << (head & PacketMsgLenMask) << endl;
 	boost::asio::async_write(
 		socket_,
 		boost::asio::buffer(write_buffer_, (head & PacketMsgLenMask) + sizeof(head)),
 		[this, self](boost::system::error_code ec, std::size_t len) {
 			if (!ec) {
-				cout << "write success: " << len << endl;
+				cout << this->name << " write success: "  << len << endl;
 			}
 		}
 	);
