@@ -19,11 +19,11 @@ public:
 	void write(std::string data, std::size_t length);
 	void sendCmdMsg(const char* data, int head);
 	void do_connectToGS(network::command::ServerInfo_S rev);
-	void start_game();
-	void end_game();
 	void startGSLogic();
 
 private:
+	void start_game();
+	void end_game();
 	void do_enterGame(network::command::ServerInfo_S rev);
 	void stop();
 	void do_connectToPL();
@@ -40,6 +40,7 @@ private:
 	std::string m_name;
 	bool m_startLoop { false };
 	bool m_startGame{ false };
+
 	network::command::Player m_player;
 
 	using Timer = boost::asio::deadline_timer;
@@ -47,7 +48,7 @@ private:
 
 public:
 	void setPlayer(const network::command::Player& player) {
-		m_player = player;
+		m_player.CopyFrom(player);
 	}
 
 	network::command::Player getPlayer() const {
@@ -56,5 +57,9 @@ public:
 
 	std::string getName() const {
 		return m_name;
+	}
+
+	void setStartGame(bool start_game) {
+		m_startGame = start_game;
 	}
 };

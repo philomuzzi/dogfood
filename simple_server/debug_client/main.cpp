@@ -12,6 +12,7 @@ int main() {
 
 		boost::asio::io_service io_service;	
 		boost::asio::ip::tcp::endpoint ep(boost::asio::ip::address::from_string("127.0.0.1"), ServerPort);
+		/*
 		auto conn = std::make_shared<Connection>(io_service);
 		conn->start(ep, "0");
 
@@ -19,10 +20,10 @@ int main() {
 		conn2->start(ep, "1");
 
 		io_service.run();
+		*/
 		
-		/*
 		std::vector<std::shared_ptr<std::thread>> thread_pool;
-		for (auto i = 0; i < 5; ++i) {
+		for (auto i = 0; i < 20; ++i) {
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 			std::shared_ptr<std::thread> t = std::make_shared<std::thread>([&io_service, &ep, i] {
 				char name[255];
@@ -38,7 +39,6 @@ int main() {
 		io_service.stop();
 		for (auto k : thread_pool)
 			k->join();
-		*/
 	}
 	catch (std::exception& e) {
 		std::cerr << "Exception: " << e.what() << "\n";

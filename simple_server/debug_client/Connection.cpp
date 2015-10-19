@@ -70,8 +70,6 @@ void Connection::do_connectToGS(ServerInfo_S rev) {
 }
 
 void Connection::start_game() {
-	m_startGame = true;
-
 	Play::StartGame_CS send;
 	send.set_accid(m_player.accid());
 	send.set_fbid(ENDLESSFBID);
@@ -83,7 +81,6 @@ void Connection::start_game() {
 }
 
 void Connection::end_game() {
-	m_startGame = false;
 	Play::EndGame_CS send;
 	send.set_accid(m_player.accid());
 	send.set_fbid(ENDLESSFBID);
@@ -168,7 +165,6 @@ void Connection::do_read() {
 					if (len > Max_DataBufferSize || len < 0) {
 						cerr << "头长度错误" << endl;
 						already_read_ = 0;
-						// 其实应该关闭连接
 					}
 					else if (already_read_ >= len) {
 						string content(len, '\0');
@@ -177,8 +173,6 @@ void Connection::do_read() {
 						already_read_ -= PacketHeadLen + len;
 						cout << m_name << " 剩余读取长度： " << already_read_ << endl;
 
-						cout << m_name << " 使用消息长度: " << PacketHeadLen + len << endl;
-						//将msgid和content放入消息处理函数中
 						if (!ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len)) {
 							cout << m_name << " 消息没有处理: " << msgid << endl;
 						}

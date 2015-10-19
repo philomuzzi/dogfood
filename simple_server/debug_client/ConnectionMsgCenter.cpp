@@ -23,10 +23,14 @@ bool PraseServerInfo_S(shared_ptr<Connection> self, const void* msg, const short
 bool ParsePlayerInfo_S(shared_ptr<Connection> self, const void* msg, const short msglen) {
 	cout << __FUNCTION__ << endl;
 	PlayerInfo_S rev;
-	rev.ParsePartialFromArray(msg, msglen);
+	auto ret = rev.ParsePartialFromArray(msg, msglen);
 
-	self->setPlayer(rev.data());
-	self->start_game();
+	if (ret) {
+		self->setPlayer(rev.data());
+		self->startGSLogic();
+	} else {
+		cout << "what a fuck !" << endl;
+	}
 
 	return true;
 }
@@ -37,6 +41,7 @@ bool ParseStartGame_CS(shared_ptr<Connection> self, const void* msg, const short
 	rev.ParsePartialFromArray(msg, msglen);
 
 	if (rev.result() == Play::StartGame_CS::SUCCESS) {
+		self->setStartGame(true);
 		cout << self->getName() << "游戏确认开始: " << rev.fbid() << endl;
 	} else {
 		cout << self->getName() << " 游戏开始失败： " << rev.result() << endl;
@@ -50,6 +55,7 @@ bool ParseEndGame_CS(shared_ptr<Connection> self, const void* msg, const short m
 	Play::EndGame_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
+	self->setStartGame(false);
 	if (rev.result() == Play::EndGame_CS::SUCCESS) {
 		cout << self->getName() << " 游戏确认结束: " << rev.fbid() << endl;
 	} else {
