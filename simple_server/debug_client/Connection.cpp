@@ -178,7 +178,6 @@ void Connection::do_read() {
 						}
 					}
 					else {
-						// 原因好像是第二个消息的消息体和第一个消息的消息体混淆了
 						cout << m_name << " 消息读取问题, msgid = " << msgid << " len = " << len << endl;
 						break;
 					}
@@ -189,7 +188,7 @@ void Connection::do_read() {
 			if (ec != error::operation_aborted) {
 				// 断开连接
 				// notice: 不需要断开连接，自己把自己坑死了
-				cout << m_name << " boost::asio::error: " << boost::system::system_error(ec).what() << endl;
+				// cout << m_name << " boost::asio::error: " << boost::system::system_error(ec).what() << endl;
 			}
 		}
 	);

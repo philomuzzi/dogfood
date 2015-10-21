@@ -9,7 +9,7 @@
 class Connection : public std::enable_shared_from_this<Connection>, boost::noncopyable {
 public:
 	explicit Connection(boost::asio::io_service& io) : socket_(io), 
-		timer_one_second_(io, boost::posix_time::seconds(1))
+		timer_one_second_(io, boost::posix_time::seconds(10))
 	{
 	}
 
