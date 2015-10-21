@@ -55,8 +55,8 @@ bool ParseEndGame_CS(shared_ptr<Connection> self, const void* msg, const short m
 	Play::EndGame_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
-	self->setStartGame(false);
 	if (rev.result() == Play::EndGame_CS::SUCCESS) {
+		self->setStartGame(false);
 		cout << self->getName() << " 游戏确认结束: " << rev.fbid() << endl;
 	} else {
 		cout << self->getName() << " 游戏结束失败: " << rev.result() << endl;
