@@ -126,8 +126,7 @@ void Connection::do_connection(ip::tcp::endpoint ep) {
 	                      });
 }
 
-void Connection::start(ip::tcp::endpoint ep, string name) {
-	m_name = name;
+void Connection::start(ip::tcp::endpoint ep) {
 	do_connection(ep);
 }
 
@@ -141,10 +140,14 @@ void Connection::startGSLogic() {
 }
 
 void Connection::oneSec(const boost::system::error_code&) {
-	if (m_startGame) end_game();
-	else start_game();
+	if (m_startLoop) {
+		if (m_startGame) 
+			end_game();
+		else 
+			start_game();
+	}
 
-	timer_one_second_.expires_at(timer_one_second_.expires_at() + boost::posix_time::seconds(10));
+	timer_one_second_.expires_at(timer_one_second_.expires_at() + boost::posix_time::seconds(TEST_TIMER));
 	timer_one_second_.async_wait(std::bind(&Connection::oneSec, shared_from_this(), std::placeholders::_1));
 }
 

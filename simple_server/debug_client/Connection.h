@@ -6,16 +6,19 @@
 #include <save.pb.h>
 #include "login_msg.pb.h"
 
+#define TEST_TIMER 30
+#include <iostream>
+
 class Connection : public std::enable_shared_from_this<Connection>, boost::noncopyable {
 public:
 	explicit Connection(boost::asio::io_service& io) : socket_(io), 
-		timer_one_second_(io, boost::posix_time::seconds(10))
+		timer_one_second_(io, boost::posix_time::seconds(TEST_TIMER))
 	{
 	}
 
 	~Connection();
 
-	void start(boost::asio::ip::tcp::endpoint ep, std::string name);
+	void start(boost::asio::ip::tcp::endpoint ep);
 	void write(std::string data, std::size_t length);
 	void sendCmdMsg(const char* data, int head);
 	void do_connectToGS(network::command::ServerInfo_S rev);
@@ -57,6 +60,11 @@ public:
 
 	std::string getName() const {
 		return m_name;
+	}
+
+	void setName(const std::string name) {
+		m_name = name;
+		std::cout << "set name: " << name << std::endl;
 	}
 
 	void setStartGame(bool start_game) {
