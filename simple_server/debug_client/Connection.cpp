@@ -12,6 +12,7 @@ using namespace boost::asio;
 using namespace network::command;
 
 #define ENDLESSFBID 131000001
+#define GAMEZONE	2
 
 // Connection的生命周期问题
 
@@ -110,6 +111,7 @@ void Connection::stop() {
 void Connection::do_connectToPL() {
 	LoginGame_C send;
 	send.set_account(m_name);
+	send.set_zone(GAMEZONE);
 	ConstructMsgMacro(network::command::CMSGLoginGame_C, send);
 	sendCmdMsg(send__, send_size__);
 	//	cout << "登录PL服务器" << endl;
