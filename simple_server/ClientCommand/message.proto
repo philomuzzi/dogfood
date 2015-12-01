@@ -1,7 +1,6 @@
 package network.command;
 
 enum CMSG {
-	CMSGTimeTickCS								= 0;//心跳
 	CMSGLoginGame_C								= 1;//请求登陆游戏首包
 	CMSGLoginFail_S								= 2;//登陆失败信息
 	CMSGServerInfo_S							= 3;//登陆信息返回
@@ -36,6 +35,34 @@ enum CMSG {
     CMSGPetScraw_C                              = 33;   // 涂鸦状态
     CMSGCheckIn_CS                              = 34;   // 签到
     CMSGInitInfo_S                              = 35;   // 服务器时间等启动信息
+    CMSGGM_Login_C                              = 36;
+    CMSGGM_LoginFail_S                          = 37;
+    CMSGGM_OnlinePlayer_S                       = 38;
+    CMSGGM_GetPlayerInfo_CS                     = 39;
+    CMSGGM_SendMail_CS                          = 40;
+    CMSGGM_Manage_Player_CS                     = 41;
+    CMSGPreferPet_C                             = 42;
+    CMSGLOG_Consume_SS                          = 43;
+    CMSGLOG_Item_SS                             = 44;
+    CMSGVerifySdk_CS                            = 45;
+    CMSGCSVError_S                              = 46;
+    CMSGManipulateFriend_CS                     = 47;
+    CMSGAddFriendAction_SS                      = 48;
+    CMSGQueryFriendAction_SS                    = 49;
+    CMSGSearchFriend_CS                         = 50;
+    CMSGRecommendFriend_CS                      = 51;
+    CMSGRequestFriendInfo_SC                    = 52;
+    CMSGAcceptFriendRankingInfo_SC              = 53;
+    CMSGGM_SetPlayerInfo_CS                     = 54;
+    CMSGGM_PlayerList_S                         = 55;
+    CMSGCreateRechargeTicket_C                  = 56;
+    CMSGCreateRechargeTicket_S                  = 57;
+    CMSGPayRechargeTicket_C                     = 58;
+    CMSGPayRechargeTicket_S                     = 59;
+    CMSGCreateRechargeTicket_SS                 = 60;
+    CMSGPayRechargeTicket_SS                    = 61;
+    CMSGInitQueryTicket_C                       = 62;
 
+	CMSGTimeTickCS								= 32767;//心跳
 	CMSGMax										= 32768;
 }

@@ -53,7 +53,7 @@ message EndGame_CS {
     optional uint32 fbId = 2;
     repeated RewardGoods rewardgoods = 3;
     optional uint32 maxscore = 4;
-    optional uint32  flag      =  5;
+    optional uint32 flag      =  5;
     optional uint32 petthisid      =  6;
 	optional Result result =  25;
 	required string	accid  = 29;		//账号ID
@@ -61,6 +61,8 @@ message EndGame_CS {
     optional uint32 diamond = 31;
     optional uint32 exp = 32;
     optional uint32 fbtype =33;
+    optional uint32 length = 34;    // 无尽模式距离
+    repeated PlayProps props = 35;
 }
 
 message CheckIn_CS {

@@ -1,0 +1,28 @@
+package network.command;
+
+enum Coin_Type {
+    Coin_Diamond = 1;
+    Coin_Gold = 2;
+}
+
+enum Consume_Type {
+    Consume_Produce = 0;
+    Consume_Consume = 1;
+}
+
+message Log_Consume_SS {
+    optional string accid = 1; 
+    optional Consume_Type consume_type = 2;      // 0,产出,1,消耗
+    optional Coin_Type coinid = 3;
+    optional string action = 4;
+    optional uint32 coincount = 5;
+    optional uint32 actioncount = 6;
+}
+
+message Log_Item_SS {
+    optional string accid = 1;
+    optional Consume_Type consume_type = 2;      // 0,产出,1,消耗
+    optional string action = 3;
+    optional uint32 num = 4;
+    optional uint32 itemid = 5;
+}

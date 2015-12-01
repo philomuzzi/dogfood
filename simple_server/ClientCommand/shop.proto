@@ -5,7 +5,6 @@ enum CurrencyType {
     Gold = 0;
     Energy = 1;
     Diamond = 2;
-    WipeStock = 3;
 }
 
 enum OpSlot {
@@ -20,6 +19,7 @@ message BuyCurrency_CS {
     enum Result {
         SUCCESS = 0;
         FAIL = 1;
+        CANNOTBUY   = 2;    // 暂时不能购买
         UNKNOWN = -1;
     }
     required uint32 buyItemId       = 2;
@@ -40,6 +40,8 @@ message UpgradeObject_CS{
         NOGOLD = 3;
         UNEXIST = 5;
         SLOTISOPEN = 6;     // 槽已经打开
+        SKILLMAX = 7;
+        PILOTMAX = 8;       // 等级已满
         UNKNOWN = -1;
     }
     enum UpgradeType {
@@ -48,6 +50,7 @@ message UpgradeObject_CS{
         Slot        = 3;    // 通过钻石购买槽
         OneClick    = 4;    // 一键升级飞行员到可以升级的最高等级
         Skill       = 5;    // 升级飞行员技能
+        Skill_OneClick = 6;
     }
     required uint32 id              = 1;
     required ObjectType obType      = 2;
@@ -75,6 +78,7 @@ message BuyObject_CS {
         BagSpace = 7;
         PetEgg   = 8;
         PetScrawl = 9;
+        FbStage = 10;           // 解锁关卡
     }
 
     enum Result {
@@ -86,6 +90,10 @@ message BuyObject_CS {
         PRE_PILOT_NOEXIST = 5;      // 角色前置角色不存在
         PRE_PILOT_LEVEL = 6;        // 角色前置等级不存在
         OPEN_PETEGG_ERROR = 7;   //该宠物蛋不能被打开
+        MAX_BAG_SPACE = 8;      // 背包大小已达到极值
+        UNLOCKED_STAGE = 9;     // 关卡已经解锁
+        UNNESSNERY_STAGE = 10;  // 关卡不需要解锁
+        NOLOCKITEM = 11;        // 关卡解锁道具不足
         UNKNOWN = 100;
     }
 

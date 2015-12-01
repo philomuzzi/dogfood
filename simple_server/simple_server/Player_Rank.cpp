@@ -29,41 +29,41 @@ void GamePlayer::checkRanking()
 }
 
 void GamePlayer::getOnlineRankingInfo(Game::Ranking_SC &cli_msg) const {
-	RankingInfo *info;
-	shared_ptr<GamePlayer> fri = nullptr;
-	for (auto i = 0; i < m_player.friendlist_size(); i++)
-	{
-		fri = nullptr;
-		fri = PlayerManager::getInstance().getPlayerByName(m_player.friendlist(i).c_str());
-		if (fri != nullptr)
-		{
-			info = cli_msg.add_rankinginfolist();
-			info->set_name(fri->m_player.name());
-			info->set_accid(m_player.friendlist(i));
-			info->set_avatar(fri->m_player.avatar());
-			info->set_level(fri->m_player.level());
-			info->set_exp(fri->m_player.exp());
-			info->set_allowenergymail(fri->m_player.allowenergymail());
-			if (fri->m_player.has_bestrecord())
-			{
-				auto record = new BestRecord(fri->m_player.bestrecord());
-				info->set_allocated_bestrecord(record);
-			}
-			if (fri->m_player.has_weekrecord())
-			{
-				auto record = new WeekRecord(fri->m_player.weekrecord());
-				info->set_allocated_weekrecord(record);
-			}
+	//RankingInfo *info;
+	//shared_ptr<GamePlayer> fri = nullptr;
+	//for (auto i = 0; i < m_player.friendlist_size(); i++)
+	//{
+	//	fri = nullptr;
+	//	fri = PlayerManager::getInstance().getPlayerByName(m_player.friendlist(i).c_str());
+	//	if (fri != nullptr)
+	//	{
+	//		info = cli_msg.add_rankinginfolist();
+	//		info->set_name(fri->m_player.name());
+	//		info->set_accid(m_player.friendlist(i));
+	//		info->set_avatar(fri->m_player.avatar());
+	//		info->set_level(fri->m_player.level());
+	//		info->set_exp(fri->m_player.exp());
+	//		info->set_allowenergymail(fri->m_player.allowenergymail());
+	//		if (fri->m_player.has_bestrecord())
+	//		{
+	//			auto record = new BestRecord(fri->m_player.bestrecord());
+	//			info->set_allocated_bestrecord(record);
+	//		}
+	//		if (fri->m_player.has_weekrecord())
+	//		{
+	//			auto record = new WeekRecord(fri->m_player.weekrecord());
+	//			info->set_allocated_weekrecord(record);
+	//		}
 
-			auto airlist = fri->m_player.airplanelist();
-			auto it_air = airlist.begin();
-			for (; it_air != airlist.end(); ++it_air)
-			{
-				auto airplane = info->add_airplanelist();
-				airplane->CopyFrom(*it_air);
-			}
-		}
-	}
+	//		auto airlist = fri->m_player.airplanelist();
+	//		auto it_air = airlist.begin();
+	//		for (; it_air != airlist.end(); ++it_air)
+	//		{
+	//			auto airplane = info->add_airplanelist();
+	//			airplane->CopyFrom(*it_air);
+	//		}
+	//	}
+	//}
 }
 
 void GamePlayer::checkLastWeekRank(Game::Ranking_SC &msg)     // 借用排行榜信息来排行成绩

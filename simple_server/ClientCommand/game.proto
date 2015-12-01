@@ -7,6 +7,51 @@ message Ranking_SC {
     repeated RankingInfo rankingInfoList = 1;
 }
 
+message ManipulateFriend_CS {
+    enum Action {
+        ADD = 1;
+        ACCEPT = 2;
+        REJECT = 3;      // 拒绝
+        F_DELETE = 4;     
+    }
+    enum Result {
+        SELF_FULL = 1;   // 目标或自己好友数量已满
+        RECV_FULL = 2;
+        NO_RECV = 3;    // 没有接收人
+        SELF    = 4;    // 目标是自己
+        MULTIAPPLY  = 5;    // 重复申请
+        MULTIACCEPT = 6;    // 重复同意申请
+        MULTIDELETE = 7;    // 重复删除
+        MULTIREJECT = 8;    // 重复拒绝
+
+        SUCCESS = 254;
+        UNKNOWN = 255;
+    }
+    optional uint32 recv_id = 1;    // 是玩家id，而不是accid
+    optional Action action = 2;
+    optional Result result = 3;
+}
+
+message SearchFriend_CS {
+    optional uint32 id = 1;     //  通过ID搜索
+    optional string name = 2;   //  通过Name搜索
+    optional string accid = 3;  //  自己的accid
+    optional RankingInfo friendInfo = 4;    // 如果有结果的返回
+}
+
+message RecommendFriend_CS {
+    optional string accid = 1;      // 无用的，但是客户端要填一下
+    repeated RankingInfo recommandInfoList = 2;
+}
+
+message FriendRequestInfo_SC {
+    repeated RankingInfo requestFriendInfoList = 1;
+}
+
+message AcceptFriendRankingInfo_SC {
+    optional RankingInfo friendInfo = 1;
+}
+
 message FinishQuest_CS {
     enum Result {
         SUCCESS = 1;
@@ -28,8 +73,15 @@ message PlayerSetting_CS {
         UNKNOWN = 255;
     }
 
+    enum SettingPoint {
+        ENERGYMAIL = 1; // 是否接收好友邮件
+        PILOT = 2;      // 角色上场与否
+        PET = 3;
+    }
+
     optional Result result = 1;
-    optional bool allowEnergyMail = 2;
+    optional bool settingValue = 2;
+    optional SettingPoint settingPoint = 3;
 }
 
 message FriendlinessInteract_CS {
@@ -62,4 +114,10 @@ message ItemForFriendliness_CS {
 
 message InitInfo_S {
     optional uint64 time = 1;
+}
+
+message CSVError_S {
+    optional string csvname = 1;
+    optional uint32 row = 2;
+    optional string column = 3;
 }

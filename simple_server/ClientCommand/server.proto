@@ -21,9 +21,15 @@ message WriteMail_SS {
 
 // 请求不在同一服务器的好友的信息
 message QueryRanking_SS {
+    enum Action {
+        FRIEND          = 1;
+        FRIENDREQUEST   = 2;
+        ACCEPTFRIEND    = 3;
+    }
     optional string accid = 1;
-    repeated string friendlist = 2;
+    repeated uint32 friendlist = 2;
     repeated RankingInfo rankingInfoList = 3;
+    optional Action action = 4 [default = FRIEND];
 }
 
 //离开游戏请求
@@ -36,4 +42,54 @@ message LeaveGame_SS {
 message SaveGame_SS {
     required string accid           = 1;
     required Player data            = 2;
+}
+
+message AddFriendAction_SS {
+    optional FriendAction action = 1;
+}
+
+message QueryFriendAction_SS {
+    optional uint32 my_id = 1;
+    optional string accid = 2;
+    repeated FriendAction actionlist = 3;
+}
+
+message CreateRechargeTicket_SS {
+    enum Result {
+        SUCCESS = 1;
+        FAIL    = 2;
+        DBCONNFAIL = 3;
+        DBINSERTFAIL = 4;
+        EXISTTICKET = 5;
+
+        UNKNOWN = 255;
+    }
+    optional uint32 id = 1;     // 玩家ID
+    optional uint32 money = 2;
+    optional uint32 diamond = 3;
+    optional uint32 tid = 4;
+    optional uint32 level = 5;
+    optional uint32 ticketid = 6;
+    optional Result result = 7;
+    optional string accid = 8;
+    optional uint64 time = 9;
+}
+
+message PayRechargeTicket_SS {
+    enum Result {
+        SUCCESS             = 1;
+        SDK_SERVER_FAIL     = 2;
+        NO_BALANCE          = 3;
+
+        UNKNOWN = 255;
+    }
+
+    optional uint32 ticketid        = 1;
+    repeated uint32 tid             = 2;        // 可能多个订单叠加处理
+    optional uint32 money           = 3;
+    optional uint32 playerid        = 4;
+    optional string serino          = 5;
+    optional uint32 balance         = 6;
+    optional uint32 platformid      = 7;
+    optional Result result          = 8;
 }

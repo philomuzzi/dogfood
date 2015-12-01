@@ -1,0 +1,59 @@
+package network.command.Pay;
+
+message CreateRechargeTicket_C {
+    optional string accid           = 1;        // c
+    optional uint32 tid             = 2;        // c, 支付表格ID
+}
+
+message CreateRechargeTicket_S {
+    enum Result {
+        SUCCESS = 1;
+        TABLE_ERROR = 2;
+        DB_ERROR = 3;
+        EXIST_TICKET    = 4;
+
+        UNKNOWN = 255;
+    }
+    optional uint32 ticketid        = 1;        // s, 订单ID
+    optional Result result          = 2;        // s
+    optional uint32 tid             = 3;        // 支付表格ID
+    optional uint64 time            = 4;
+    optional uint32 money           = 5;
+}
+
+message PayRechargeTicket_C {
+    enum PayResult {
+        SUCCESS  = 1;
+        FAIL     = 2;
+        CANCELED = 3;
+
+        UNKNOWN = 255;
+    }
+    optional string accid           = 1;        // c
+    optional uint32 tid             = 2;        // c, 支付表格ID
+    optional uint32 ticketid        = 3;        // c, 订单ID
+    optional string queryparam      = 4;        // c, 查询凭证
+    optional PayResult result       = 5;        
+    optional uint32 platformid      = 6;
+    optional uint32 playerid        = 7;
+}
+
+message PayRechargeTicket_S {
+    enum Result {
+        SUCCESS  = 1;
+        DB_ERROR = 2;       // 数据库访问错误
+        NO_TICKET = 3;      // 订单不存在
+        DB_UPDATE_ERROR = 4;      // 数据库更新错误
+        CANCEL_SUCCESS = 5;
+        SDK_SERVER_FAIL = 6;
+        NO_BALANCE      = 7;        // 充值余额为0
+
+        UNKNOWN = 255;
+    }
+
+    optional Result result          = 1;
+    optional uint32 ticketid        = 2;
+    optional uint32 tid             = 3;        // 支付表格ID
+    optional uint32 platformid      = 4;
+    optional uint32 money           = 5;
+}

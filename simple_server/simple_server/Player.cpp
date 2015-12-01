@@ -333,12 +333,12 @@ void GamePlayer::sendFriendNextMailTime() const {
 
 void GamePlayer::setting(Game::PlayerSetting_CS &msg)
 {
-	m_player.set_allowenergymail(msg.allowenergymail());
+	//m_player.set_allowenergymail(msg.allowenergymail());
 
-	sendPlayerInfo();
-	msg.set_result(Game::PlayerSetting_CS::SUCCESS);
-	ConstructMsgMacro(CMSGPlayerSetting_CS, msg);
-	m_connection->sendCmdMsg(msg__, msg_size__);
+	//sendPlayerInfo();
+	//msg.set_result(Game::PlayerSetting_CS::SUCCESS);
+	//ConstructMsgMacro(CMSGPlayerSetting_CS, msg);
+	//m_connection->sendCmdMsg(msg__, msg_size__);
 }
 
 void GamePlayer::requestUserMail()

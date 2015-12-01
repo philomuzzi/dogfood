@@ -1,7 +1,68 @@
 package network.command.GM;
 
+import "save.proto";
 import "data.proto";
+
+enum LOGINERROR {
+	LOGINERROR_UNKNOWN				= 1;		//未知错误
+	LOGINERROR_PASSWORDERR			= 2;		//密码错误
+	LOGINERROR_NOACCOUNT			= 3;		//账号不存在
+	LOGINERROR_GAMECLOSE			= 4;		//游戏关闭
+}
+
+enum RESULT {
+    Result_Nosense = 1;
+    Result_Success = 2;
+    Result_Unknown = -1;
+}
 
 message ExecGM_CS{
     required GMCmdData gmcommand = 1;    
 } 
+
+message GM_Login_C {
+    optional uint32 zoneid = 1;
+    optional string account = 2;
+    optional string passward = 3;
+}
+
+message GM_LoginFail_S {
+    optional LOGINERROR result = 1;
+}
+
+message GM_OnlinePlayer_S {
+    repeated string namelist = 1;
+}
+
+message GM_PlayerList_S {
+    repeated string accidlist = 1;
+    repeated string namelist = 2;
+}
+
+message GM_GetPlayerInfo_CS {
+    optional string accid = 1;
+    optional Player data = 2;       // 返回
+    optional RESULT result = 3;
+}
+
+message GM_SendMail_CS {
+    repeated string namelist = 1;   // 为空则是全体
+    optional MailInfo mailinfo = 2; // 邮件信息，有些内容服务器生成，客户端不用填
+    optional RESULT result = 3;
+}
+
+message GM_SetPlayerInfo_CS {
+    optional string accid = 1;
+    optional Player data = 2;
+    optional RESULT result = 3;
+}
+
+message GM_Manage_Player_CS {
+    enum ManageType {
+        Kick = 1;
+        Forbid = 2;
+    }
+    optional string accid = 1;
+    optional ManageType type = 2;
+    optional RESULT result = 3;
+}

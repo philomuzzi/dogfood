@@ -10,7 +10,7 @@ message Player {
 	optional uint32 gold =  4;
 	optional uint32 diamond =  5;
 	optional uint32 energy =  6;
-	optional uint64 energyTime =  7;
+	optional uint64 energyTime =  7 [default = 0];
 	optional uint32 currentPilot =  8;
 	optional uint32 currentAirplane =  9;
 	repeated Pilot pilotList =  10;
@@ -29,7 +29,7 @@ message Player {
     optional uint32 currentmissionid        = 22;
     optional uint32 currentdailymissionid   = 23;
 
-    repeated string friendlist = 24;    // 好友accid
+    repeated uint32 friendlist = 24;    // 好友id
     optional string avatar = 25;
     optional uint32 lastweekrecord = 26;    // 上周得分
 
@@ -45,14 +45,26 @@ message Player {
 
     repeated PetStatistics petstatistics = 35;
 
-    optional uint32 lastofflinetime = 36;
+    optional uint64 lastofflinetime = 36;
 
     repeated NormalFbStatistics normalfbstatistics = 37;
-    optional uint32 itemnum = 38; //闯关道具
+    optional uint32 itemnum = 38; //闯关解锁道具
     optional uint32 wipestock = 39 ;//扫荡券
     optional uint32 checktimes = 40; // 签到次数
     optional uint32 lastcheckday = 41; // 最后签到时间，这个时间是游戏基准天数
     optional uint32 totalchecktimes = 42; // 累计签到次数
     optional uint32 lastloginmonth = 43;   // 上次签到月份
-    optional uint32 lastchecktime = 44; // 上次签到时间，这个时间是unix世界秒数
+    optional uint64 lastchecktime = 44; // 上次签到时间，这个时间是unix世界秒数
+
+    optional uint32 preferPet = 45; // 选择的宠物的thisid
+    optional bool allowPilot = 46 [default = true];     // 是否允许飞行员上场
+    optional bool allowPet = 47 [default = true];       // 是否允许宠物上场
+    repeated uint32 unlockedstages = 48;                 // 解锁的关卡列表
+
+    optional uint32 male = 49; // 0, male, 1, female
+
+    repeated uint32 FriendRequestList = 50;
+    optional uint64 lastlogintime = 51;
+
+    optional uint32 receive_energy_mail = 52;
 }

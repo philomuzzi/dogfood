@@ -326,9 +326,9 @@ bool GamePlayer::addItemToBag(uint32 item_id, uint32 item_num)
 	switch (static_cast<PlayerItemType>(type)) {
 	case PlayerItemType::Item_PlanePart:
 		return addPlanePartBag(id, item_num);
-	case PlayerItemType::Item_WipeStock:
-		addMoney(network::command::Shop::WipeStock, item_num, MoneyAction::AddWipeStockAction_FbDrop);
-		return true;
+//	case PlayerItemType::Item_WipeStock:
+//		addMoney(network::command::Shop::WipeStock, item_num, MoneyAction::AddWipeStockAction_FbDrop);
+//		return true;
 	case PlayerItemType::Item_GiftBag:
 		addGiftToBag(item_id);
 		break;

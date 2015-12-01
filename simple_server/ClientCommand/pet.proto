@@ -12,13 +12,22 @@ message PetStren_CS{
 
         MAXERROR  = 100;
     }
+
+    enum Type {
+        PetNormal = 0;
+        PetOneClick = 1;
+    }
     required uint32 thisid = 1;
     optional uint32 petid  = 2;
     optional Result result = 3;
-    optional uint32 type   = 4;
+    optional Type type   = 4;
 }
 
-message PetScrawl_C{
-       required uint32 thisid = 1;
-       optional uint32 sate   = 2;//0表示脱 1表示穿
-    }
+message PetScrawl_C {
+    required uint32 thisid = 1;
+    optional uint32 sate   = 2;//0表示脱 1表示穿
+}
+
+message PreferPet_C {
+    optional uint32 thisid = 1;
+}

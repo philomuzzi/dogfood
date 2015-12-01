@@ -57,7 +57,7 @@ message PlayerStatus {
 
 message MailBag {
     repeated MailInfo usermail = 1;
-    repeated uint32 readsystemmaillist = 2;
+    repeated uint64 readsystemmaillist = 2; // [TODO] 必须是64位才行
 }
 
 enum MailSourceType {
@@ -67,9 +67,9 @@ enum MailSourceType {
 
 message MailInfo {
     enum MailType {
-        Text = 1;
-        Attach = 2;
-        Energy = 3;
+        Text = 1;   // 文本邮件
+        Attach = 2; // 附件邮件
+        Energy = 3; // 体力邮件专用
     }
 
     enum MailStatus {
@@ -82,9 +82,10 @@ message MailInfo {
     optional MailType mailtype = 3;         // user
     optional MailStatus status = 4;         // server
     optional string send_accid = 5;         // user
-    optional uint32 time = 7;               // server
+    optional uint64 time = 7;               // server
     optional string text = 8;               // user
     repeated Item attachList = 9;           // user
+    optional string send_name = 10;         // user，发送邮件的玩家的名字
 }
 
 message BestRecord {
@@ -96,7 +97,7 @@ message BestRecord {
 
 message WeekRecord {
     optional uint32 score = 2;
-    optional uint32 time = 3;
+    optional uint64 time = 3;
     optional uint32 weekindex = 5;
 }
 
@@ -113,6 +114,11 @@ message RankingInfo {
     optional uint32 lastloginweek = 9;
 	repeated Airplane airplaneList = 10;
     optional bool allowEnergyMail = 11 [default = false];
+    optional uint32 endlesslength = 12;
+    optional uint64 lastlogintime = 13;
+    optional uint64 lastofflinetime = 14;
+    optional uint32 male = 15;
+    optional uint32 id = 16;
 }
 
 message NextSendTime {
@@ -131,11 +137,18 @@ message QuestStatistics {
     optional uint32 endlessTopScore = 3;
     optional uint32 normalTimes = 4;
     optional uint32 normalTopScore = 5;
+    optional uint32 endlessLength = 6;
+    repeated PlayProps playprops = 7;
 }
 
 message DailyStatistics {
     optional uint32 activeCount = 1;
     optional uint32 endlessTimes = 2;
+    optional uint32 pvpTimes = 4;
+    optional uint32 normalTimes =5;
+    optional uint32 wipeTimes = 6;
+    optional uint32 sendFriendEnergyTimes = 7;
+    optional uint32 buyGoldUseDiamondTimes = 8;
 }
 
 message PetStatistics{
@@ -146,7 +159,23 @@ message PetStatistics{
 }
 
 message NormalFbStatistics{
-   required uint32 id = 1;
-   optional uint32 wipetimes = 2;
-   optional uint32 groupid = 3; 
+    required uint32 id = 1;
+    optional uint32 wipetimes = 2;
+    optional uint32 groupid = 3; 
+}
+
+message PlayProps{
+    optional uint32 id = 1;
+    optional uint32 number = 2;
+}
+
+message FriendAction {
+    enum Action {
+        ADD  = 1;
+        ACCEPT = 2;
+        F_DELETE = 3;
+    }
+    optional uint32 from_id         = 1;
+    optional uint32 to_id           = 2;
+    optional Action action          = 3;
 }

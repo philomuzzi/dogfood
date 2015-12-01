@@ -11,6 +11,7 @@ message ReadMail_CS {
     enum Result {
         SUCCESS = 1;
         ERROR_ID = 2;
+        MAX_RECEIVE_TIMES = 3;      // 达到了最大体力邮件领取上限
         UNKNOWN = 255;
     }
 
