@@ -1,17 +1,15 @@
 #include "ConnectionMsgCenter.h"
 #include "message.pb.h"
 #include "login_msg.pb.h"
-#include "../Utility/utility.h"
 #include <iostream>
 #include "Connection.h"
 #include <play.pb.h>
-#include <thread>
 
 using namespace std;
 using namespace network::command;
 
 bool PraseServerInfo_S(shared_ptr<Connection> self, const void* msg, const short msglen) {
-	cout << __FUNCTION__ << endl;
+//	cout << __FUNCTION__ << endl;
 	ServerInfo_S rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
@@ -21,7 +19,7 @@ bool PraseServerInfo_S(shared_ptr<Connection> self, const void* msg, const short
 }
 
 bool ParsePlayerInfo_S(shared_ptr<Connection> self, const void* msg, const short msglen) {
-	cout << __FUNCTION__ << endl;
+//	cout << __FUNCTION__ << endl;
 	PlayerInfo_S rev;
 	auto ret = rev.ParsePartialFromArray(msg, msglen);
 
@@ -36,7 +34,7 @@ bool ParsePlayerInfo_S(shared_ptr<Connection> self, const void* msg, const short
 }
 
 bool ParseStartGame_CS(shared_ptr<Connection> self, const void* msg, const short msglen) {
-	cout << __FUNCTION__ << endl;
+//	cout << __FUNCTION__ << endl;
 	Play::StartGame_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
@@ -51,15 +49,15 @@ bool ParseStartGame_CS(shared_ptr<Connection> self, const void* msg, const short
 }
 
 bool ParseEndGame_CS(shared_ptr<Connection> self, const void* msg, const short msglen) {
-	cout << __FUNCTION__ << endl;
+//	cout << __FUNCTION__ << endl;
 	Play::EndGame_CS rev;
 	rev.ParsePartialFromArray(msg, msglen);
 
 	if (rev.result() == Play::EndGame_CS::SUCCESS) {
 		self->setStartGame(false);
-		cout << self->getName() << " 游戏确认结束: " << rev.fbid() << endl;
+//		cout << self->getName() << " 游戏确认结束: " << rev.fbid() << endl;
 	} else {
-		cout << self->getName() << " 游戏结束失败: " << rev.result() << endl;
+//		cout << self->getName() << " 游戏结束失败: " << rev.result() << endl;
 	}
 
 	return true;

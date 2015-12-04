@@ -17,22 +17,7 @@ using namespace network::command;
 // Connection的生命周期问题
 
 Connection::~Connection() {
-	cout << "Destroy Connection" << endl;
-}
-
-
-void Connection::write(string data, size_t length) {
-	auto self(shared_from_this());
-	copy(data.begin(), data.end(), write_buffer_.begin());
-	boost::asio::async_write(
-		socket_,
-		buffer(write_buffer_, length),
-		[this, self](boost::system::error_code ec, size_t len) {
-			if (!ec) {
-				cout << "write success: " << len << endl;
-			}
-		}
-	);
+	cout << m_name << " Destroy Connection" << endl;
 }
 
 void Connection::sendCmdMsg(const char* data, int head) {
@@ -52,6 +37,9 @@ void Connection::sendCmdMsg(const char* data, int head) {
 			if (!ec) {
 				cout << "write success: " << len << endl;
 			}
+			else {
+				displayErr(ec);
+			}
 		}
 	);
 }
@@ -65,8 +53,10 @@ void Connection::do_connectToGS(ServerInfo_S rev) {
 		                      if (!ec) {
 			                      self->do_enterGame(rev);
 		                      }
-		                      else
+		                      else {
+			                      self->displayErr(ec);
 			                      self->stop();
+		                      }
 	                      });
 }
 
@@ -95,6 +85,7 @@ void Connection::do_enterGame(ServerInfo_S rev) {
 	EnterGame_CSS send;
 	send.set_loginid(rev.loginid());
 	send.set_accid(rev.accid());
+	send.set_nickname(m_name);
 	send.set_version(0);
 	ConstructMsgMacro(network::command::CMSGEnterGame_CSS, send);
 	sendCmdMsg(send__, send_size__);
@@ -105,12 +96,13 @@ void Connection::do_enterGame(ServerInfo_S rev) {
 
 void Connection::stop() {
 	socket_.close();
-	cout << "close socket" << endl;
+	cout << m_name << "close socket" << endl;
 }
 
 void Connection::do_connectToPL() {
 	LoginGame_C send;
 	send.set_account(m_name);
+	send.set_game(1);
 	send.set_zone(GAMEZONE);
 	ConstructMsgMacro(network::command::CMSGLoginGame_C, send);
 	sendCmdMsg(send__, send_size__);
@@ -123,8 +115,13 @@ void Connection::do_connection(ip::tcp::endpoint ep) {
 	auto self(shared_from_this());
 	socket_.async_connect(ep,
 	                      [self](boost::system::error_code ec) {
-		                      if (!ec) self->do_connectToPL();
-		                      else self->stop();
+		                      if (!ec) {
+			                      self->do_connectToPL();
+		                      }
+		                      else {
+			                      self->displayErr(ec);
+			                      self->stop();
+		                      }
 	                      });
 }
 
@@ -143,9 +140,9 @@ void Connection::startGSLogic() {
 
 void Connection::oneSec(const boost::system::error_code&) {
 	if (m_startLoop) {
-		if (m_startGame) 
+		if (m_startGame)
 			end_game();
-		else 
+		else
 			start_game();
 	}
 
@@ -166,7 +163,7 @@ void Connection::do_read() {
 					int head = *reinterpret_cast<int *>(read_buffer_);
 					uint16 msgid = (head & PacketMsgIdMask) >> 16;
 					uint16 len = head & PacketMsgLenMask;
-					cout << m_name << " msgid: " << msgid << " len: " << len << " length = " << length << endl;
+					// cout << m_name << " msgid: " << msgid << " len: " << len << " length = " << length << endl;
 					if (len > Max_DataBufferSize || len < 0) {
 						cerr << "头长度错误" << endl;
 						already_read_ = 0;
@@ -176,10 +173,10 @@ void Connection::do_read() {
 						copy(read_buffer_ + PacketHeadLen, read_buffer_ + PacketHeadLen + len, content.begin());
 						copy(read_buffer_ + PacketHeadLen + len, read_buffer_ + already_read_, read_buffer_); // 后面的数据没有清空
 						already_read_ -= PacketHeadLen + len;
-						cout << m_name << " 剩余读取长度： " << already_read_ << endl;
+						// cout << m_name << " 剩余读取长度： " << already_read_ << endl;
 
 						if (!ConnectionMsgCenter::getInstance().dispatch(msgid, self, content.data(), len)) {
-							cout << m_name << " 消息没有处理: " << msgid << endl;
+							// cout << m_name << " 消息没有处理: " << msgid << endl;
 						}
 					}
 					else {
@@ -193,8 +190,12 @@ void Connection::do_read() {
 			if (ec != error::operation_aborted) {
 				// 断开连接
 				// notice: 不需要断开连接，自己把自己坑死了
-				// cout << m_name << " boost::asio::error: " << boost::system::system_error(ec).what() << endl;
+				// displayErr(ec);
 			}
 		}
 	);
+}
+
+void Connection::displayErr(boost::system::error_code& ec) {
+	cout << m_name << " boost::asio::error: " << boost::system::system_error(ec).what() << endl;
 }

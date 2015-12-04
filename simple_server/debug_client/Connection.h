@@ -19,7 +19,6 @@ public:
 	~Connection();
 
 	void start(boost::asio::ip::tcp::endpoint ep);
-	void write(std::string data, std::size_t length);
 	void sendCmdMsg(const char* data, int head);
 	void do_connectToGS(network::command::ServerInfo_S rev);
 	void startGSLogic();
@@ -33,6 +32,8 @@ private:
 	void do_connection(boost::asio::ip::tcp::endpoint ep);
 	void do_read();
 	void oneSec(const boost::system::error_code&);
+
+	void displayErr(boost::system::error_code &ec);
 
 	boost::asio::ip::tcp::socket socket_;
 	char read_buffer_[Max_DataBufferSize];
